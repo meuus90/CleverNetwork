@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--https://material.io/resources/color/#!/?view.left=1&view.right=0&primary.color=eded3c-->
+<resources>
+    <color name="colorPrimary">@color/primaryColor</color>
+    <color name="colorPrimaryDark">@color/primaryDarkColor</color>
+    <color name="colorAccent">#03DAC5</color>
+
+    <color name="primaryColor">#eeee3d</color>
+    <color name="primaryLightColor">#ffff73</color>
+    <color name="primaryDarkColor">#b8bc00</color>
+    <color name="primaryTextColor">#000000</color>
+
+</resources>
