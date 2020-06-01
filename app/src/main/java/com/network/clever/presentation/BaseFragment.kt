@@ -5,14 +5,14 @@ import androidx.fragment.app.Fragment
 import com.network.base.di.Injectable
 
 open class BaseFragment : Fragment(), Injectable {
-    private lateinit var baseActivity: BaseActivity
+    lateinit var baseActivity: BaseActivity
     private lateinit var context: Context
     override fun getContext() = context
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        baseActivity = (context as BaseActivity?)!!
+        baseActivity = (context as BaseActivity)
         this.context = context
     }
 

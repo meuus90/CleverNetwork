@@ -1,0 +1,98 @@
+{
+  "project_info": {
+    "project_number": "691975443500",
+    "firebase_url": "https://clevernetwork-96db9.firebaseio.com",
+    "project_id": "clevernetwork-96db9",
+    "storage_bucket": "clevernetwork-96db9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:691975443500:android:31d3e1c8dc92d18a85ed89",
+        "android_client_info": {
+          "package_name": "com.network.clever"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "691975443500-449ud3lb4i1kt5bvvhvit861aau43286.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkL38kHphoqMgp9cCWCxa_yo42i9f7ip0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "691975443500-449ud3lb4i1kt5bvvhvit861aau43286.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:691975443500:android:7c391ba903178f0085ed89",
+        "android_client_info": {
+          "package_name": "com.network.clever.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "691975443500-449ud3lb4i1kt5bvvhvit861aau43286.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkL38kHphoqMgp9cCWCxa_yo42i9f7ip0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "691975443500-449ud3lb4i1kt5bvvhvit861aau43286.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:691975443500:android:619f1e2883e2010a85ed89",
+        "android_client_info": {
+          "package_name": "com.network.clever.stg"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "691975443500-449ud3lb4i1kt5bvvhvit861aau43286.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkL38kHphoqMgp9cCWCxa_yo42i9f7ip0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "691975443500-449ud3lb4i1kt5bvvhvit861aau43286.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
