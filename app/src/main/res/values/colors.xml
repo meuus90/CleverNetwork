@@ -4,10 +4,18 @@
     <color name="colorPrimary">@color/primaryColor</color>
     <color name="colorPrimaryDark">@color/primaryDarkColor</color>
     <color name="colorAccent">#03DAC5</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorRed">#ff0000</color>
+    <color name="colorTransparent">#00000000</color>
 
     <color name="primaryColor">#eeee3d</color>
     <color name="primaryLightColor">#ffff73</color>
     <color name="primaryDarkColor">#b8bc00</color>
-    <color name="primaryTextColor">#000000</color>
 
+    <color name="overlay_dark_60">#99000000</color>
+
+    <color name="list_line_grey">#ededed</color>
+
+    <color name="grey_text_hint">#cdcdcd</color>
 </resources>

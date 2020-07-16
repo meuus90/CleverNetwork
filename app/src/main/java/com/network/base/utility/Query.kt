@@ -9,7 +9,7 @@ class Query {
     var boundType: Int = 0
 
     companion object{
-        fun doQuery(params: List<Any>) =
+        fun query(params: List<Any>) =
                 Query().apply {
                     this.params = params
                     boundType = NetworkBoundResource.BOUND_FROM_BACKEND

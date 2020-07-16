@@ -3,7 +3,7 @@ package com.network.clever.domain.viewmodel.item
 import androidx.lifecycle.viewModelScope
 import com.network.clever.domain.viewmodel.BaseViewModel
 import com.network.base.network.Resource
-import com.network.base.utility.Parameters
+import com.network.base.utility.Params
 import com.network.base.utility.SingleLiveEvent
 import com.network.clever.domain.usecase.item.ItemListUseCase
 import kotlinx.coroutines.launch
@@ -13,10 +13,10 @@ import javax.inject.Singleton
 @Singleton
 class ItemListViewModel
 @Inject
-constructor(private val useCase: ItemListUseCase) : BaseViewModel<Parameters, Int>() {
+constructor(private val useCase: ItemListUseCase) : BaseViewModel<Params, Int>() {
     internal var assets = SingleLiveEvent<Resource>()
 
-    override fun pullTrigger(params: Parameters) {
+    override fun pullTrigger(params: Params) {
         viewModelScope.launch {
             assets = useCase.execute(viewModelScope, params)
         }

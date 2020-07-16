@@ -19,7 +19,7 @@ package com.network.clever.domain.usecase.item
 import androidx.lifecycle.MutableLiveData
 import com.network.clever.domain.usecase.BaseUseCase
 import com.network.base.network.Resource
-import com.network.base.utility.Parameters
+import com.network.base.utility.Params
 import com.network.base.utility.Query
 import com.network.base.utility.SingleLiveEvent
 import com.network.clever.data.repository.item.ItemListRepository
@@ -30,19 +30,19 @@ import javax.inject.Singleton
 @Singleton
 class ItemListUseCase
 @Inject
-constructor(private val repository: ItemListRepository) : BaseUseCase<Parameters, Resource>() {
+constructor(private val repository: ItemListRepository) : BaseUseCase<Params, Resource>() {
     private val liveData by lazy { MutableLiveData<Query>() }
 
     override suspend fun execute(
         viewModelScope: CoroutineScope,
-        parameters: Parameters
+        params: Params
     ): SingleLiveEvent<Resource> {
-        setQuery(parameters)
+        setQuery(params)
 
         return repository.work(this@ItemListUseCase.liveData)
     }
 
-    private fun setQuery(parameters: Parameters) {
-        liveData.value = parameters.query
+    private fun setQuery(params: Params) {
+        liveData.value = params.query
     }
 }

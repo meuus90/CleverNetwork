@@ -20,16 +20,8 @@ open class BaseFragment : Fragment(), Injectable {
         return this::class.java.simpleName
     }
 
-    internal fun replaceFragmentInActivity(fragment: Fragment) {
-        baseActivity.replaceFragmentInActivity(fragment, baseActivity.frameLayoutId)
-    }
-
-    internal fun addFragmentToActivity(fragment: Fragment) {
-        baseActivity.addFragmentToActivity(fragment, baseActivity.frameLayoutId)
-    }
-
-    internal fun popAndAddFragmentToActivity(fragment: Fragment) {
-        baseActivity.popAndAddFragmentToActivity(fragment, baseActivity.frameLayoutId)
+    internal fun addFragment(cls: Class<*>, backStackState: Int): Fragment {
+        return baseActivity.addFragment(cls, backStackState)
     }
 
     internal fun goToRootFragment() {

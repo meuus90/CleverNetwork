@@ -1,9 +1,18 @@
 <resources>
     <string name="app_name">CleverNetwork</string>
 
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="yes">YES</string>
+    <string name="no">NO</string>
+    <string name="next">Next</string>
+    <string name="disagree">Disagree</string>
+    <string name="confirm">Confirm</string>
+    <string name="complete">Complete</string>
 
     <string name="sign_id_hint">Email</string>
     <string name="sign_pw_hint">Password</string>
     <string name="sign_in">Sign In</string>
     <string name="sign_up">Sign Up</string>
+    <string name="create_account">Create Account</string>
 </resources>

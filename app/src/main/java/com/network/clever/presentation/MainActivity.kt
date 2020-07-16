@@ -24,14 +24,14 @@ class MainActivity : BaseActivity() {
         val isValidatedUser = firebaseAuth.currentUser
 
         if (isValidatedUser == null) {
-            replaceFragmentInActivity(
-                AuthFragment(),
-                frameLayoutId
+            addFragment(
+                AuthFragment::class.java,
+                BACK_STACK_STATE_REPLACE
             )
         } else {
-            replaceFragmentInActivity(
-                HomeFragment(),
-                frameLayoutId
+            addFragment(
+                HomeFragment::class.java,
+                BACK_STACK_STATE_REPLACE
             )
         }
     }

@@ -11,11 +11,19 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.annotation.GlideModule
 import com.network.base.view.DetailsTransition
+import com.network.clever.R
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
 abstract class BaseActivity : AppCompatActivity(), HasAndroidInjector {
+    companion object {
+        const val BACK_STACK_STATE_REPLACE = 0
+        const val BACK_STACK_STATE_ADD = 1
+        const val BACK_STACK_STATE_POP_AND_ADD = 2
+    }
+
+
     open val frameLayoutId = 0
 
     private lateinit var glideRequestManager: RequestManager
@@ -35,33 +43,79 @@ abstract class BaseActivity : AppCompatActivity(), HasAndroidInjector {
 
         setContentView()
     }
-    internal fun replaceFragmentInActivity(
-            fragment: Fragment,
-            frameId: Int,
-            sharedView: View? = null
-    ) {
-        setTransition(fragment, sharedView)
-        supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-        transact(fragment, frameId, sharedView)
+
+    internal fun replaceFragment(cls: Class<*>): Fragment {
+        val fragment = getFragmentInstance(cls)
+        callFragment(fragment)
+
+        return fragment
     }
 
-    internal fun addFragmentToActivity(
-            fragment: Fragment,
-            frameId: Int,
-            sharedView: View? = null
-    ) {
-        setTransition(fragment, sharedView)
-        transact(fragment, frameId, sharedView)
+    internal fun addFragment(cls: Class<*>, backStackState: Int): Fragment {
+        val fragment = getFragmentInstance(cls)
+
+        supportFragmentManager.apply {
+            when (backStackState) {
+                BACK_STACK_STATE_REPLACE -> {
+                    popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+
+                    beginTransaction().setCustomAnimations(
+                        0, 0,
+                        R.anim.slide_in_left_right,
+                        R.anim.slide_out_left_right
+                    )
+                }
+                BACK_STACK_STATE_ADD -> {
+                    beginTransaction().setCustomAnimations(
+                        R.anim.slide_in_right_left,
+                        R.anim.slide_out_right_left,
+                        R.anim.slide_in_left_right,
+                        R.anim.slide_out_left_right
+                    )
+                }
+                BACK_STACK_STATE_POP_AND_ADD -> {
+                    popBackStack()
+
+                    beginTransaction().setCustomAnimations(
+                        R.anim.slide_in_right_left,
+                        R.anim.slide_out_right_left,
+                        R.anim.slide_in_left_right,
+                        R.anim.slide_out_left_right
+                    )
+                }
+            }
+        }
+
+        callFragment(fragment)
+
+        return fragment
     }
 
-    internal fun popAndAddFragmentToActivity(
-            fragment: Fragment,
-            frameId: Int,
-            sharedView: View? = null
-    ) {
-        setTransition(fragment, sharedView)
-        supportFragmentManager.popBackStack()
-        transact(fragment, frameId, sharedView)
+    private fun getFragmentInstance(cls: Class<*>): Fragment {
+        var fragment = supportFragmentManager.findFragmentByTag(cls.name)
+
+        fragment?.let {
+            supportFragmentManager.beginTransaction().remove(fragment!!).commit()
+        }
+
+        fragment = supportFragmentManager.fragmentFactory.instantiate(cls.classLoader!!, cls.name)
+        return fragment
+    }
+
+    private fun callFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction().apply {
+            setCustomAnimations(
+                R.anim.slide_in_right_left,
+                R.anim.slide_out_right_left,
+                R.anim.slide_in_left_right,
+                R.anim.slide_out_left_right
+            )
+
+            setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+
+            addToBackStack(fragment.javaClass.name)
+            replace(frameLayoutId, fragment, fragment.javaClass.name)
+        }.commit()
     }
 
     internal fun goToRootFragment() {
