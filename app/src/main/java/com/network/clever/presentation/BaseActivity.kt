@@ -159,4 +159,19 @@ abstract class BaseActivity : AppCompatActivity(), HasAndroidInjector {
 
         return null
     }
+
+    override fun onBackPressed() {
+        val fragment = getCurrentFragment()
+        if (fragment != null) {
+            val fragmentStackSize = supportFragmentManager.backStackEntryCount
+            if (fragmentStackSize <= 1) {
+                supportFragmentManager.popBackStackImmediate()
+                supportFinishAfterTransition()
+            } else
+                super.onBackPressed()
+
+        } else {
+            super.onBackPressed()
+        }
+    }
 }
