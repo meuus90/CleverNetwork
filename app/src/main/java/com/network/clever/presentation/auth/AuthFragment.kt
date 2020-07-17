@@ -14,6 +14,7 @@ import com.network.clever.presentation.BaseFragment
 import com.network.clever.presentation.MainActivity
 import com.network.clever.presentation.home.HomeFragment
 import kotlinx.android.synthetic.main.fragment_auth.*
+import timber.log.Timber
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
@@ -41,14 +42,19 @@ class AuthFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
         et_email.addTextChangedListener {
             email = it.toString()
+            Timber.e("email : $email")
         }
 
         et_pw.addTextChangedListener {
             pw = it.toString()
+            Timber.e("pw : $pw")
         }
 
         tv_sign_in.setOnClickListener {
-            if (isValidFormat(email, pw))
+            Timber.e("email : $email")
+            Timber.e("pw : $pw")
+            if (isValidFormat(email, pw)) {
+                Timber.e("Sign in")
                 mainActivity.firebaseAuth.signInWithEmailAndPassword(email, pw)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
@@ -66,10 +72,12 @@ class AuthFragment : BaseFragment() {
                             ).show()
                         }
                     }
+            }
         }
 
         tv_sign_up.setOnClickListener {
-            if (isValidFormat(email, pw))
+            if (isValidFormat(email, pw)) {
+                Timber.e("Sign up")
                 mainActivity.firebaseAuth.createUserWithEmailAndPassword(email, pw)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
@@ -86,6 +94,7 @@ class AuthFragment : BaseFragment() {
                             ).show()
                         }
                     }
+            }
         }
     }
 

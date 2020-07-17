@@ -13,6 +13,9 @@
     <color name="primaryLightColor">#ffff73</color>
     <color name="primaryDarkColor">#b8bc00</color>
 
+    <color name="colorGrey">#888889</color>
+    <color name="colorGrey2">#262626</color>
+
     <color name="overlay_dark_60">#99000000</color>
 
     <color name="list_line_grey">#ededed</color>
