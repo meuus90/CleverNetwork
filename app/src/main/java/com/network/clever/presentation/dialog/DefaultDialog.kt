@@ -15,9 +15,9 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import com.network.base.view.gone
-import com.network.base.view.setDefaultWindowTheme
-import com.network.base.view.show
+import com.meuus.base.view.gone
+import com.meuus.base.view.setDefaultWindowTheme
+import com.meuus.base.view.show
 import com.network.clever.R
 import kotlinx.android.synthetic.main.dialog_default.*
 import java.util.*

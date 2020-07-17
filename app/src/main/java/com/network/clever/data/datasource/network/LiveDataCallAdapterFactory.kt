@@ -17,7 +17,7 @@
 package com.network.clever.data.datasource.network
 
 import androidx.lifecycle.LiveData
-import com.network.base.network.ApiResponse
+import com.meuus.base.network.ApiResponse
 import retrofit2.CallAdapter
 import retrofit2.Retrofit
 import java.lang.reflect.ParameterizedType

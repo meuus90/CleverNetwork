@@ -17,11 +17,11 @@
 package com.network.clever.domain.usecase.item
 
 import androidx.lifecycle.MutableLiveData
+import com.meuus.base.network.Resource
+import com.meuus.base.utility.Params
+import com.meuus.base.utility.Query
+import com.meuus.base.utility.SingleLiveEvent
 import com.network.clever.domain.usecase.BaseUseCase
-import com.network.base.network.Resource
-import com.network.base.utility.Params
-import com.network.base.utility.Query
-import com.network.base.utility.SingleLiveEvent
 import com.network.clever.data.repository.item.ItemListRepository
 import kotlinx.coroutines.CoroutineScope
 import javax.inject.Inject

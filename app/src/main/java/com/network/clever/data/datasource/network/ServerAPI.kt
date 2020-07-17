@@ -17,7 +17,7 @@
 package com.network.clever.data.datasource.network
 
 import androidx.lifecycle.LiveData
-import com.network.base.network.ApiResponse
+import com.meuus.base.network.ApiResponse
 import com.network.clever.data.datasource.model.item.Item
 import retrofit2.http.GET
 import retrofit2.http.Query

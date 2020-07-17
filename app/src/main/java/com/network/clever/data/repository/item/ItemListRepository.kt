@@ -21,11 +21,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
+import com.meuus.base.network.NetworkBoundResource
+import com.meuus.base.network.Resource
+import com.meuus.base.utility.Query
+import com.meuus.base.utility.SingleLiveEvent
 import com.network.clever.data.repository.BaseRepository
-import com.network.base.network.NetworkBoundResource
-import com.network.base.network.Resource
-import com.network.base.utility.Query
-import com.network.base.utility.SingleLiveEvent
 import com.network.clever.data.datasource.ItemListDataSource
 import com.network.clever.data.datasource.dao.item.ItemDao
 import com.network.clever.data.datasource.model.item.Item

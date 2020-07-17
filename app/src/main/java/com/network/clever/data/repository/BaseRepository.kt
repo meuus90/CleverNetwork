@@ -2,7 +2,7 @@ package com.network.clever.data.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.network.base.network.Resource
+import com.meuus.base.network.Resource
 import com.network.clever.data.datasource.network.ServerAPI
 import javax.inject.Inject
 import javax.inject.Singleton

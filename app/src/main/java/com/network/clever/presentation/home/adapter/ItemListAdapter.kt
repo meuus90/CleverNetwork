@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
-import com.network.base.view.BaseViewHolder
+import com.meuus.base.view.BaseViewHolder
 import com.network.clever.R
 import com.network.clever.data.datasource.model.item.Item
 import kotlinx.android.extensions.LayoutContainer

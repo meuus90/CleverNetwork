@@ -1,4 +1,4 @@
-package com.network.base.constant
+package com.network.clever.constant
 
 import androidx.multidex.BuildConfig
 

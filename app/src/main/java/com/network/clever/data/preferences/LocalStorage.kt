@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.network.base.storage
+package com.network.clever.data.preferences
 
 import android.app.Activity
 import android.content.Context

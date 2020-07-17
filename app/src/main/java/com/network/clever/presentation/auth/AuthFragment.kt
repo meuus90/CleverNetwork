@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
-import com.network.base.view.AutoClearedValue
+import com.meuus.base.view.AutoClearedValue
 import com.network.clever.R
 import com.network.clever.presentation.BaseActivity
 import com.network.clever.presentation.BaseFragment

@@ -10,7 +10,7 @@ import androidx.fragment.app.FragmentTransaction
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.annotation.GlideModule
-import com.network.base.view.DetailsTransition
+import com.meuus.base.view.DetailsTransition
 import com.network.clever.R
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector

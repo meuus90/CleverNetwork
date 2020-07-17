@@ -29,8 +29,8 @@ import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersisto
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.network.base.network.NetworkError
-import com.network.base.storage.LocalStorage
+import com.meuus.base.network.NetworkError
+import com.network.clever.data.preferences.LocalStorage
 import com.network.clever.data.datasource.model.Cache
 import com.network.clever.data.datasource.network.LiveDataCallAdapterFactory
 import com.network.clever.data.datasource.network.ServerAPI
