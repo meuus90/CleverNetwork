@@ -13,7 +13,7 @@ import androidx.multidex.BuildConfig
 import androidx.multidex.MultiDex
 import com.bumptech.glide.Glide
 import com.facebook.stetho.Stetho
-import com.network.base.di.helper.AppInjector
+import com.network.clever.di.helper.AppInjector
 import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.Logger
 import dagger.android.DispatchingAndroidInjector

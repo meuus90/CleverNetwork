@@ -2,7 +2,7 @@ package com.network.clever.presentation
 
 import android.content.Context
 import androidx.fragment.app.Fragment
-import com.network.base.di.Injectable
+import com.network.clever.di.Injectable
 
 open class BaseFragment : Fragment(), Injectable {
     lateinit var baseActivity: BaseActivity
