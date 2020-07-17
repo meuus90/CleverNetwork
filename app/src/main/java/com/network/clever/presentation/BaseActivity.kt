@@ -12,6 +12,7 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.annotation.GlideModule
 import com.meuus.base.view.DetailsTransition
 import com.network.clever.R
+import com.network.clever.presentation.dialog.LoadingDialog
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
@@ -123,6 +124,21 @@ abstract class BaseActivity : AppCompatActivity(), HasAndroidInjector {
         if (count >= 2) {
             val be = supportFragmentManager.getBackStackEntryAt(0)
             supportFragmentManager.popBackStack(be.id, 0)
+        }
+    }
+
+    private var loadingDialog: LoadingDialog? = null
+    internal fun showLoading(show: Boolean) {
+        if (show) {
+            if (loadingDialog != null && loadingDialog!!.isShowing())
+                return
+
+            loadingDialog = LoadingDialog.getInstance()
+            loadingDialog!!.show(supportFragmentManager, null)
+
+        } else {
+            if (loadingDialog != null && loadingDialog!!.isShowing())
+                loadingDialog?.dismiss()
         }
     }
 

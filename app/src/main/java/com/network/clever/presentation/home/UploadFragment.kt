@@ -8,13 +8,12 @@ import com.meuus.base.view.AutoClearedValue
 import com.network.clever.R
 import com.network.clever.presentation.BaseFragment
 import com.network.clever.presentation.MainActivity
-import kotlinx.android.synthetic.main.fragment_tab.*
 
-class HomeFragment : BaseFragment() {
+class UploadFragment : BaseFragment() {
     companion object {
-        fun newInstance() = HomeFragment().apply {
+        fun newInstance() = UploadFragment().apply {
             arguments = Bundle(1).apply {
-                putString(FRAGMENT_TAG, HomeFragment::class.java.name)
+                putString(FRAGMENT_TAG, UploadFragment::class.java.name)
             }
         }
     }
@@ -31,7 +30,7 @@ class HomeFragment : BaseFragment() {
         val acvView =
             AutoClearedValue(
                 this,
-                inflater.inflate(R.layout.fragment_home, container, false)
+                inflater.inflate(R.layout.fragment_upload, container, false)
             )
         return acvView.get()?.rootView
     }

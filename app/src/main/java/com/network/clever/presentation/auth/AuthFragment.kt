@@ -6,13 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.widget.addTextChangedListener
 import com.meuus.base.view.AutoClearedValue
 import com.network.clever.R
 import com.network.clever.presentation.BaseActivity
 import com.network.clever.presentation.BaseFragment
 import com.network.clever.presentation.MainActivity
-import com.network.clever.presentation.home.HomeFragment
+import com.network.clever.presentation.home.TabFragment
 import kotlinx.android.synthetic.main.fragment_auth.*
 import timber.log.Timber
 import java.util.regex.Matcher
@@ -36,27 +35,20 @@ class AuthFragment : BaseFragment() {
         return acvView.get()?.rootView
     }
 
-    var email = ""
-    var pw = ""
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        et_email.addTextChangedListener {
-            email = it.toString()
-            Timber.e("email : $email")
-        }
-
-        et_pw.addTextChangedListener {
-            pw = it.toString()
-            Timber.e("pw : $pw")
-        }
-
         tv_sign_in.setOnClickListener {
+            val email = et_email.text.toString()
+            val pw = et_pw.text.toString()
             Timber.e("email : $email")
             Timber.e("pw : $pw")
+
             if (isValidFormat(email, pw)) {
+                showLoading(true)
                 Timber.e("Sign in")
                 mainActivity.firebaseAuth.signInWithEmailAndPassword(email, pw)
                     .addOnCompleteListener { task ->
+                        showLoading(false)
                         if (task.isSuccessful) {
                             // Sign in success, update UI with the signed-in user's information
 //                        Log.d(TAG, "createUserWithEmail:success")
@@ -76,10 +68,17 @@ class AuthFragment : BaseFragment() {
         }
 
         tv_sign_up.setOnClickListener {
+            val email = et_email.text.toString()
+            val pw = et_pw.text.toString()
+            Timber.e("email : $email")
+            Timber.e("pw : $pw")
+
             if (isValidFormat(email, pw)) {
+                showLoading(true)
                 Timber.e("Sign up")
                 mainActivity.firebaseAuth.createUserWithEmailAndPassword(email, pw)
                     .addOnCompleteListener { task ->
+                        showLoading(false)
                         if (task.isSuccessful) {
                             Toast.makeText(
                                 context, "Sign up success",
@@ -99,7 +98,9 @@ class AuthFragment : BaseFragment() {
     }
 
     private fun isValidFormat(email: String, pw: String): Boolean {
-        return isValidEmail(email) && isValidPw(pw)
+        val checkEmail = isValidEmail(email)
+        val checkPw = isValidPw(pw)
+        return checkEmail /*&& checkPw*/
     }
 
     private fun isValidEmail(target: String): Boolean {
@@ -112,10 +113,10 @@ class AuthFragment : BaseFragment() {
     private fun isValidPw(target: String): Boolean {
         val p: Pattern = Pattern.compile("(^.*(?=.{6,100})(?=.*[0-9])(?=.*[a-zA-Z]).*$)")
         val m: Matcher = p.matcher(target)
-        return m.find() && !target.matches(Regex(".*[ㄱ-ㅎㅏ-ㅣ가-힣]+.*"))
+        return m.find()
     }
 
     fun updateUI() {
-        addFragment(HomeFragment::class.java, BaseActivity.BACK_STACK_STATE_REPLACE)
+        addFragment(TabFragment::class.java, BaseActivity.BACK_STACK_STATE_REPLACE)
     }
 }

@@ -4,7 +4,7 @@ import android.os.Bundle
 import com.google.firebase.auth.FirebaseAuth
 import com.network.clever.R
 import com.network.clever.presentation.auth.AuthFragment
-import com.network.clever.presentation.home.HomeFragment
+import com.network.clever.presentation.home.TabFragment
 import javax.inject.Inject
 
 
@@ -30,7 +30,7 @@ class MainActivity : BaseActivity() {
             )
         } else {
             addFragment(
-                HomeFragment::class.java,
+                TabFragment::class.java,
                 BACK_STACK_STATE_REPLACE
             )
         }

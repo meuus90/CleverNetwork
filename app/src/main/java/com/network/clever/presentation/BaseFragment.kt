@@ -5,8 +5,13 @@ import androidx.fragment.app.Fragment
 import com.network.clever.di.Injectable
 
 open class BaseFragment : Fragment(), Injectable {
+    companion object{
+        const val FRAGMENT_TAG = "fragment_tag"
+    }
+
     lateinit var baseActivity: BaseActivity
     private lateinit var context: Context
+
     override fun getContext() = context
 
     override fun onAttach(context: Context) {
@@ -26,5 +31,9 @@ open class BaseFragment : Fragment(), Injectable {
 
     internal fun goToRootFragment() {
         baseActivity.goToRootFragment()
+    }
+
+    internal fun showLoading(show: Boolean){
+        baseActivity.showLoading(show)
     }
 }
