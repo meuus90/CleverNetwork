@@ -14,15 +14,8 @@
  * limitations under the License.
  */
 
-package com.network.clever.data.datasource.network
+package com.network.clever.domain.usecase.item
 
-import androidx.lifecycle.LiveData
-import com.meuus.base.network.ApiResponse
-import com.network.clever.data.datasource.model.item.ItemModel
-import retrofit2.http.GET
-import retrofit2.http.Query
+class ItemListUseCaseTest() {
 
-interface ServerAPI {
-    @GET("search")
-    fun getItems(@Query("part") part: String): LiveData<ApiResponse<MutableList<ItemModel>>>
 }

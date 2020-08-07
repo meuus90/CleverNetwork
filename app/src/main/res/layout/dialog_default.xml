@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:paddingStart="30dp"
     android:paddingEnd="30dp"
-    tools:background="@color/overlay_dark_60">
+    tools:background="@color/colorOverlayDark60">
 
     <ImageView
         android:id="@+id/iv_close"

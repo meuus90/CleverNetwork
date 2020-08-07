@@ -10,7 +10,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 @Entity(tableName = "Items")
-data class Item(
+data class ItemModel(
     @field:PrimaryKey(autoGenerate = true)
         @field:ColumnInfo(name = "index") val index: Int,
 

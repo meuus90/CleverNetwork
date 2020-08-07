@@ -1,11 +1,13 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-allopen'
+apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'jacoco'
 apply plugin: 'com.google.firebase.firebase-perf'
-apply plugin: 'com.google.gms.google-services'
+apply plugin: "de.mannodermaus.android-junit5"
 
 
 android {
@@ -19,19 +21,10 @@ android {
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
-        signingConfig signingConfigs.debug
+        ndk.abiFilters 'x86', 'x86_64', 'armeabi', 'armeabi-v7a', 'mips', 'mips64', 'arm64-v8a'
         vectorDrawables.useSupportLibrary = true
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
-        javaCompileOptions {
-            annotationProcessorOptions {
-                includeCompileClasspath false
-                arguments = ["room.schemaLocation"  : "$projectDir/schemas".toString(),
-                             "room.incremental"     : "true",
-                             "room.expandProjection": "true"]
-            }
-        }
+        testInstrumentationRunnerArgument "runnerBuilder", "de.mannodermaus.junit5.AndroidJUnit5Builder"
     }
 
     applicationVariants.all { variant ->
@@ -40,25 +33,45 @@ android {
         }
     }
 
-    android {
-        sourceSets {
-            String sharedTestDir = 'src/sharedTest/java'
-            test {
-                java.srcDir sharedTestDir
-            }
-            androidTest {
-                java.srcDir sharedTestDir
-            }
-        }
-    }
-
     buildTypes {
         debug {
+            lintOptions {
+                checkReleaseBuilds false
+            }
+
+            FirebasePerformance {
+                // Set this flag to 'false' to disable @AddTrace annotation processing and
+                // automatic HTTP/S network request monitoring
+                // for a specific build variant at compile time.
+                instrumentationEnabled false
+            }
+
+            initWith debug
+            jniDebuggable true
+            minifyEnabled true
+            shrinkResources true
             testCoverageEnabled !project.hasProperty('android.injected.invoked.from.ide')
             signingConfig signingConfigs.debug
+            multiDexKeepFile file('multidex-config.txt')
+            multiDexKeepProguard file('multidex-config.pro')
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         release {
+//            signingConfig signingConfigs.release
+            lintOptions {
+                checkReleaseBuilds false
+            }
+
+            FirebasePerformance {
+                // Set this flag to 'false' to disable @AddTrace annotation processing and
+                // automatic HTTP/S network request monitoring
+                // for a specific build variant at compile time.
+                instrumentationEnabled false
+            }
+
+            initWith release
             minifyEnabled true
+            shrinkResources true
             multiDexKeepFile file('multidex-config.txt')
             multiDexKeepProguard file('multidex-config.pro')
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -66,6 +79,17 @@ android {
     }
 
     sourceSets {
+        String sharedTestDir = 'src/sharedTest/java'
+        test {
+            java.srcDir sharedTestDir
+        }
+        androidTest {
+            java.srcDir sharedTestDir
+        }
+        main {
+            assets.srcDirs = ['src/main/res/raw']
+        }
+
         androidTest.kotlin.srcDirs += "src/test-common/kotlin"
         test.kotlin.srcDirs += "src/test-common/kotlin"
         main.java.srcDirs += 'src/main/kotlin'
@@ -76,25 +100,30 @@ android {
     productFlavors {
         prod {
             dimension "default"
-            manifestPlaceholders = [appNameGradle: "Clever"]
+        }
+
+        stg {
+            dimension "default"
+            applicationIdSuffix = ".stg"
         }
 
         dev {
             dimension "default"
             applicationIdSuffix = ".dev"
-            manifestPlaceholders = [appNameGradle: "Clever_dev"]
         }
+    }
 
-        mock {
-            dimension "default"
-            applicationIdSuffix = ".mock"
-            manifestPlaceholders = [appNameGradle: "Clever_mock"]
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'x86', 'x86_64', 'armeabi', 'armeabi-v7a', 'mips', 'mips64', 'arm64-v8a'
+            universalApk true
         }
     }
 
     testOptions.unitTests.returnDefaultValues = true
     testOptions.unitTests.all {
-
         testLogging {
             events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
         }
@@ -102,6 +131,18 @@ android {
     testOptions {
         unitTests {
             includeAndroidResources = true
+        }
+
+        testOptions {
+            junitPlatform {
+                // Don't raise errors about incorrect configuration
+                // of JUnit 5 instrumentation tests
+                instrumentationTests.integrityCheckEnabled = false
+            }
+        }
+
+        unitTests.all {
+            useJUnitPlatform()
         }
     }
 
@@ -112,6 +153,7 @@ android {
         kotlinOptions {
             suppressWarnings = true
             jvmTarget = '1.8'
+            jvmTarget = JavaVersion.VERSION_1_8
             apiVersion = '1.4'
             languageVersion = '1.4'
         }
@@ -122,6 +164,10 @@ android {
         // Sets Java compatibility to Java 8
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    packagingOptions {
+        exclude "META-INF/LICENSE*"
     }
 }
 
@@ -140,6 +186,10 @@ androidExtensions {
 repositories {
     mavenCentral()
     jcenter()
+
+    maven {
+        url 'https://maven.fabric.io/public'
+    }
 
     maven {
         url 'https://maven.google.com/'
@@ -242,7 +292,32 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
-    implementation 'com.github.meuus90:CleverBase:1.0.2'
+    // (Required) Writing and executing Unit Tests on the JUnit Platform
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.6.2"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.6.2"
+
+    // (Optional) If you need "Parameterized Tests"
+    testImplementation "org.junit.jupiter:junit-jupiter-params:5.6.2"
+
+    // (Optional) If you also have JUnit 4-based tests
+    testImplementation "junit:junit:4.13"
+    testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.6.2"
+
+    // Jupiter API & Test Runner, if you don't have it already
+    androidTestImplementation "androidx.test:runner:1.2.0"
+    androidTestImplementation "org.junit.jupiter:junit-jupiter-api:5.6.2"
+
+    // The instrumentation test companion libraries
+    androidTestImplementation "de.mannodermaus.junit5:android-test-core:1.2.0"
+    androidTestRuntimeOnly "de.mannodermaus.junit5:android-test-runner:1.2.0"
+
+    androidTestImplementation 'androidx.test:core:1.2.0'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test:rules:1.2.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'com.google.truth:truth:1.0'
+
+    implementation 'com.github.meuus90:CleverBase:1.0.3'
 }
 
 task fullCoverageReport(type: JacocoReport) {

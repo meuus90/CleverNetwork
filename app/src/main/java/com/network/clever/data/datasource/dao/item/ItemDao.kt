@@ -19,12 +19,12 @@ package com.network.clever.data.datasource.dao.item
 import androidx.room.Dao
 import androidx.room.Query
 import com.network.clever.data.datasource.dao.BaseDao
-import com.network.clever.data.datasource.model.item.Item
+import com.network.clever.data.datasource.model.item.ItemModel
 
 @Dao
-interface ItemDao : BaseDao<Item> {
+interface ItemDao : BaseDao<ItemModel> {
     @Query("SELECT * FROM Items")
-    fun getAssets(): List<Item>
+    fun getAssets(): List<ItemModel>
 
     @Query("DELETE FROM Items")
     suspend fun clear()

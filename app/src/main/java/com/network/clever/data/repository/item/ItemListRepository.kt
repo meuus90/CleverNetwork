@@ -28,7 +28,7 @@ import com.meuus.base.utility.SingleLiveEvent
 import com.network.clever.data.repository.BaseRepository
 import com.network.clever.data.datasource.ItemListDataSource
 import com.network.clever.data.datasource.dao.item.ItemDao
-import com.network.clever.data.datasource.model.item.Item
+import com.network.clever.data.datasource.model.item.ItemModel
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -39,8 +39,8 @@ class ItemListRepository
 constructor(private val dao: ItemDao) : BaseRepository<Query>() {
     override suspend fun work(liveData: MutableLiveData<Query>): SingleLiveEvent<Resource> {
         return object :
-                NetworkBoundResource<PagedList<Item>, MutableList<Item>>(liveData.value?.boundType!!) {
-            override suspend fun workToCache(item: MutableList<Item>) {
+                NetworkBoundResource<PagedList<ItemModel>, MutableList<ItemModel>>(liveData.value?.boundType!!) {
+            override suspend fun workToCache(item: MutableList<ItemModel>) {
                 clearCache()
                 dao.insert(item)
             }
@@ -49,7 +49,7 @@ constructor(private val dao: ItemDao) : BaseRepository<Query>() {
                     isLatest: Boolean,
                     itemCount: Int,
                     pages: Int
-            ): LiveData<PagedList<Item>> {
+            ): LiveData<PagedList<ItemModel>> {
                 val config = PagedList.Config.Builder()
                         .setInitialLoadSizeHint(20)
                         .setPageSize(itemCount)
@@ -58,8 +58,8 @@ constructor(private val dao: ItemDao) : BaseRepository<Query>() {
                         .build()
 
                 return LivePagedListBuilder(object :
-                        DataSource.Factory<Int, Item>() {
-                    override fun create(): DataSource<Int, Item> {
+                        DataSource.Factory<Int, ItemModel>() {
+                    override fun create(): DataSource<Int, ItemModel> {
 
                         val list = dao.getAssets()
                         return ItemListDataSource(list)

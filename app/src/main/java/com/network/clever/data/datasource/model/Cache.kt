@@ -19,14 +19,14 @@ package com.network.clever.data.datasource.model
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.network.clever.data.datasource.dao.item.ItemDao
-import com.network.clever.data.datasource.model.item.Item
+import com.network.clever.data.datasource.model.item.ItemModel
 
 /**
  * Main cache description.
  */
 @Database(
         entities = [
-            Item::class
+            ItemModel::class
         ], exportSchema = false, version = 1
 )
 //@TypeConverters(BigDecimalTypeConverter::class, StringListTypeConverter::class)
