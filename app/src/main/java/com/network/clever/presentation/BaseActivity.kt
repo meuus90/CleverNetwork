@@ -114,13 +114,6 @@ abstract class BaseActivity : AppCompatActivity(), HasAndroidInjector {
 
     private fun callFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction().apply {
-            setCustomAnimations(
-                R.anim.slide_in_right_left,
-                R.anim.slide_out_right_left,
-                R.anim.slide_in_left_right,
-                R.anim.slide_out_left_right
-            )
-
             setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
 
             addToBackStack(fragment.javaClass.name)

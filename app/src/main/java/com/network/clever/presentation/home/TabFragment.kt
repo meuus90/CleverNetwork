@@ -52,6 +52,8 @@ class TabFragment : BaseFragment() {
 
         container.adapter = fragmentAdapter
 
+        container.isUserInputEnabled = false
+
         bottom_navigation.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.action_home -> {
