@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "691975443500-lctdpkkr6nhn2f663pf45bnj5bd8ef2k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.network.clever",
+            "certificate_hash": "06e8a483c446535bff3826a70958539fcd3da8ff"
+          }
+        },
+        {
           "client_id": "691975443500-449ud3lb4i1kt5bvvhvit861aau43286.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -44,6 +52,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "691975443500-hqfeumr7ht8i290u76ka4r5cgpre58la.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.network.clever.dev",
+            "certificate_hash": "06e8a483c446535bff3826a70958539fcd3da8ff"
+          }
+        },
+        {
           "client_id": "691975443500-449ud3lb4i1kt5bvvhvit861aau43286.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -72,6 +88,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "691975443500-k89enf0n7965volebg2nqim86rsrp2fs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.network.clever.stg",
+            "certificate_hash": "06e8a483c446535bff3826a70958539fcd3da8ff"
+          }
+        },
         {
           "client_id": "691975443500-449ud3lb4i1kt5bvvhvit861aau43286.apps.googleusercontent.com",
           "client_type": 3

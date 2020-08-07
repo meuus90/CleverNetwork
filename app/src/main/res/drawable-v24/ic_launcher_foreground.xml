@@ -5,8 +5,8 @@
     android:viewportWidth="108"
     android:viewportHeight="108">
     <item
-        android:width="54dp"
-        android:height="54dp"
+        android:width="30dp"
+        android:height="30dp"
         android:gravity="center"
         android:drawable="@drawable/ic_launcher"/>
 </layer-list>
