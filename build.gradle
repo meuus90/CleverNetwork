@@ -128,6 +128,17 @@ spotless {
     }
 }
 
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+ext {
+    KEYSTORE_STORE_FILE = rootProject.file(keystoreProperties['SIGNED_STORE_FILE'])
+    KEYSTORE_STORE_PASSWORD = keystoreProperties['SIGNED_STORE_PASSWORD']
+    KEYSTORE_KEY_ALIAS = keystoreProperties['SIGNED_KEY_ALIAS']
+    KEYSTORE_KEY_PASSWORD = keystoreProperties['SIGNED_KEY_PASSWORD']
+}
+
 configurations.all {
     resolutionStrategy.eachDependency { DependencyResolveDetails details ->
         def requested = details.requested

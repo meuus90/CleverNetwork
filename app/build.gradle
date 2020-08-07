@@ -33,8 +33,18 @@ android {
         }
     }
 
+    signingConfigs {
+        release {
+            storeFile file(KEYSTORE_STORE_FILE)
+            storePassword KEYSTORE_STORE_PASSWORD
+            keyAlias KEYSTORE_KEY_ALIAS
+            keyPassword KEYSTORE_KEY_PASSWORD
+        }
+    }
+
     buildTypes {
         debug {
+            signingConfig signingConfigs.release
             lintOptions {
                 checkReleaseBuilds false
             }
@@ -48,8 +58,8 @@ android {
 
             initWith debug
             jniDebuggable true
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+            shrinkResources false
             testCoverageEnabled !project.hasProperty('android.injected.invoked.from.ide')
             signingConfig signingConfigs.debug
             multiDexKeepFile file('multidex-config.txt')
@@ -57,7 +67,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         release {
-//            signingConfig signingConfigs.release
+            signingConfig signingConfigs.release
             lintOptions {
                 checkReleaseBuilds false
             }

@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "691975443500-f62843m76lpn8ed1aatkjvn1d9uprl2a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.network.clever",
+            "certificate_hash": "680018a1ef2846f1229f14688045b37d9ea90562"
+          }
+        },
+        {
+          "client_id": "691975443500-v7legl5v72nlm8lgrrmukbgt4l19smhv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.network.clever",
+            "certificate_hash": "26b10822e37c286d4aa132003eedc516944c6a09"
+          }
+        },
+        {
           "client_id": "691975443500-lctdpkkr6nhn2f663pf45bnj5bd8ef2k.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -52,6 +68,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "691975443500-5q0ge0j5vh4r26glhbdnqjl0calq43as.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.network.clever.dev",
+            "certificate_hash": "680018a1ef2846f1229f14688045b37d9ea90562"
+          }
+        },
+        {
+          "client_id": "691975443500-3le0dkmp5lnorkhu7f0u4c0efuua1vgu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.network.clever.dev",
+            "certificate_hash": "26b10822e37c286d4aa132003eedc516944c6a09"
+          }
+        },
+        {
           "client_id": "691975443500-hqfeumr7ht8i290u76ka4r5cgpre58la.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -88,6 +120,22 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "691975443500-dvph4lrm2ou8dq60kfgpk3655upphfmc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.network.clever.stg",
+            "certificate_hash": "680018a1ef2846f1229f14688045b37d9ea90562"
+          }
+        },
+        {
+          "client_id": "691975443500-d03r8mp7ql0hipc9odv3h50201f10kgp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.network.clever.stg",
+            "certificate_hash": "26b10822e37c286d4aa132003eedc516944c6a09"
+          }
+        },
         {
           "client_id": "691975443500-k89enf0n7965volebg2nqim86rsrp2fs.apps.googleusercontent.com",
           "client_type": 1,
