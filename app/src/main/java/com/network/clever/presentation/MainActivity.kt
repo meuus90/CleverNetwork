@@ -6,12 +6,10 @@ import android.util.Log
 import android.view.View
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.GoogleAuthProvider
 import com.network.clever.R
-import com.network.clever.constant.AppConfig
 import com.network.clever.presentation.auth.AuthFragment
 import com.network.clever.presentation.home.TabFragment
 import timber.log.Timber
@@ -47,12 +45,7 @@ class MainActivity : BaseActivity() {
             )
         }
 
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(AppConfig.clientId)
-            .requestEmail()
-            .build()
-
-        googleSignInClient = GoogleSignIn.getClient(this, gso)
+        googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions)
     }
 
     fun googleSignIn() {

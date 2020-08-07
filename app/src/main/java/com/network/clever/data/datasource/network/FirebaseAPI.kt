@@ -18,11 +18,10 @@ package com.network.clever.data.datasource.network
 
 import androidx.lifecycle.LiveData
 import com.meuus.base.network.ApiResponse
-import com.network.clever.data.datasource.model.item.ItemModel
+import com.network.clever.data.datasource.model.item.ContentsModel
 import retrofit2.http.GET
-import retrofit2.http.Query
 
-interface ServerAPI {
-    @GET("search")
-    fun getItems(@Query("part") part: String): LiveData<ApiResponse<MutableList<ItemModel>>>
+interface FirebaseAPI {
+    @GET("v1/contents/payload.json")
+    fun getPlaylists(): LiveData<ApiResponse<ContentsModel>>
 }

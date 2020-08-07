@@ -1,20 +1,26 @@
 package com.network.clever.data.datasource
 
 import androidx.paging.PageKeyedDataSource
-import com.network.clever.data.datasource.model.item.ItemModel
+import com.network.clever.data.datasource.model.item.PlaylistModel
 
-class ItemListDataSource(private val List: List<ItemModel>) :
-    PageKeyedDataSource<Int, ItemModel>() {
+class ItemListDataSource(private val List: MutableList<PlaylistModel>) :
+    PageKeyedDataSource<Int, PlaylistModel>() {
     override fun loadInitial(
         params: LoadInitialParams<Int>,
-        callback: LoadInitialCallback<Int, ItemModel>
+        callback: LoadInitialCallback<Int, PlaylistModel>
     ) {
-        callback.onResult(List as MutableList<ItemModel>, null, null)
+        callback.onResult(List, null, null)
     }
 
-    override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, ItemModel>) {
+    override fun loadBefore(
+        params: LoadParams<Int>,
+        callback: LoadCallback<Int, PlaylistModel>
+    ) {
     }
 
-    override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, ItemModel>) {
+    override fun loadAfter(
+        params: LoadParams<Int>,
+        callback: LoadCallback<Int, PlaylistModel>
+    ) {
     }
 }

@@ -3,14 +3,14 @@ package com.network.clever.data.repository
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.meuus.base.network.Resource
-import com.network.clever.data.datasource.network.ServerAPI
+import com.network.clever.data.datasource.network.FirebaseAPI
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 abstract class BaseRepository<T> {
     @field:Inject
-    lateinit var serverAPI: ServerAPI
+    lateinit var firebaseAPI: FirebaseAPI
 
     abstract suspend fun work(liveData: MutableLiveData<T>): LiveData<Resource>
 

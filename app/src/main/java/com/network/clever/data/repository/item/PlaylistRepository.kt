@@ -25,56 +25,57 @@ import com.meuus.base.network.NetworkBoundResource
 import com.meuus.base.network.Resource
 import com.meuus.base.utility.Query
 import com.meuus.base.utility.SingleLiveEvent
-import com.network.clever.data.repository.BaseRepository
 import com.network.clever.data.datasource.ItemListDataSource
-import com.network.clever.data.datasource.dao.item.ItemDao
-import com.network.clever.data.datasource.model.item.ItemModel
+import com.network.clever.data.datasource.dao.item.PlaylistDao
+import com.network.clever.data.datasource.model.item.ContentsModel
+import com.network.clever.data.datasource.model.item.PlaylistModel
+import com.network.clever.data.repository.BaseRepository
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ItemListRepository
+class PlaylistRepository
 @Inject
-constructor(private val dao: ItemDao) : BaseRepository<Query>() {
+constructor(private val dao: PlaylistDao) : BaseRepository<Query>() {
     override suspend fun work(liveData: MutableLiveData<Query>): SingleLiveEvent<Resource> {
         return object :
-                NetworkBoundResource<PagedList<ItemModel>, MutableList<ItemModel>>(liveData.value?.boundType!!) {
-            override suspend fun workToCache(item: MutableList<ItemModel>) {
+            NetworkBoundResource<PagedList<PlaylistModel>, ContentsModel>(liveData.value?.boundType!!) {
+            override suspend fun workToCache(item: ContentsModel) {
                 clearCache()
-                dao.insert(item)
+                dao.insert(item.playlists)
             }
 
             override suspend fun loadFromCache(
-                    isLatest: Boolean,
-                    itemCount: Int,
-                    pages: Int
-            ): LiveData<PagedList<ItemModel>> {
+                isLatest: Boolean,
+                itemCount: Int,
+                pages: Int
+            ): LiveData<PagedList<PlaylistModel>> {
                 val config = PagedList.Config.Builder()
-                        .setInitialLoadSizeHint(20)
-                        .setPageSize(itemCount)
-                        .setPrefetchDistance(10)
-                        .setEnablePlaceholders(true)
-                        .build()
+                    .setInitialLoadSizeHint(20)
+                    .setPageSize(itemCount)
+                    .setPrefetchDistance(10)
+                    .setEnablePlaceholders(true)
+                    .build()
 
                 return LivePagedListBuilder(object :
-                        DataSource.Factory<Int, ItemModel>() {
-                    override fun create(): DataSource<Int, ItemModel> {
+                    DataSource.Factory<Int, PlaylistModel>() {
+                    override fun create(): DataSource<Int, PlaylistModel> {
 
-                        val list = dao.getAssets()
+                        val list = dao.getPlaylists()
                         return ItemListDataSource(list)
                     }
                 }, /* PageList Config */ config).build()
             }
 
             override suspend fun doNetworkJob() =
-                    serverAPI.getItems(liveData.value!!.params[0] as String)
+                firebaseAPI.getPlaylists()
 
             override fun onNetworkError(errorMessage: String?, errorCode: Int) =
-                    Timber.e("Network-Error: $errorMessage")
+                Timber.e("Network-Error: $errorMessage")
 
             override fun onFetchFailed(failedMessage: String?) =
-                    Timber.e("Fetch-Failed: $failedMessage")
+                Timber.e("Fetch-Failed: $failedMessage")
         }.getAsSingleLiveEvent()
     }
 }

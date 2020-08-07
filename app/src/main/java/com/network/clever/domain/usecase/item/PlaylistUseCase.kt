@@ -21,16 +21,16 @@ import com.meuus.base.network.Resource
 import com.meuus.base.utility.Params
 import com.meuus.base.utility.Query
 import com.meuus.base.utility.SingleLiveEvent
+import com.network.clever.data.repository.item.PlaylistRepository
 import com.network.clever.domain.usecase.BaseUseCase
-import com.network.clever.data.repository.item.ItemListRepository
 import kotlinx.coroutines.CoroutineScope
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ItemListUseCase
+class PlaylistUseCase
 @Inject
-constructor(private val repository: ItemListRepository) : BaseUseCase<Params, Resource>() {
+constructor(private val repository: PlaylistRepository) : BaseUseCase<Params, Resource>() {
     private val liveData by lazy { MutableLiveData<Query>() }
 
     override suspend fun execute(
@@ -39,7 +39,7 @@ constructor(private val repository: ItemListRepository) : BaseUseCase<Params, Re
     ): SingleLiveEvent<Resource> {
         setQuery(params)
 
-        return repository.work(this@ItemListUseCase.liveData)
+        return repository.work(this@PlaylistUseCase.liveData)
     }
 
     private fun setQuery(params: Params) {

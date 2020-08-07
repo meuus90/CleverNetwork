@@ -20,19 +20,21 @@ import android.app.Application
 import android.content.Context
 import android.os.Build
 import android.util.Log
-import androidx.multidex.BuildConfig
 import androidx.room.Room
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.franmontiel.persistentcookiejar.PersistentCookieJar
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.meuus.base.network.NetworkError
+import com.network.clever.BuildConfig
+import com.network.clever.constant.AppConfig
 import com.network.clever.data.datasource.model.Cache
+import com.network.clever.data.datasource.network.FirebaseAPI
 import com.network.clever.data.datasource.network.LiveDataCallAdapterFactory
-import com.network.clever.data.datasource.network.ServerAPI
 import com.network.clever.data.preferences.LocalStorage
 import com.orhanobut.logger.Logger
 import dagger.Module
@@ -185,15 +187,24 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provideAPI(gson: Gson, okHttpClient: OkHttpClient): ServerAPI {
+    fun provideGoogleSignInOptions(): GoogleSignInOptions {
+        return GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(AppConfig.clientId)
+            .requestEmail()
+            .build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideFirebaseAPI(gson: Gson, okHttpClient: OkHttpClient): FirebaseAPI {
         val retrofit = Retrofit.Builder()
-            .baseUrl("")
+            .baseUrl(BuildConfig.firebaseServer)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .addCallAdapterFactory(LiveDataCallAdapterFactory())
             .client(okHttpClient)
             .build()
 
-        return retrofit.create(ServerAPI::class.java)
+        return retrofit.create(FirebaseAPI::class.java)
     }
 
     @Singleton
@@ -203,5 +214,5 @@ class AppModule {
 
     @Singleton
     @Provides
-    internal fun provideItemDao(cache: Cache) = cache.itemDao()
+    internal fun provideItemDao(cache: Cache) = cache.playlistDao()
 }

@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentTransaction
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.annotation.GlideModule
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.meuus.base.view.DetailsTransition
 import com.network.clever.R
@@ -28,6 +29,9 @@ abstract class BaseActivity : AppCompatActivity(), HasAndroidInjector {
 
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
+
+    @Inject
+    lateinit var googleSignInOptions: GoogleSignInOptions
 
     open val frameLayoutId = 0
 

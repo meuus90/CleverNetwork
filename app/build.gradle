@@ -15,8 +15,10 @@ android {
     buildToolsVersion "29.0.3"
 
     defaultConfig {
-        applicationId "com.network.clever"
         multiDexEnabled true
+        testInstrumentationRunnerArguments
+        aaptOptions.cruncherEnabled = false
+        applicationId "com.network.clever"
         minSdkVersion 23
         targetSdkVersion 29
         versionCode 1
@@ -62,8 +64,8 @@ android {
             shrinkResources false
             testCoverageEnabled !project.hasProperty('android.injected.invoked.from.ide')
             signingConfig signingConfigs.debug
-            multiDexKeepFile file('multidex-config.txt')
-            multiDexKeepProguard file('multidex-config.pro')
+//            multiDexKeepFile file('multidex-config.txt')
+//            multiDexKeepProguard file('multidex-config.pro')
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         release {
@@ -82,8 +84,8 @@ android {
             initWith release
             minifyEnabled true
             shrinkResources true
-            multiDexKeepFile file('multidex-config.txt')
-            multiDexKeepProguard file('multidex-config.pro')
+//            multiDexKeepFile file('multidex-config.txt')
+//            multiDexKeepProguard file('multidex-config.pro')
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -110,16 +112,32 @@ android {
     productFlavors {
         prod {
             dimension "default"
+            manifestPlaceholders = [appNameGradle: "@string/app_name"]
+            manifestPlaceholders = [appLabel: "@string/app_name"]
+//            https://www.googleapis.com/youtube/v3/playlistItems?playlistId=PLFgquLnL59alGJcdc0BEZJb2p7IgkL0Oe&part=snippet&maxResults=10&key={API_KEY}
+
+            buildConfigField "String", "firebaseServer", "\"https://clevernetwork-96db9.firebaseio.com/\""
+            buildConfigField "String", "youtubeServer", "\"https://www.googleapis.com/youtube/\""
         }
 
         stg {
             dimension "default"
             applicationIdSuffix = ".stg"
+            manifestPlaceholders = [appNameGradle: "@string/app_name"]
+            manifestPlaceholders = [appLabel: "@string/app_name"]
+
+            buildConfigField "String", "firebaseServer", "\"https://clevernetwork-96db9.firebaseio.com/\""
+            buildConfigField "String", "youtubeServer", "\"https://www.googleapis.com/youtube/\""
         }
 
         dev {
             dimension "default"
             applicationIdSuffix = ".dev"
+            manifestPlaceholders = [appNameGradle: "@string/app_name"]
+            manifestPlaceholders = [appLabel: "@string/app_name"]
+
+            buildConfigField "String", "firebaseServer", "\"https://clevernetwork-96db9.firebaseio.com/\""
+            buildConfigField "String", "youtubeServer", "\"https://www.googleapis.com/youtube/\""
         }
     }
 

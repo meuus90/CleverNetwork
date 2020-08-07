@@ -19,13 +19,13 @@ package com.network.clever.data.datasource.dao.item
 import androidx.room.Dao
 import androidx.room.Query
 import com.network.clever.data.datasource.dao.BaseDao
-import com.network.clever.data.datasource.model.item.ItemModel
+import com.network.clever.data.datasource.model.item.PlaylistModel
 
 @Dao
-interface ItemDao : BaseDao<ItemModel> {
-    @Query("SELECT * FROM Items")
-    fun getAssets(): List<ItemModel>
+interface PlaylistDao : BaseDao<PlaylistModel> {
+    @Query("SELECT * FROM Playlist")
+    fun getPlaylists(): MutableList<PlaylistModel>
 
-    @Query("DELETE FROM Items")
+    @Query("DELETE FROM Playlist")
     suspend fun clear()
 }

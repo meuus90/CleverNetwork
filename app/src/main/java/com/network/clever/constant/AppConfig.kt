@@ -1,6 +1,6 @@
 package com.network.clever.constant
 
-import androidx.multidex.BuildConfig
+import com.network.clever.BuildConfig
 
 
 object AppConfig {
@@ -21,4 +21,7 @@ object AppConfig {
 
     val clientId: String
         get() = "691975443500-449ud3lb4i1kt5bvvhvit861aau43286.apps.googleusercontent.com"
+
+    val apiKey: String
+        get() = "AIzaSyDkL38kHphoqMgp9cCWCxa_yo42i9f7ip0"
 }

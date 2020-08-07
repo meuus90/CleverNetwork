@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--https://material.io/resources/color/#!/?view.left=1&view.right=0&primary.color=eded3c-->
+<?xml version="1.0" encoding="utf-8"?><!--https://material.io/resources/color/#!/?view.left=1&view.right=0&primary.color=eded3c-->
 <resources>
     <color name="colorPrimary">@color/primaryColor</color>
     <color name="colorPrimaryDark">@color/primaryDarkColor</color>
@@ -8,7 +7,7 @@
     <color name="primaryColor">#ffd54f</color>
     <color name="primaryLightColor">#ffff81</color>
     <color name="primaryDarkColor">#c8a415</color>
-    <color name="primaryTextColor">#000000</color>
+    <color name="primaryTextColor">@color/colorWhite</color>
     <color name="primaryTextHintColor">#cdcdcd</color>
 
     <color name="listLineGrey">#ededed</color>

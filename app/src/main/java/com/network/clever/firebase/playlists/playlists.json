@@ -1,0 +1,144 @@
+{
+  "payload": {
+    "playlists": [
+      {
+        "id": 0,
+        "name": "RELEASED",
+        "key": "RDCLAK5uy_lS4dqGRHszluFAbLsV-sHJCqULtBm2Gfw",
+        "imageUrl": "https://lh3.googleusercontent.com/oJkR9zfStqyy8DAVzLiUWwbIID0GdlaRlShzrqaChTxljSF3m1nnBzdg40R3JqmUStiXKRRlDx4=w544-h544-l90-rj"
+      },
+      {
+        "id": 1,
+        "name": "주목해야 할 신인",
+        "key": "RDCLAK5uy_lz175mC_wAtZHK0hbDqLrxb5J28QbUznQ",
+        "imageUrl": "https://lh3.googleusercontent.com/F_-bRk0mRX93voCrL7IdDyEp1JIgu3RLkl0Ps7gFSsOxr7IBXhiSWGYlCtOPioyXe1PQAGuShw=w544-h544-l90-rj"
+      },
+      {
+        "id": 2,
+        "name": "최신 국내 음악",
+        "key": "RDCLAK5uy_kITLp-IuXw_winp1mnN9PSNatPBiAK52A",
+        "imageUrl": "https://lh3.googleusercontent.com/OgeotMa0X3DAEfLoMMaHQ1TqRODUcPYJNO22zq9uB21XiXsG8lwxX0bHHIODhCILpAjwQmS5dQ=w544-h544-l90-rj"
+      },
+      {
+        "id": 3,
+        "name": "최신 국내 댄스",
+        "key": "RDCLAK5uy_mVBAam6Saaqa_DeJRxGkawqqxwPTBrGXM",
+        "imageUrl": "https://lh3.googleusercontent.com/qH6nVwQFjum9Rhsw23VKiQ9nId1DcDgMhudJSVZtEldPed_QlNZw8oWw02cjElu5IvWsOw75TA=w544-h544-l90-rj"
+      },
+      {
+        "id": 4,
+        "name": "최신 국내 인디/포크",
+        "key": "RDCLAK5uy_mn7OLm9QvyB230t7RtLWt0BvUmFVlQ-Hc",
+        "imageUrl": "https://lh3.googleusercontent.com/Kry_ciRPYVaU609bLQFkMUAz_3D5GtACi9sXUufzG_b3K5cMTDF36vYgdv_PNMS8z8h7V8jQWXw=w544-h544-l90-rj"
+      },
+      {
+        "id": 5,
+        "name": "최신 국내 OST",
+        "key": "RDCLAK5uy_lN9xj1RQGmBltmvrzTVHMg-vyVt594KYU",
+        "imageUrl": "https://lh3.googleusercontent.com/Zo7rn87T2qderdL1DEb6nAT4-C2ZLixiSvEF5KkG1InLqWypjOnNFoNXtoIqsSvZiQSdaVLMe80=w544-h544-l90-rj"
+      },
+      {
+        "id": 6,
+        "name": "최신 팝 음악",
+        "key": "RDCLAK5uy_nkjcHIQK0Hgf7ihU25uJc0CEokeGkSNxA",
+        "imageUrl": "https://lh3.googleusercontent.com/JE9lCFxufi2kgaiJmFlNAUlpdo_UFZxjlrku2gVcUseloP7-PltGURmu1yWpRwFO7iN3W2xg=w544-h544-l90-rj"
+      },
+      {
+        "id": 7,
+        "name": "최신 국내 힙합/R&B",
+        "key": "RDCLAK5uy_n0f4tLAkNM233wO0yiTEI7467ovnaGbR8",
+        "imageUrl": "https://lh3.googleusercontent.com/o485j9JXnlrOWdNjxhy6CLSd8mSIXAeHRWJAKOOLANSSlJz3h3TxsVeOBCOZvkvqtuKoIdK1Bw=w544-h544-l90-rj"
+      },
+      {
+        "id": 8,
+        "name": "최신 국내 발라드",
+        "key": "RDCLAK5uy_mWqhoadUUp9crhEkmZZkdExj7YpBuFBEQ",
+        "imageUrl": "https://lh3.googleusercontent.com/SgbnBdh_XN5RlYFzk_L_uTfN-SwWn8M4srW8bs2OU177xbZoNr96LPYqFIWOpLGH92fPAGOUcJQ=w544-h544-l90-rj"
+      },
+      {
+        "id": 9,
+        "name": "최신 재즈",
+        "key": "RDCLAK5uy_nppUVicPb1PRbUZmVEMhqgvyFz33Il4pE",
+        "imageUrl": "https://lh3.googleusercontent.com/uRyqzucDUjVe-gSW5qukIqtS5m_ghY1Akgi8jusJYDHULg1-iTRCCPwKI08nIXiEftJH11qmog=w544-h544-l90-rj"
+      },
+      {
+        "id": 10,
+        "name": "국내 발라드 핫리스트",
+        "key": "RDCLAK5uy_m9ty3WvAucm7-5KsKdro9_HnocE8LSS9o",
+        "imageUrl": "https://lh3.googleusercontent.com/ZOJmBGLFxQJWShQ9bwLsX7uuIOfy-DkHmzNGheMEyfzEQ2glmpJOTP3WrbYVtw1pbZdWWyWAZtw=w544-h544-l90-rj"
+      },
+      {
+        "id": 11,
+        "name": "국내 댄스 핫리스트",
+        "key": "RDCLAK5uy_nMqMWmqwZwDvMcqcAohgO_Dp_7zT1nSC8",
+        "imageUrl": "https://lh3.googleusercontent.com/2uVispmZuwQBdsAGCHSNN2kmfkbpNa_Xcz_ge19wizF5LLoMhzR4GlVtIumbou6ntDPC4_BumA=w544-h544-l90-rj"
+      },
+      {
+        "id": 12,
+        "name": "국내 힙합 핫리스트",
+        "key": "RDCLAK5uy_lYPvoz4gPFnKMw_BFojpMk7xRSIqVBkEE",
+        "imageUrl": "https://lh3.googleusercontent.com/7t_Hx54RUfqwKI7C8QlS6HmG8YbW1krvOB_3VaFDOnlQUpUbIj7cZwhba2Qp4HevUXL6chf14g=w544-h544-l90-rj"
+      },
+      {
+        "id": 13,
+        "name": "국내 가요 핫리스트",
+        "key": "RDCLAK5uy_l7wbVbkC-dG5fyEQQsBfjm_z3dLAhYyvo",
+        "imageUrl": "https://lh3.googleusercontent.com/dpCD-xuT6d8TU3X1J_b_uKQaZe3cROs6g7-Wws7q7jB643Fj1QpjvnOXSMuVvI5iNNzEgJvttQ=w544-h544-l90-rj"
+      },
+      {
+        "id": 14,
+        "name": "OST 핫리스트",
+        "key": "RDCLAK5uy_kRRqnSpfrRZ9OJyTB2IE5WsAqYluG0uYo",
+        "imageUrl": "https://lh3.googleusercontent.com/YT8yCzFUqiu9biDbwlS0EUkwqOWQBQP1TNz_HtvYOfzpBkPmrMAzKOMzlt6iHZNm7Eqp5KPqpg=w544-h544-l90-rj"
+      },
+      {
+        "id": 15,
+        "name": "국내 인디/포크 핫리스트",
+        "key": "RDCLAK5uy_mjCKq8hnUQJqul0W6YW6x2Ep4P67jQ5Po",
+        "imageUrl": "https://lh3.googleusercontent.com/MejSNC8BOfBhHTq_sc4bm9aDYvNdWqYs0OrfxCzCMIOz9a97O0A3eXQa6uAa7WCCjSh-weY4PQ=w544-h544-l90-rj"
+      },
+      {
+        "id": 16,
+        "name": "국내 록/얼터너티브 핫리스트",
+        "key": "RDCLAK5uy_lBfTSdVdgXeN399Mxt2L3C6hLarC1aaN0",
+        "imageUrl": "https://lh3.googleusercontent.com/XJGAs4pGrYAVIQxeoXvr1vV69oYuJ-LxMCmvgCofz9rK7kFc-HbyENYM8Wk9SeHuiKSxlvZggg=w544-h544-l90-rj"
+      },
+      {
+        "id": 17,
+        "name": "해외 힙합/R&B 핫리스트",
+        "key": "RDCLAK5uy_l0nFcbRh2kbs27gleqzu364A9rN-D8Ib8",
+        "imageUrl": "https://lh3.googleusercontent.com/X9uLgTJYtcM1gcxk5QGSl8ODiZrdgXlaSDCnZczCHWfLEHpOp_qGi2skKFUJulhyWU5pjPJE1g=w544-h544-l90-rj"
+      },
+      {
+        "id": 18,
+        "name": "국내외 핫리스트 믹스",
+        "key": "RDCLAK5uy_k6pZ82Gha0sopanWffXo4iMBVaGR7jQaE",
+        "imageUrl": "https://lh3.googleusercontent.com/t1kvD1hOl521D5xn60-zkcc56QRvlbzar_FKyovLAjzbQIHW902jtyAct09FFpGhBsg7bIELyA=w544-h544-l90-rj"
+      },
+      {
+        "id": 19,
+        "name": "국내 R&B 핫리스트",
+        "key": "RDCLAK5uy_mMRkzfvFXzNQbSl3K-hE_FJ7g8TqMtSlo",
+        "imageUrl": "https://lh3.googleusercontent.com/3FyByjEn1RJU2VS-rVReTHxAdN1PNwY5Ac4bmWp4qIbHyeoEzL1xPSXtjsYFmc0ibwG1r_Ob=w544-h544-l90-rj"
+      },
+      {
+        "id": 20,
+        "name": "몽환적인 트렌디 감성 팝",
+        "key": "RDCLAK5uy_ksGphJr7YduIL-vDvJBUJQ2_JCYnCkaYI",
+        "imageUrl": "https://lh3.googleusercontent.com/zsKIlzktaTEKY40qRLHJv52arwiXOU2WZngQ3JDQXBHAVXjkMeniXj9I1p7VdyGtNGwL38hP=w544-h544-l90-rj"
+      },
+      {
+        "id": 21,
+        "name": "몽환적인 국내 PBR&B/힙합",
+        "key": "RDCLAK5uy_m-GTLZo18cjnHMpCL9BMvE_3M6c37ip0Q",
+        "imageUrl": "https://lh3.googleusercontent.com/25yGwkQyrghLExp6YoJXp4aWQF9JkTaYm7paVYV-DyVAv519TEzYlR_1XvynciZcfNtKyAdwXKY=w544-h544-l90-rj"
+      },
+      {
+        "id": 22,
+        "name": "몽환적인 클라우드 랩",
+        "key": "RDCLAK5uy_nkJrxjFhdd-mkbTcHt4VQO0gE2jA5ovbc",
+        "imageUrl": "https://lh3.googleusercontent.com/bhf1ARb4HaHfvVaLTORhzlz35exvd9rhS39QdW-dYzwq6pRWRo3JImJI0oHFGSu1Sq0pFyoXmQ=w544-h544-l90-rj"
+      }
+    ]
+  }
+}
