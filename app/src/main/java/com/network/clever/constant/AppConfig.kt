@@ -18,4 +18,7 @@ object AppConfig {
 
     val isTypeRelease: Boolean
         get() = BuildConfig.BUILD_TYPE.contains("release")
+
+    val clientId: String
+        get() = "691975443500-449ud3lb4i1kt5bvvhvit861aau43286.apps.googleusercontent.com"
 }

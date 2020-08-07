@@ -5,14 +5,12 @@ import android.app.Application
 import android.content.ComponentCallbacks2
 import android.content.Context
 import android.content.res.Configuration
-import android.os.Build
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.multidex.BuildConfig
 import androidx.multidex.MultiDex
 import com.bumptech.glide.Glide
-import com.facebook.stetho.Stetho
 import com.network.clever.di.helper.AppInjector
 import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.Logger
@@ -45,8 +43,10 @@ class CleverNetwork : Application(), LifecycleObserver, HasAndroidInjector {
     override fun onCreate() {
         super.onCreate()
 
-        if ("robolectric" != Build.FINGERPRINT && BuildConfig.DEBUG)
-            Stetho.initializeWithDefaults(this)
+        if (BuildConfig.DEBUG) {
+            Timber.uprootAll()
+            Timber.plant(Timber.DebugTree())
+        }
 
         Logger.addLogAdapter(AndroidLogAdapter())
 

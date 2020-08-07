@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentTransaction
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.annotation.GlideModule
+import com.google.firebase.auth.FirebaseAuth
 import com.meuus.base.view.DetailsTransition
 import com.network.clever.R
 import com.network.clever.presentation.dialog.LoadingDialog
@@ -19,11 +20,14 @@ import javax.inject.Inject
 
 abstract class BaseActivity : AppCompatActivity(), HasAndroidInjector {
     companion object {
+        const val BACK_STACK_STATE_NEW = -1
         const val BACK_STACK_STATE_REPLACE = 0
         const val BACK_STACK_STATE_ADD = 1
         const val BACK_STACK_STATE_POP_AND_ADD = 2
     }
 
+    @Inject
+    lateinit var firebaseAuth: FirebaseAuth
 
     open val frameLayoutId = 0
 
@@ -57,6 +61,11 @@ abstract class BaseActivity : AppCompatActivity(), HasAndroidInjector {
 
         supportFragmentManager.apply {
             when (backStackState) {
+                BACK_STACK_STATE_NEW -> {
+                    popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+
+                    beginTransaction().setCustomAnimations(0, 0, 0, 0)
+                }
                 BACK_STACK_STATE_REPLACE -> {
                     popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
 
