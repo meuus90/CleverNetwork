@@ -18,10 +18,18 @@ package com.network.clever.data.datasource.network
 
 import androidx.lifecycle.LiveData
 import com.meuus.base.network.ApiResponse
-import com.network.clever.data.datasource.model.item.PlaylistListModel
+import com.network.clever.data.datasource.model.item.MusicListModel
 import retrofit2.http.GET
+import retrofit2.http.Query
 
-interface FirebaseAPI {
-    @GET("v1/contents/payload.json")
-    fun getPlaylists(): LiveData<ApiResponse<PlaylistListModel>>
+interface YoutubeAPI {
+
+    //            https://www.googleapis.com/youtube/v3/playlistItems?playlistId=PLFgquLnL59alGJcdc0BEZJb2p7IgkL0Oe&part=snippet&maxResults=10&key={API_KEY}
+    @GET("v3/playlistItems")
+    fun getMusics(
+        @Query("playlistId") playlistId: String,
+        @Query("part") part: String,
+        @Query("maxResults") maxResults: Int,
+        @Query("key") key: String
+    ): LiveData<ApiResponse<MusicListModel>>
 }

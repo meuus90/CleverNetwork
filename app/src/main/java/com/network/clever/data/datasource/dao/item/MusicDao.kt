@@ -14,14 +14,18 @@
  * limitations under the License.
  */
 
-package com.network.clever.data.datasource.network
+package com.network.clever.data.datasource.dao.item
 
-import androidx.lifecycle.LiveData
-import com.meuus.base.network.ApiResponse
-import com.network.clever.data.datasource.model.item.PlaylistListModel
-import retrofit2.http.GET
+import androidx.room.Dao
+import androidx.room.Query
+import com.network.clever.data.datasource.dao.BaseDao
+import com.network.clever.data.datasource.model.item.MusicListModel
 
-interface FirebaseAPI {
-    @GET("v1/contents/payload.json")
-    fun getPlaylists(): LiveData<ApiResponse<PlaylistListModel>>
+@Dao
+interface MusicDao : BaseDao<MusicListModel.MusicModel> {
+    @Query("SELECT * FROM Music")
+    fun getPlaylists(): MutableList<MusicListModel.MusicModel>
+
+    @Query("DELETE FROM Music")
+    suspend fun clear()
 }

@@ -35,6 +35,7 @@ import com.network.clever.constant.AppConfig
 import com.network.clever.data.datasource.model.Cache
 import com.network.clever.data.datasource.network.FirebaseAPI
 import com.network.clever.data.datasource.network.LiveDataCallAdapterFactory
+import com.network.clever.data.datasource.network.YoutubeAPI
 import com.network.clever.data.preferences.LocalStorage
 import com.orhanobut.logger.Logger
 import dagger.Module
@@ -209,10 +210,27 @@ class AppModule {
 
     @Singleton
     @Provides
+    fun provideYoutubeAPI(gson: Gson, okHttpClient: OkHttpClient): YoutubeAPI {
+        val retrofit = Retrofit.Builder()
+            .baseUrl(BuildConfig.youtubeServer)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .addCallAdapterFactory(LiveDataCallAdapterFactory())
+            .client(okHttpClient)
+            .build()
+
+        return retrofit.create(YoutubeAPI::class.java)
+    }
+
+    @Singleton
+    @Provides
     internal fun provideCache(app: Application) =
         Room.databaseBuilder(app, Cache::class.java, "clever.db").build()
 
     @Singleton
     @Provides
-    internal fun provideItemDao(cache: Cache) = cache.playlistDao()
+    internal fun providePlaylistDao(cache: Cache) = cache.playlistDao()
+
+    @Singleton
+    @Provides
+    internal fun provideMusicDao(cache: Cache) = cache.musicDao()
 }

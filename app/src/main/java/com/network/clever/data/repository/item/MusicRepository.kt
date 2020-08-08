@@ -25,33 +25,32 @@ import com.meuus.base.network.NetworkBoundResource
 import com.meuus.base.network.Resource
 import com.meuus.base.utility.Query
 import com.meuus.base.utility.SingleLiveEvent
-import com.network.clever.data.datasource.PlaylistDataSource
-import com.network.clever.data.datasource.dao.item.PlaylistDao
-import com.network.clever.data.datasource.model.item.PlaylistListModel
+import com.network.clever.constant.AppConfig
+import com.network.clever.data.datasource.MusicDataSource
+import com.network.clever.data.datasource.dao.item.MusicDao
+import com.network.clever.data.datasource.model.item.MusicListModel
 import com.network.clever.data.repository.BaseRepository
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class PlaylistRepository
+class MusicRepository
 @Inject
-constructor(private val dao: PlaylistDao) : BaseRepository<Query>() {
+constructor(private val dao: MusicDao) : BaseRepository<Query>() {
     override suspend fun work(liveData: MutableLiveData<Query>): SingleLiveEvent<Resource> {
         return object :
-            NetworkBoundResource<PagedList<PlaylistListModel.PlaylistModel>, PlaylistListModel>(
-                liveData.value?.boundType!!
-            ) {
-            override suspend fun workToCache(item: PlaylistListModel) {
+            NetworkBoundResource<PagedList<MusicListModel.MusicModel>, MusicListModel>(liveData.value?.boundType!!) {
+            override suspend fun workToCache(item: MusicListModel) {
                 clearCache()
-                dao.insert(item.playlists)
+                dao.insert(item.items)
             }
 
             override suspend fun loadFromCache(
                 isLatest: Boolean,
                 itemCount: Int,
                 pages: Int
-            ): LiveData<PagedList<PlaylistListModel.PlaylistModel>> {
+            ): LiveData<PagedList<MusicListModel.MusicModel>> {
                 val config = PagedList.Config.Builder()
                     .setInitialLoadSizeHint(20)
                     .setPageSize(itemCount)
@@ -60,17 +59,22 @@ constructor(private val dao: PlaylistDao) : BaseRepository<Query>() {
                     .build()
 
                 return LivePagedListBuilder(object :
-                    DataSource.Factory<Int, PlaylistListModel.PlaylistModel>() {
-                    override fun create(): DataSource<Int, PlaylistListModel.PlaylistModel> {
+                    DataSource.Factory<Int, MusicListModel.MusicModel>() {
+                    override fun create(): DataSource<Int, MusicListModel.MusicModel> {
 
                         val list = dao.getPlaylists()
-                        return PlaylistDataSource(list)
+                        return MusicDataSource(list)
                     }
                 }, /* PageList Config */ config).build()
             }
 
             override suspend fun doNetworkJob() =
-                firebaseAPI.getPlaylists()
+                youtubeAPI.getMusics(
+                    liveData.value?.params?.get(0) as String,
+                    "snippet",
+                    10,
+                    AppConfig.apiKey
+                )
 
             override fun onNetworkError(errorMessage: String?, errorCode: Int) =
                 Timber.e("Network-Error: $errorMessage")

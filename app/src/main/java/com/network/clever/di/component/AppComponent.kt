@@ -19,7 +19,9 @@ package com.network.clever.di.component
 import android.app.Application
 import com.network.clever.CleverNetwork
 import com.network.clever.di.module.AppModule
+import com.network.clever.di.module.activity.AuthActivityModule
 import com.network.clever.di.module.activity.MainActivityModule
+import com.network.clever.di.module.activity.PlaylistActivityModule
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.support.AndroidSupportInjectionModule
@@ -30,7 +32,9 @@ import javax.inject.Singleton
     modules = [
         AndroidSupportInjectionModule::class,
         AppModule::class,
-        MainActivityModule::class
+        AuthActivityModule::class,
+        MainActivityModule::class,
+        PlaylistActivityModule::class
     ]
 )
 

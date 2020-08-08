@@ -1,4 +1,4 @@
-package com.network.clever.presentation
+package com.network.clever.presentation.auth
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,12 +10,12 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.GoogleAuthProvider
 import com.network.clever.R
-import com.network.clever.presentation.auth.AuthFragment
-import com.network.clever.presentation.home.TabFragment
+import com.network.clever.presentation.BaseActivity
+import com.network.clever.presentation.Caller
 import timber.log.Timber
 
 
-class MainActivity : BaseActivity() {
+class AuthActivity : BaseActivity() {
     companion object {
         const val RC_SIGN_IN = 9001
     }
@@ -25,7 +25,7 @@ class MainActivity : BaseActivity() {
     lateinit var googleSignInClient: GoogleSignInClient
 
     override fun setContentView() {
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_default)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,10 +39,7 @@ class MainActivity : BaseActivity() {
                 BACK_STACK_STATE_NEW
             )
         } else {
-            addFragment(
-                TabFragment::class.java,
-                BACK_STACK_STATE_NEW
-            )
+            Caller.openHome(this)
         }
 
         googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions)
@@ -52,7 +49,10 @@ class MainActivity : BaseActivity() {
         val signInIntent = googleSignInClient.signInIntent
         Log.d("MainActivity", "googleSignIn")
         Timber.d("googleSignIn")
-        startActivityForResult(signInIntent, RC_SIGN_IN)
+        startActivityForResult(
+            signInIntent,
+            RC_SIGN_IN
+        )
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -77,7 +77,7 @@ class MainActivity : BaseActivity() {
         firebaseAuth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    addFragment(TabFragment::class.java, BACK_STACK_STATE_REPLACE)
+                    Caller.openHome(this)
 
                 } else {
                     val view = findViewById<View>(frameLayoutId)

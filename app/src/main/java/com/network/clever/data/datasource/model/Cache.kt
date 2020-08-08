@@ -18,18 +18,22 @@ package com.network.clever.data.datasource.model
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import com.network.clever.data.datasource.dao.item.MusicDao
 import com.network.clever.data.datasource.dao.item.PlaylistDao
-import com.network.clever.data.datasource.model.item.PlaylistModel
+import com.network.clever.data.datasource.model.item.MusicListModel
+import com.network.clever.data.datasource.model.item.PlaylistListModel
 
 /**
  * Main cache description.
  */
 @Database(
     entities = [
-        PlaylistModel::class
+        PlaylistListModel.PlaylistModel::class,
+        MusicListModel.MusicModel::class
     ], exportSchema = false, version = 1
 )
 //@TypeConverters(BigDecimalTypeConverter::class, StringListTypeConverter::class)
 abstract class Cache : RoomDatabase() {
     abstract fun playlistDao(): PlaylistDao
+    abstract fun musicDao(): MusicDao
 }

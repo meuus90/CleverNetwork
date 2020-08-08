@@ -1,7 +1,10 @@
 package com.network.clever.di.module.activity
 
-import com.network.clever.di.module.fragment.*
-import com.network.clever.presentation.MainActivity
+import com.network.clever.di.module.fragment.HomeFragmentModule
+import com.network.clever.di.module.fragment.SettingFragmentModule
+import com.network.clever.di.module.fragment.TabFragmentModule
+import com.network.clever.di.module.fragment.UploadFragmentModule
+import com.network.clever.presentation.home.HomeActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -9,12 +12,11 @@ import dagger.android.ContributesAndroidInjector
 abstract class MainActivityModule {
     @ContributesAndroidInjector(
         modules = [
-            AuthFragmentModule::class,
             TabFragmentModule::class,
             HomeFragmentModule::class,
             UploadFragmentModule::class,
             SettingFragmentModule::class
         ]
     )
-    internal abstract fun contributeMainActivity(): MainActivity
+    internal abstract fun contributeHomeActivity(): HomeActivity
 }

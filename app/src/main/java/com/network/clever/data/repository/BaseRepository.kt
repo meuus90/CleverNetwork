@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.meuus.base.network.Resource
 import com.network.clever.data.datasource.network.FirebaseAPI
+import com.network.clever.data.datasource.network.YoutubeAPI
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -11,6 +12,9 @@ import javax.inject.Singleton
 abstract class BaseRepository<T> {
     @field:Inject
     lateinit var firebaseAPI: FirebaseAPI
+
+    @field:Inject
+    lateinit var youtubeAPI: YoutubeAPI
 
     abstract suspend fun work(liveData: MutableLiveData<T>): LiveData<Resource>
 

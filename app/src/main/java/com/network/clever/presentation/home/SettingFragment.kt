@@ -7,8 +7,6 @@ import android.view.ViewGroup
 import com.meuus.base.view.AutoClearedValue
 import com.network.clever.R
 import com.network.clever.presentation.BaseFragment
-import com.network.clever.presentation.MainActivity
-import kotlinx.android.synthetic.main.fragment_tab.*
 
 class SettingFragment : BaseFragment() {
     companion object {
@@ -19,8 +17,8 @@ class SettingFragment : BaseFragment() {
         }
     }
 
-    private val mainActivity: MainActivity by lazy {
-        activity as MainActivity
+    private val homeActivity: HomeActivity by lazy {
+        activity as HomeActivity
     }
 
     override fun onCreateView(

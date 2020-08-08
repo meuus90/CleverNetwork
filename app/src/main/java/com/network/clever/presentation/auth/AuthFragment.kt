@@ -8,13 +8,12 @@ import android.view.ViewGroup
 import com.meuus.base.view.AutoClearedValue
 import com.network.clever.R
 import com.network.clever.presentation.BaseFragment
-import com.network.clever.presentation.MainActivity
 import kotlinx.android.synthetic.main.fragment_auth.*
 import timber.log.Timber
 
 class AuthFragment : BaseFragment() {
-    private val mainActivity: MainActivity by lazy {
-        activity as MainActivity
+    private val authActivity: AuthActivity by lazy {
+        activity as AuthActivity
     }
 
     override fun onCreateView(
@@ -37,7 +36,7 @@ class AuthFragment : BaseFragment() {
             Log.d(this.tag, "setOnClickListener")
             Timber.d("setOnClickListener")
 
-            mainActivity.googleSignIn()
+            authActivity.googleSignIn()
         }
     }
 }

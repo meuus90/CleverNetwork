@@ -1,4 +1,4 @@
-package com.network.clever.presentation.home
+package com.network.clever.presentation.stream
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,33 +11,32 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.meuus.base.network.Status
 import com.meuus.base.utility.Params
-import com.meuus.base.utility.Query.Companion.query
+import com.meuus.base.utility.Query
 import com.meuus.base.view.AutoClearedValue
 import com.network.clever.R
-import com.network.clever.data.datasource.model.item.PlaylistListModel
-import com.network.clever.domain.viewmodel.item.PlaylistViewModel
+import com.network.clever.data.datasource.model.item.MusicListModel
+import com.network.clever.domain.viewmodel.item.MusicViewModel
 import com.network.clever.presentation.BaseFragment
-import com.network.clever.presentation.Caller
-import com.network.clever.presentation.home.adapter.PlaylistAdapter
-import kotlinx.android.synthetic.main.fragment_home.*
+import com.network.clever.presentation.stream.adapter.ContentsAdapter
+import kotlinx.android.synthetic.main.fragment_playlist.*
 import javax.inject.Inject
 
-class HomeFragment : BaseFragment() {
+class PlaylistFragment : BaseFragment() {
     companion object {
-        fun newInstance() = HomeFragment().apply {
+        fun newInstance() = PlaylistFragment().apply {
             arguments = Bundle(1).apply {
-                putString(FRAGMENT_TAG, HomeFragment::class.java.name)
+                putString(FRAGMENT_TAG, PlaylistFragment::class.java.name)
             }
         }
     }
 
     @Inject
-    internal lateinit var playlistViewModel: PlaylistViewModel
+    internal lateinit var musicViewModel: MusicViewModel
 
-    private lateinit var adapter: PlaylistAdapter
+    private lateinit var adapter: ContentsAdapter
 
-    private val homeActivity: HomeActivity by lazy {
-        activity as HomeActivity
+    private val playlistActivity: PlaylistActivity by lazy {
+        activity as PlaylistActivity
     }
 
     override fun onCreateView(
@@ -48,7 +47,7 @@ class HomeFragment : BaseFragment() {
         val acvView =
             AutoClearedValue(
                 this,
-                inflater.inflate(R.layout.fragment_home, container, false)
+                inflater.inflate(R.layout.fragment_playlist, container, false)
             )
         return acvView.get()?.rootView
     }
@@ -56,8 +55,8 @@ class HomeFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        adapter = PlaylistAdapter { item ->
-            Caller.openPlaylist(homeActivity, item)
+        adapter = ContentsAdapter { item ->
+
         }
         adapter.setHasStableIds(true)
         recyclerView.adapter = adapter
@@ -77,13 +76,13 @@ class HomeFragment : BaseFragment() {
     private fun getPlaylist() {
         setLoading(true)
 
-        val query = query(listOf())
+        val query = Query.query(listOf(playlistActivity.playlist.key))
 
-        playlistViewModel.pullTrigger(Params(query))
-        playlistViewModel.playlist.observe(viewLifecycleOwner, Observer { resource ->
+        musicViewModel.pullTrigger(Params(query))
+        musicViewModel.music.observe(viewLifecycleOwner, Observer { resource ->
             when (resource.getStatus()) {
                 Status.SUCCESS -> {
-                    val list = resource.getData() as PagedList<PlaylistListModel.PlaylistModel>
+                    val list = resource.getData() as PagedList<MusicListModel.MusicModel>
                     adapter.submitList(list)
 
                     setLoading(false)
