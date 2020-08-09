@@ -14,6 +14,18 @@ android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
 
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/ASL2.0'
+        exclude("META-INF/*.kotlin_module")
+    }
+
     defaultConfig {
         multiDexEnabled true
         testInstrumentationRunnerArguments
@@ -301,6 +313,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-config:19.2.0'
     implementation 'com.google.firebase:firebase-database:19.3.1'
     implementation 'com.google.firebase:firebase-storage:19.1.1'
+    implementation 'com.google.api-client:google-api-client:1.30.10'
+
 
     // Glide(Image library)
     implementation 'com.github.bumptech.glide:glide:4.11.0'
@@ -346,6 +360,13 @@ dependencies {
     androidTestImplementation 'androidx.test:rules:1.2.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'com.google.truth:truth:1.0'
+
+    // EXO player
+    implementation "com.google.android.exoplayer:exoplayer-core:$exo_player_version"
+    implementation "com.google.android.exoplayer:exoplayer-dash:$exo_player_version"
+    implementation "com.google.android.exoplayer:exoplayer-ui:$exo_player_version"
+    implementation 'com.danikula:videocache:2.7.0'
+    implementation 'org.greenrobot:eventbus:3.0.0'
 
     implementation 'com.github.meuus90:CleverBase:1.0.9'
 }

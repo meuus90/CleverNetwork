@@ -7,10 +7,10 @@
         android:title="Home" />
 
     <item
-        android:id="@+id/action_upload"
+        android:id="@+id/action_playlist"
         android:enabled="true"
-        android:icon="@drawable/ic_perm_media"
-        android:title="Upload" />
+        android:icon="@drawable/ic_library_music"
+        android:title="Playlist" />
 
     <item
         android:id="@+id/action_setting"

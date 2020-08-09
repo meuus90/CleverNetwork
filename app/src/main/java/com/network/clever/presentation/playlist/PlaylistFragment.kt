@@ -1,11 +1,10 @@
-package com.network.clever.presentation.stream
+package com.network.clever.presentation.playlist
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
@@ -17,7 +16,7 @@ import com.network.clever.R
 import com.network.clever.data.datasource.model.item.MusicListModel
 import com.network.clever.domain.viewmodel.item.MusicViewModel
 import com.network.clever.presentation.BaseFragment
-import com.network.clever.presentation.stream.adapter.ContentsAdapter
+import com.network.clever.presentation.playlist.adapter.PlaylistAdapter
 import kotlinx.android.synthetic.main.fragment_playlist.*
 import javax.inject.Inject
 
@@ -33,7 +32,7 @@ class PlaylistFragment : BaseFragment() {
     @Inject
     internal lateinit var musicViewModel: MusicViewModel
 
-    private lateinit var adapter: ContentsAdapter
+    private lateinit var adapter: PlaylistAdapter
 
     private val playlistActivity: PlaylistActivity by lazy {
         activity as PlaylistActivity
@@ -55,9 +54,15 @@ class PlaylistFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        adapter = ContentsAdapter { item ->
-
-        }
+        adapter =
+            PlaylistAdapter(context) { item ->
+                // todo : add one item
+//                val fragment = addFragment(
+//                    PlayerFragment::class.java,
+//                    BaseActivity.BACK_STACK_STATE_NEW
+//                )
+//                (fragment as PlayerFragment).music = item
+            }
         adapter.setHasStableIds(true)
         recyclerView.adapter = adapter
         recyclerView.setHasFixedSize(false)
@@ -71,19 +76,28 @@ class PlaylistFragment : BaseFragment() {
             getPlaylist()
         }
         getPlaylist()
+
+        iv_add.setOnClickListener {
+            //todo : add all
+        }
+
+        iv_play.setOnClickListener {
+            //todo : replace all
+        }
     }
 
     private fun getPlaylist() {
         setLoading(true)
 
-        val query = Query.query(listOf(playlistActivity.playlist.key))
+        val key = playlistActivity.platlist.key
+        val query = Query.query(listOf(key))
 
         musicViewModel.pullTrigger(Params(query))
         musicViewModel.music.observe(viewLifecycleOwner, Observer { resource ->
             when (resource.getStatus()) {
                 Status.SUCCESS -> {
-                    val list = resource.getData() as PagedList<MusicListModel.MusicModel>
-                    adapter.submitList(list)
+                    val list = resource.getData() as MusicListModel
+                    adapter.setItemList(list.items)
 
                     setLoading(false)
                 }

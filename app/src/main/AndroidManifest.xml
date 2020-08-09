@@ -28,7 +28,12 @@
             android:theme="@style/AppTheme" />
 
         <activity
-            android:name=".presentation.stream.PlaylistActivity"
+            android:name=".presentation.playlist.PlaylistActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name=".presentation.stream.PlayerActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme" />
     </application>

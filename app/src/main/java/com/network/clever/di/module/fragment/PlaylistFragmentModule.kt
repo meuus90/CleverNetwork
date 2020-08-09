@@ -1,6 +1,6 @@
 package com.network.clever.di.module.fragment
 
-import com.network.clever.presentation.stream.PlaylistFragment
+import com.network.clever.presentation.playlist.PlaylistFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

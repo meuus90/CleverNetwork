@@ -15,7 +15,11 @@ data class MusicListModel(
 
     @Parcelize
     @Entity(tableName = "Music")
-    @TypeConverters(ThumbnailsTypeConverter::class, ThumbnailTypeConverter::class)
+    @TypeConverters(
+        ResourceIdTypeConverter::class,
+        ThumbnailsTypeConverter::class,
+        ThumbnailTypeConverter::class
+    )
     data class MusicModel(
         @field:PrimaryKey
         @field:ColumnInfo(name = "id") val id: String,
@@ -29,24 +33,48 @@ data class MusicListModel(
         @field:ColumnInfo(name = "publishedAt") val publishedAt: String,
         @field:ColumnInfo(name = "title") val title: String,
         @field:ColumnInfo(name = "description") val description: String,
+        @field:ColumnInfo(name = "channelId") val channelId: String,
+        @field:ColumnInfo(name = "playlistId") val playlistId: String,
 
-        @field:ColumnInfo(name = "thumbnails") val thumbnails: Thumbnails,
+        @field:ColumnInfo(name = "resourceId") val resourceId: ResourceId,
+        @field:ColumnInfo(name = "thumbnails") val thumbnails: Thumbnails
     ) : BaseData(), Parcelable {
-        constructor() : this("", "", "", Thumbnails())
+        constructor() : this("", "", "", "", "", ResourceId(), Thumbnails())
+    }
+
+    @Parcelize
+    data class ResourceId(
+        @field:ColumnInfo(name = "kind") val kind: String,
+        @field:ColumnInfo(name = "videoId") val videoId: String
+    ) : BaseData(), Parcelable {
+        constructor() : this("", "")
     }
 
     @Parcelize
     data class Thumbnails(
-        @field:ColumnInfo(name = "default") val default: Thumbnail,
+        @field:ColumnInfo(name = "default") val default: Thumbnail
     ) : BaseData(), Parcelable {
         constructor() : this(Thumbnail())
     }
 
     @Parcelize
     data class Thumbnail(
-        @field:ColumnInfo(name = "url") val url: String,
+        @field:ColumnInfo(name = "url") val url: String
     ) : BaseData(), Parcelable {
         constructor() : this("")
+    }
+
+    class ResourceIdTypeConverter {
+        @TypeConverter
+        fun itemToString(value: ResourceId?): String {
+            return Gson().toJson(value)
+        }
+
+        @TypeConverter
+        fun stringToItem(value: String?): ResourceId {
+            val item = object : TypeToken<ResourceId>() {}.type
+            return Gson().fromJson(value, item)
+        }
     }
 
     class ThumbnailsTypeConverter {

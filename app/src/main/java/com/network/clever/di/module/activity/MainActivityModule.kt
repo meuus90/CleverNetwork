@@ -1,9 +1,9 @@
 package com.network.clever.di.module.activity
 
 import com.network.clever.di.module.fragment.HomeFragmentModule
+import com.network.clever.di.module.fragment.PlaylistListFragmentModule
 import com.network.clever.di.module.fragment.SettingFragmentModule
 import com.network.clever.di.module.fragment.TabFragmentModule
-import com.network.clever.di.module.fragment.UploadFragmentModule
 import com.network.clever.presentation.home.HomeActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -14,7 +14,7 @@ abstract class MainActivityModule {
         modules = [
             TabFragmentModule::class,
             HomeFragmentModule::class,
-            UploadFragmentModule::class,
+            PlaylistListFragmentModule::class,
             SettingFragmentModule::class
         ]
     )

@@ -14,6 +14,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.meuus.base.view.DetailsTransition
 import com.network.clever.R
+import com.network.clever.data.preferences.LocalStorage
 import com.network.clever.presentation.dialog.LoadingDialog
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
@@ -32,6 +33,9 @@ abstract class BaseActivity : AppCompatActivity(), HasAndroidInjector {
 
     @Inject
     lateinit var googleSignInOptions: GoogleSignInOptions
+
+    @Inject
+    lateinit var localStorage: LocalStorage
 
     open val frameLayoutId = 0
 

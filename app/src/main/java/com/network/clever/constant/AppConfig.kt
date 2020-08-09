@@ -24,4 +24,7 @@ object AppConfig {
 
     val apiKey: String
         get() = "AIzaSyDkL38kHphoqMgp9cCWCxa_yo42i9f7ip0"
+
+    val youtubePlayerUrl: String
+        get() = "https://music.youtube.com/watch?v=%s&list=%s"
 }

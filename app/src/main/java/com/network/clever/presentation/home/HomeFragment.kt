@@ -11,14 +11,15 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.meuus.base.network.Status
 import com.meuus.base.utility.Params
-import com.meuus.base.utility.Query.Companion.query
+import com.meuus.base.utility.Query
 import com.meuus.base.view.AutoClearedValue
 import com.network.clever.R
-import com.network.clever.data.datasource.model.item.PlaylistListModel
-import com.network.clever.domain.viewmodel.item.PlaylistViewModel
+import com.network.clever.data.datasource.model.item.MusicListModel
+import com.network.clever.domain.viewmodel.item.MyPlaylistViewModel
+import com.network.clever.presentation.BaseActivity
 import com.network.clever.presentation.BaseFragment
-import com.network.clever.presentation.Caller
-import com.network.clever.presentation.home.adapter.PlaylistAdapter
+import com.network.clever.presentation.home.adapter.ContentsAdapter
+import com.network.clever.presentation.stream.PlayerFragment
 import kotlinx.android.synthetic.main.fragment_home.*
 import javax.inject.Inject
 
@@ -32,9 +33,9 @@ class HomeFragment : BaseFragment() {
     }
 
     @Inject
-    internal lateinit var playlistViewModel: PlaylistViewModel
+    internal lateinit var myPlaylistViewModel: MyPlaylistViewModel
 
-    private lateinit var adapter: PlaylistAdapter
+    private lateinit var adapter: ContentsAdapter
 
     private val homeActivity: HomeActivity by lazy {
         activity as HomeActivity
@@ -56,9 +57,14 @@ class HomeFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        adapter = PlaylistAdapter { item ->
-            Caller.openPlaylist(homeActivity, item)
-        }
+        adapter =
+            ContentsAdapter { item ->
+                val fragment = addFragment(
+                    PlayerFragment::class.java,
+                    BaseActivity.BACK_STACK_STATE_NEW
+                )
+                (fragment as PlayerFragment).music = item
+            }
         adapter.setHasStableIds(true)
         recyclerView.adapter = adapter
         recyclerView.setHasFixedSize(false)
@@ -71,19 +77,24 @@ class HomeFragment : BaseFragment() {
         swipeRefreshLayout.setOnRefreshListener {
             getPlaylist()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
         getPlaylist()
     }
 
     private fun getPlaylist() {
         setLoading(true)
 
-        val query = query(listOf())
+        val query = Query.query(listOf())
 
-        playlistViewModel.pullTrigger(Params(query))
-        playlistViewModel.playlist.observe(viewLifecycleOwner, Observer { resource ->
+        myPlaylistViewModel.pullTrigger(Params(query))
+        myPlaylistViewModel.playlist.observe(viewLifecycleOwner, Observer { resource ->
             when (resource.getStatus()) {
                 Status.SUCCESS -> {
-                    val list = resource.getData() as PagedList<PlaylistListModel.PlaylistModel>
+                    val list = resource.getData() as PagedList<MusicListModel.MusicModel>
                     adapter.submitList(list)
 
                     setLoading(false)

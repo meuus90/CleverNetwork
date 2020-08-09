@@ -39,7 +39,7 @@ class AuthActivity : BaseActivity() {
                 BACK_STACK_STATE_NEW
             )
         } else {
-            Caller.openHome(this)
+            Caller.openMyPlaylist(this)
         }
 
         googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions)
@@ -64,7 +64,9 @@ class AuthActivity : BaseActivity() {
         try {
             // Google Sign In was successful, authenticate with Firebase
             val account = task.getResult(ApiException::class.java)!!
-            Log.d("MainActivity", "firebaseAuthWithGoogle:" + account.id)
+
+            Log.d("MainActivity", "firebaseAuthWithGoogle idToken:" + account.idToken)
+            Log.d("MainActivity", "firebaseAuthWithGoogle serverAuthCode:" + account.serverAuthCode)
             firebaseAuthWithGoogle(account.idToken!!)
         } catch (e: ApiException) {
             Log.w("MainActivity", "Google sign in failed", e)
@@ -77,8 +79,8 @@ class AuthActivity : BaseActivity() {
         firebaseAuth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    Caller.openHome(this)
-
+                    localStorage.setAuthToken(idToken)
+                    Caller.openMyPlaylist(this)
                 } else {
                     val view = findViewById<View>(frameLayoutId)
                     Snackbar.make(view, "Authentication Failed.", Snackbar.LENGTH_SHORT).show()

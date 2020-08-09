@@ -1,4 +1,4 @@
-package com.network.clever.presentation.stream.adapter
+package com.network.clever.presentation.home.adapter
 
 import android.annotation.SuppressLint
 import android.graphics.Color
@@ -10,35 +10,35 @@ import androidx.recyclerview.widget.DiffUtil
 import com.bumptech.glide.Glide
 import com.meuus.base.view.BaseViewHolder
 import com.network.clever.R
-import com.network.clever.data.datasource.model.item.MusicListModel
+import com.network.clever.data.datasource.model.item.PlaylistListModel
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_music.*
+import kotlinx.android.synthetic.main.item_playlist.*
 import timber.log.Timber
 
-class ContentsAdapter(val doOnClick: (item: MusicListModel.MusicModel) -> Unit) :
-    PagedListAdapter<MusicListModel.MusicModel, BaseViewHolder<MusicListModel.MusicModel>>(
+class PlaylistListAdapter(val doOnClick: (item: PlaylistListModel.PlaylistModel) -> Unit) :
+    PagedListAdapter<PlaylistListModel.PlaylistModel, BaseViewHolder<PlaylistListModel.PlaylistModel>>(
         DIFF_CALLBACK
     ) {
     companion object {
         private val PAYLOAD_TITLE = Any()
 
         private val DIFF_CALLBACK =
-            object : DiffUtil.ItemCallback<MusicListModel.MusicModel>() {
+            object : DiffUtil.ItemCallback<PlaylistListModel.PlaylistModel>() {
                 override fun areItemsTheSame(
-                    oldItem: MusicListModel.MusicModel,
-                    newItem: MusicListModel.MusicModel
+                    oldItem: PlaylistListModel.PlaylistModel,
+                    newItem: PlaylistListModel.PlaylistModel
                 ): Boolean =
                     oldItem.id == newItem.id
 
                 override fun areContentsTheSame(
-                    oldItem: MusicListModel.MusicModel,
-                    newItem: MusicListModel.MusicModel
+                    oldItem: PlaylistListModel.PlaylistModel,
+                    newItem: PlaylistListModel.PlaylistModel
                 ): Boolean =
                     oldItem == newItem
 
                 override fun getChangePayload(
-                    oldItem: MusicListModel.MusicModel,
-                    newItem: MusicListModel.MusicModel
+                    oldItem: PlaylistListModel.PlaylistModel,
+                    newItem: PlaylistListModel.PlaylistModel
                 ): Any? {
                     return if (sameExceptTitle(oldItem, newItem)) {
                         PAYLOAD_TITLE
@@ -49,8 +49,8 @@ class ContentsAdapter(val doOnClick: (item: MusicListModel.MusicModel) -> Unit) 
             }
 
         private fun sameExceptTitle(
-            oldItem: MusicListModel.MusicModel,
-            newItem: MusicListModel.MusicModel
+            oldItem: PlaylistListModel.PlaylistModel,
+            newItem: PlaylistListModel.PlaylistModel
         ): Boolean {
             return oldItem.copy(id = newItem.id) == newItem
         }
@@ -59,14 +59,14 @@ class ContentsAdapter(val doOnClick: (item: MusicListModel.MusicModel) -> Unit) 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): BaseViewHolder<MusicListModel.MusicModel> {
+    ): BaseViewHolder<PlaylistListModel.PlaylistModel> {
         val inflater = LayoutInflater.from(parent.context.applicationContext)
-        val view = inflater.inflate(R.layout.item_music, parent, false)
+        val view = inflater.inflate(R.layout.item_playlist, parent, false)
         return PlayItemHolder(view, this)
     }
 
     override fun onBindViewHolder(
-        holder: BaseViewHolder<MusicListModel.MusicModel>,
+        holder: BaseViewHolder<PlaylistListModel.PlaylistModel>,
         position: Int
     ) {
         val item = getItem(position)
@@ -90,17 +90,17 @@ class ContentsAdapter(val doOnClick: (item: MusicListModel.MusicModel) -> Unit) 
 
     class PlayItemHolder(
         override val containerView: View,
-        private val adapter: ContentsAdapter
-    ) : BaseViewHolder<MusicListModel.MusicModel>(containerView), LayoutContainer {
+        private val adapter: PlaylistListAdapter
+    ) : BaseViewHolder<PlaylistListModel.PlaylistModel>(containerView), LayoutContainer {
         @SuppressLint("SetTextI18n")
         override fun bindItemHolder(
-            holder: BaseViewHolder<MusicListModel.MusicModel>,
-            item: MusicListModel.MusicModel,
+            holder: BaseViewHolder<PlaylistListModel.PlaylistModel>,
+            item: PlaylistListModel.PlaylistModel,
             position: Int
         ) {
             try {
                 Glide.with(context).asDrawable().clone()
-                    .load(item.snippet.thumbnails.default.url)
+                    .load(item.imageUrl)
                     .centerCrop()
                     .dontAnimate()
                     .into(iv_thumbnail)
@@ -108,8 +108,7 @@ class ContentsAdapter(val doOnClick: (item: MusicListModel.MusicModel) -> Unit) 
                 Timber.e(e)
             }
 
-            tv_title.text = item.snippet.title
-            tv_artist.text = item.snippet.description
+            tv_name.text = item.name
 
             v_root.setOnClickListener {
                 adapter.doOnClick(item)

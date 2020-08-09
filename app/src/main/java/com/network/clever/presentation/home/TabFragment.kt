@@ -31,7 +31,7 @@ class TabFragment : BaseFragment() {
 
     private val fragments = listOf(
         HomeFragment.newInstance(),
-        UploadFragment.newInstance(),
+        PlaylistListFragment.newInstance(),
         SettingFragment.newInstance()
     )
 
@@ -59,7 +59,7 @@ class TabFragment : BaseFragment() {
                     container.setCurrentItem(0, true)
                     true
                 }
-                R.id.action_upload -> {
+                R.id.action_playlist -> {
                     container.setCurrentItem(1, true)
                     true
                 }

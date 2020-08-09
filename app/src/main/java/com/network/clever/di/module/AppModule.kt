@@ -135,7 +135,7 @@ class AppModule {
 
     @Provides
     //@Singleton
-    fun getRequestInterceptor(/*context: Context, localRepository: LocalRepository*/): Interceptor {
+    fun getRequestInterceptor(context: Context, localStorage: LocalStorage): Interceptor {
         return Interceptor {
             Timber.tag("PRETTY_LOGGER")
 
@@ -145,6 +145,9 @@ class AppModule {
                 val builder = newBuilder()
 
                 builder.header("Accept", "application/json")
+                localStorage.getAuthToken()?.also { token ->
+                    builder.header("Authorization", "Bearer $token")
+                }
 
                 builder.build()
             }
