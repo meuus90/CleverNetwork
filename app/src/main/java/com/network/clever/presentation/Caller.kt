@@ -2,7 +2,7 @@ package com.network.clever.presentation
 
 import android.content.Context
 import android.content.Intent
-import com.network.clever.R
+import com.network.clever.data.datasource.model.item.MusicListModel
 import com.network.clever.data.datasource.model.item.PlaylistListModel
 import com.network.clever.presentation.auth.AuthActivity
 import com.network.clever.presentation.playlist.PlaylistActivity
@@ -15,7 +15,8 @@ object Caller {
     const val TAB_LISTS = 1
     const val TAB_SETTING = 2
 
-    const val PLAYLIST_KEY = "PLAYLIST_KEY"
+    const val KEY_PLAYLIST = "KEY_PLAYLIST"
+    const val KEY_MUSIC = "KEY_MUSIC"
 
     internal fun logoutApp(context: Context) {
         val intent = Intent(context, AuthActivity::class.java)
@@ -49,17 +50,17 @@ object Caller {
 
     internal fun openPlaylist(activity: BaseActivity, playlist: PlaylistListModel.PlaylistModel) {
         val intent = Intent(activity, PlaylistActivity::class.java).apply {
-            putExtra(PLAYLIST_KEY, playlist)
+            putExtra(KEY_PLAYLIST, playlist)
         }
         activity.startActivity(intent)
-        activity.overridePendingTransition(R.anim.slide_in_right_left, R.anim.slide_out_left_right)
+//        activity.overridePendingTransition(R.anim.slide_in_right_left, R.anim.slide_out_left_right)
     }
 
-    internal fun openPlayer(activity: BaseActivity, playlist: PlaylistListModel.PlaylistModel) {
+    internal fun openPlayer(activity: BaseActivity, music: MusicListModel.MusicModel) {
         val intent = Intent(activity, PlayerActivity::class.java).apply {
-            putExtra(PLAYLIST_KEY, playlist)
+            putExtra(KEY_MUSIC, music)
         }
         activity.startActivity(intent)
-        activity.overridePendingTransition(R.anim.slide_in_right_left, R.anim.slide_out_left_right)
+//        activity.overridePendingTransition(R.anim.slide_in_right_left, R.anim.slide_out_left_right)
     }
 }

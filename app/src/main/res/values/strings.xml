@@ -10,6 +10,8 @@
     <string name="confirm">Confirm</string>
     <string name="complete">Complete</string>
 
+    <string name="no_music">No Music</string>
+
     <string name="sign_in">Sign in with Google</string>
     <string name="sign_out">Log out</string>
 </resources>

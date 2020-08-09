@@ -6,13 +6,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.google.android.exoplayer2.ui.PlayerView
+import androidx.lifecycle.Observer
+import androidx.paging.PagedList
+import com.meuus.base.utility.Params
+import com.meuus.base.utility.Query
 import com.meuus.base.view.AutoClearedValue
 import com.network.clever.R
 import com.network.clever.constant.AppConfig
 import com.network.clever.data.datasource.model.item.MusicListModel
+import com.network.clever.domain.viewmodel.item.MyPlaylistViewModel
 import com.network.clever.presentation.BaseFragment
 import com.network.clever.presentation.stream.player.PlayerManager
+import kotlinx.android.synthetic.main.fragment_player.*
+import javax.inject.Inject
 
 class PlayerFragment : BaseFragment() {
     companion object {
@@ -22,6 +28,9 @@ class PlayerFragment : BaseFragment() {
             }
         }
     }
+
+    @Inject
+    internal lateinit var myPlaylistViewModel: MyPlaylistViewModel
 
     lateinit var playerManager: PlayerManager
 
@@ -39,9 +48,6 @@ class PlayerFragment : BaseFragment() {
                 this,
                 inflater.inflate(R.layout.fragment_player, container, false)
             )
-        acvView.get()?.rootView?.let {
-            initInstances(it)
-        }
         return acvView.get()?.rootView
     }
 
@@ -54,36 +60,40 @@ class PlayerFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        initInstances()
     }
 
+    private fun getPlaylist() {
+        val query = Query.query(listOf())
 
-    private var playerView: PlayerView? = null
+        myPlaylistViewModel.getMutableList(Params(query))
+        myPlaylistViewModel.playlist.observe(viewLifecycleOwner, Observer { resource ->
+            val list = resource as PagedList<MusicListModel.MusicModel>
+        })
+    }
 
     lateinit var music: MusicListModel.MusicModel
 
-    private fun initInstances(rootView: View) {
-        playerView = rootView.findViewById(R.id.video_view)
-
+    private fun initInstances() {
         if (PlayerManager.getService() == null) {
             playerManager.bind()
         }
 
-        playerView!!.controllerHideOnTouch = false
-        playerView!!.controllerShowTimeoutMs = 0
-        playerView!!.showController()
+        video_view.controllerHideOnTouch = false
+        video_view.controllerShowTimeoutMs = 0
+        video_view.showController()
 
     }
 
     private fun managerBinding() {
         val videoUrl = String.format(
             AppConfig.youtubePlayerUrl,
-            music.snippet.resourceId.videoId,
-            music.snippet.playlistId
+            music.snippet.resourceId.videoId
         )
 
         if (playerManager.isServiceBound) {
             playerManager.playOrPause(videoUrl)
-            playerView!!.player = PlayerManager.getService().exoPlayer
+            video_view.player = PlayerManager.getService().exoPlayer
         }
     }
 
@@ -101,7 +111,7 @@ class PlayerFragment : BaseFragment() {
 
     @SuppressLint("InlinedApi")
     private fun hideSystemUiFullScreen() {
-        playerView!!.systemUiVisibility = (View.SYSTEM_UI_FLAG_LOW_PROFILE
+        video_view.systemUiVisibility = (View.SYSTEM_UI_FLAG_LOW_PROFILE
                 or View.SYSTEM_UI_FLAG_FULLSCREEN
                 or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
@@ -111,7 +121,7 @@ class PlayerFragment : BaseFragment() {
 
     @SuppressLint("InlinedApi")
     private fun hideSystemUi() {
-        playerView!!.systemUiVisibility = (View.SYSTEM_UI_FLAG_LOW_PROFILE
+        video_view.systemUiVisibility = (View.SYSTEM_UI_FLAG_LOW_PROFILE
                 or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION

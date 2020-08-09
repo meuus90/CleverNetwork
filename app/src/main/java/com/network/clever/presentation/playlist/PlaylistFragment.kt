@@ -65,7 +65,9 @@ class PlaylistFragment : BaseFragment() {
         adapter =
             PlaylistAdapter(context) { item ->
                 val query = Query.query(listOf(ADD_ITEM, item))
-                update(query)
+                update(query) {
+                    Caller.openPlayer(playlistActivity, item)
+                }
             }
         adapter.setHasStableIds(true)
         recyclerView.adapter = adapter
@@ -83,20 +85,24 @@ class PlaylistFragment : BaseFragment() {
 
         iv_add.setOnClickListener {
             val query = Query.query(listOf(ADD_ALL, list.items))
-            update(query)
+            update(query) {
+                Caller.openPlayer(playlistActivity, list.items[0])
+            }
         }
 
         iv_play.setOnClickListener {
             val query = Query.query(listOf(UPDATE_ALL, list.items))
-            update(query)
+            update(query) {
+                Caller.openPlayer(playlistActivity, list.items[0])
+            }
         }
     }
 
-    private fun update(query: Query) {
+    private fun update(query: Query, onSuccess: () -> Unit) {
         updateMyPlaylistViewModel.pullTrigger(Params(query))
         updateMyPlaylistViewModel.playlist.observe(viewLifecycleOwner, Observer { isSuccess ->
             if (isSuccess) {
-                Caller.openMyPlaylist(playlistActivity)
+                onSuccess()
             } else {
 
             }

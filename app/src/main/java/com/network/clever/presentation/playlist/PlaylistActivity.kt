@@ -19,7 +19,7 @@ class PlaylistActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        platlist = intent.getParcelableExtra(Caller.PLAYLIST_KEY)
+        platlist = intent.getParcelableExtra(Caller.KEY_PLAYLIST)
 
         addFragment(
             PlaylistFragment::class.java,

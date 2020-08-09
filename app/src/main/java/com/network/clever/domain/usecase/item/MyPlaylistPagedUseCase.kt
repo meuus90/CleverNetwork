@@ -17,9 +17,13 @@
 package com.network.clever.domain.usecase.item
 
 import androidx.lifecycle.MutableLiveData
+import androidx.paging.DataSource
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import com.meuus.base.utility.Params
 import com.meuus.base.utility.Query
 import com.meuus.base.utility.SingleLiveEvent
+import com.network.clever.data.datasource.MusicDataSource
 import com.network.clever.data.datasource.dao.item.MusicDao
 import com.network.clever.data.datasource.model.item.MusicListModel
 import com.network.clever.domain.usecase.BaseUseCase
@@ -28,65 +32,36 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class UpdateMyPlaylistUseCase
+class MyPlaylistPagedUseCase
 @Inject
-constructor(private val dao: MusicDao) : BaseUseCase<Params, Boolean>() {
-    companion object {
-        const val UPDATE_ALL = 0
-        const val ADD_ALL = 1
-        const val ADD_ITEM = 2
-        const val DELETE_ALL = 3
-        const val DELETE_ITEM = 4
-    }
-
+constructor(private val dao: MusicDao) :
+    BaseUseCase<Params, PagedList<MusicListModel.MusicModel>>() {
     private val liveData by lazy { MutableLiveData<Query>() }
 
     override suspend fun execute(
         viewModelScope: CoroutineScope,
         params: Params
-    ): SingleLiveEvent<Boolean> {
-        setQuery(params)
+    ): SingleLiveEvent<PagedList<MusicListModel.MusicModel>> {
+        val config = PagedList.Config.Builder()
+            .setInitialLoadSizeHint(20)
+            .setPageSize(10)
+            .setPrefetchDistance(10)
+            .setEnablePlaceholders(true)
+            .build()
 
-        val state = params.query.params[0] as Int
-        val result = when (state) {
-            UPDATE_ALL -> {
-                val music = params.query.params[1] as MutableList<MusicListModel.MusicModel>
+        val liveData = LivePagedListBuilder(object :
+            DataSource.Factory<Int, MusicListModel.MusicModel>() {
+            override fun create(): DataSource<Int, MusicListModel.MusicModel> {
 
-                dao.clear()
-                dao.insert(music)
-                true
+                val list = dao.getPlaylists()
+                return MusicDataSource(list)
             }
-            ADD_ALL -> {
-                val music = params.query.params[1] as MutableList<MusicListModel.MusicModel>
+        }, /* PageList Config */ config).build()
 
-                dao.insert(music)
 
-                true
-            }
-            ADD_ITEM -> {
-                val music = params.query.params[1] as MusicListModel.MusicModel
-
-                dao.insert(music)
-                true
-            }
-            DELETE_ALL -> {
-                dao.clear()
-                true
-            }
-            DELETE_ITEM -> {
-                val music = params.query.params[1] as MusicListModel.MusicModel
-
-                dao.delete(music)
-                true
-            }
-            else -> {
-                false
-            }
-        }
-
-        val resultEvent = SingleLiveEvent<Boolean>()
+        val resultEvent = SingleLiveEvent<PagedList<MusicListModel.MusicModel>>()
         resultEvent.addSource(liveData) {
-            resultEvent.value = result
+            resultEvent.value = it
         }
 
         return resultEvent

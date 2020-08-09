@@ -35,13 +35,13 @@ import javax.inject.Singleton
 class MyPlaylistUseCase
 @Inject
 constructor(private val dao: MusicDao) :
-    BaseUseCase<Params, PagedList<MusicListModel.MusicModel>>() {
+    BaseUseCase<Params, MutableList<MusicListModel.MusicModel>>() {
     private val liveData by lazy { MutableLiveData<Query>() }
 
     override suspend fun execute(
         viewModelScope: CoroutineScope,
         params: Params
-    ): SingleLiveEvent<PagedList<MusicListModel.MusicModel>> {
+    ): SingleLiveEvent<MutableList<MusicListModel.MusicModel>> {
         val config = PagedList.Config.Builder()
             .setInitialLoadSizeHint(20)
             .setPageSize(10)
@@ -59,7 +59,7 @@ constructor(private val dao: MusicDao) :
         }, /* PageList Config */ config).build()
 
 
-        val resultEvent = SingleLiveEvent<PagedList<MusicListModel.MusicModel>>()
+        val resultEvent = SingleLiveEvent<MutableList<MusicListModel.MusicModel>>()
         resultEvent.addSource(liveData) {
             resultEvent.value = it
         }

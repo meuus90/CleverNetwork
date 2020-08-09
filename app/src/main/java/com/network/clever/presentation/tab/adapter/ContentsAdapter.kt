@@ -15,7 +15,10 @@ import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_my_music.*
 import timber.log.Timber
 
-class ContentsAdapter(val doOnClick: (item: MusicListModel.MusicModel) -> Unit) :
+class ContentsAdapter(
+    val doOnClick: (item: MusicListModel.MusicModel) -> Unit,
+    val doOnClickDelete: (item: MusicListModel.MusicModel) -> Unit
+) :
     PagedListAdapter<MusicListModel.MusicModel, BaseViewHolder<MusicListModel.MusicModel>>(
         DIFF_CALLBACK
     ) {
@@ -120,6 +123,10 @@ class ContentsAdapter(val doOnClick: (item: MusicListModel.MusicModel) -> Unit) 
 
             v_root.setOnClickListener {
                 adapter.doOnClick(item)
+            }
+
+            iv_delete.setOnClickListener {
+                adapter.doOnClickDelete(item)
             }
         }
 
