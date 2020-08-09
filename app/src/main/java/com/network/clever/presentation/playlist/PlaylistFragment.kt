@@ -14,8 +14,13 @@ import com.meuus.base.utility.Query
 import com.meuus.base.view.AutoClearedValue
 import com.network.clever.R
 import com.network.clever.data.datasource.model.item.MusicListModel
+import com.network.clever.domain.usecase.item.UpdateMyPlaylistUseCase.Companion.ADD_ALL
+import com.network.clever.domain.usecase.item.UpdateMyPlaylistUseCase.Companion.ADD_ITEM
+import com.network.clever.domain.usecase.item.UpdateMyPlaylistUseCase.Companion.UPDATE_ALL
 import com.network.clever.domain.viewmodel.item.MusicViewModel
+import com.network.clever.domain.viewmodel.item.UpdateMyPlaylistViewModel
 import com.network.clever.presentation.BaseFragment
+import com.network.clever.presentation.Caller
 import com.network.clever.presentation.playlist.adapter.PlaylistAdapter
 import kotlinx.android.synthetic.main.fragment_playlist.*
 import javax.inject.Inject
@@ -31,6 +36,9 @@ class PlaylistFragment : BaseFragment() {
 
     @Inject
     internal lateinit var musicViewModel: MusicViewModel
+
+    @Inject
+    internal lateinit var updateMyPlaylistViewModel: UpdateMyPlaylistViewModel
 
     private lateinit var adapter: PlaylistAdapter
 
@@ -56,12 +64,8 @@ class PlaylistFragment : BaseFragment() {
 
         adapter =
             PlaylistAdapter(context) { item ->
-                // todo : add one item
-//                val fragment = addFragment(
-//                    PlayerFragment::class.java,
-//                    BaseActivity.BACK_STACK_STATE_NEW
-//                )
-//                (fragment as PlayerFragment).music = item
+                val query = Query.query(listOf(ADD_ITEM, item))
+                update(query)
             }
         adapter.setHasStableIds(true)
         recyclerView.adapter = adapter
@@ -78,14 +82,28 @@ class PlaylistFragment : BaseFragment() {
         getPlaylist()
 
         iv_add.setOnClickListener {
-            //todo : add all
+            val query = Query.query(listOf(ADD_ALL, list.items))
+            update(query)
         }
 
         iv_play.setOnClickListener {
-            //todo : replace all
+            val query = Query.query(listOf(UPDATE_ALL, list.items))
+            update(query)
         }
     }
 
+    private fun update(query: Query) {
+        updateMyPlaylistViewModel.pullTrigger(Params(query))
+        updateMyPlaylistViewModel.playlist.observe(viewLifecycleOwner, Observer { isSuccess ->
+            if (isSuccess) {
+                Caller.openMyPlaylist(playlistActivity)
+            } else {
+
+            }
+        })
+    }
+
+    lateinit var list: MusicListModel
     private fun getPlaylist() {
         setLoading(true)
 
@@ -96,7 +114,7 @@ class PlaylistFragment : BaseFragment() {
         musicViewModel.music.observe(viewLifecycleOwner, Observer { resource ->
             when (resource.getStatus()) {
                 Status.SUCCESS -> {
-                    val list = resource.getData() as MusicListModel
+                    list = resource.getData() as MusicListModel
                     adapter.setItemList(list.items)
 
                     setLoading(false)

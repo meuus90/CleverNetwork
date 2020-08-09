@@ -7,7 +7,7 @@ import android.graphics.BitmapFactory
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.network.clever.R
-import com.network.clever.presentation.home.HomeActivity
+import com.network.clever.presentation.tab.HomeActivity
 
 class PlayerNotificationManager(private val service: PlayerService) {
 

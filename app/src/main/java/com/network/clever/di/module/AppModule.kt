@@ -74,8 +74,8 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provideLocalStorage(context: Context): LocalStorage {
-        return LocalStorage(context)
+    fun provideLocalStorage(context: Context, cache: Cache): LocalStorage {
+        return LocalStorage(context, cache)
     }
 
     @Provides
@@ -145,9 +145,9 @@ class AppModule {
                 val builder = newBuilder()
 
                 builder.header("Accept", "application/json")
-                localStorage.getAuthToken()?.also { token ->
-                    builder.header("Authorization", "Bearer $token")
-                }
+//                localStorage.getAuthToken()?.also { token ->
+//                    builder.header("Authorization", "Bearer $token")
+//                }
 
                 builder.build()
             }

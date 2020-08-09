@@ -1,4 +1,4 @@
-package com.network.clever.presentation.home
+package com.network.clever.presentation.tab
 
 import android.os.Bundle
 import android.view.LayoutInflater

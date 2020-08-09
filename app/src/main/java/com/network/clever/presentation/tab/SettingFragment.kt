@@ -1,4 +1,4 @@
-package com.network.clever.presentation.home
+package com.network.clever.presentation.tab
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import com.meuus.base.view.AutoClearedValue
 import com.network.clever.R
 import com.network.clever.presentation.BaseFragment
+import kotlinx.android.synthetic.main.fragment_setting.*
 
 class SettingFragment : BaseFragment() {
     companion object {
@@ -37,5 +38,9 @@ class SettingFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        tv_logout.setOnClickListener {
+            homeActivity.firebaseAuth.signOut()
+            homeActivity.localStorage.logOut()
+        }
     }
 }

@@ -11,4 +11,5 @@
     <string name="complete">Complete</string>
 
     <string name="sign_in">Sign in with Google</string>
+    <string name="sign_out">Log out</string>
 </resources>

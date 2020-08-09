@@ -1,11 +1,13 @@
 package com.network.clever.presentation
 
+import android.content.Context
 import android.content.Intent
 import com.network.clever.R
 import com.network.clever.data.datasource.model.item.PlaylistListModel
-import com.network.clever.presentation.home.HomeActivity
+import com.network.clever.presentation.auth.AuthActivity
 import com.network.clever.presentation.playlist.PlaylistActivity
 import com.network.clever.presentation.stream.PlayerActivity
+import com.network.clever.presentation.tab.HomeActivity
 
 object Caller {
     const val TAB_TEY = "TAB_TEY"
@@ -14,6 +16,12 @@ object Caller {
     const val TAB_SETTING = 2
 
     const val PLAYLIST_KEY = "PLAYLIST_KEY"
+
+    internal fun logoutApp(context: Context) {
+        val intent = Intent(context, AuthActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(intent)
+    }
 
     internal fun openMyPlaylist(activity: BaseActivity) {
         val intent = Intent(activity, HomeActivity::class.java).apply {

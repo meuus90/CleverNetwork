@@ -1,4 +1,4 @@
-package com.network.clever.presentation.home.adapter
+package com.network.clever.presentation.tab.adapter
 
 import android.annotation.SuppressLint
 import android.graphics.Color

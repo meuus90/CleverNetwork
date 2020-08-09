@@ -4,7 +4,7 @@ import com.network.clever.di.module.fragment.HomeFragmentModule
 import com.network.clever.di.module.fragment.PlaylistListFragmentModule
 import com.network.clever.di.module.fragment.SettingFragmentModule
 import com.network.clever.di.module.fragment.TabFragmentModule
-import com.network.clever.presentation.home.HomeActivity
+import com.network.clever.presentation.tab.HomeActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

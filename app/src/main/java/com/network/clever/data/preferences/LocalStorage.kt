@@ -20,56 +20,58 @@ import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
+import com.network.clever.data.datasource.model.Cache
+import com.network.clever.presentation.Caller
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class LocalStorage
 @Inject
-constructor(val context: Context) {
+constructor(val context: Context, val cache: Cache) {
     companion object {
         internal const val USER_FILE = "User"
 
         const val key_auth_token = "auth_token"
-        const val key_user_email = "user_email"
     }
 
     private val pref: SharedPreferences =
         context.getSharedPreferences(USER_FILE, Activity.MODE_PRIVATE)
 
-    //    var authToken: String? = null
+    internal fun logOut() {
+        cleanPreference(clearRoom = true)
+        Caller.logoutApp(context)
+    }
+
+
+    internal fun cleanPreference(clearRoom: Boolean = true) {
+        val editor = pref.edit()
+        editor.clear()
+        editor.apply()
+        editor.commit()
+
+        if (clearRoom)
+            clearRoom()
+    }
+
+    private fun clearRoom() = runBlocking {
+        cache.playlistDao().clear()
+        cache.musicDao().clear()
+    }
+
     internal fun getAuthToken(): String? {
         val gson = Gson()
         val json = pref.getString(key_auth_token, "")
 
-        userEmailAddress = gson.fromJson(json, String::class.java)
-        return userEmailAddress
+        return gson.fromJson(json, String::class.java)
     }
 
     internal fun setAuthToken(authToken: String?) {
-//        this.authToken = authToken
         val editor = pref.edit()
         val gson = Gson()
         val json = gson.toJson(authToken)
         editor.putString(key_auth_token, json)
-        editor.apply()
-    }
-
-    var userEmailAddress: String? = null
-    internal fun getUserEmail(): String? {
-        val gson = Gson()
-        val json = pref.getString(key_user_email, "")
-
-        userEmailAddress = gson.fromJson(json, String::class.java)
-        return userEmailAddress
-    }
-
-    internal fun setUserEmail(email: String?) {
-        userEmailAddress = email
-        val editor = pref.edit()
-        val gson = Gson()
-        val json = gson.toJson(email)
-        editor.putString(key_user_email, json)
         editor.apply()
     }
 }

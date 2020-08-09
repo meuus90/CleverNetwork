@@ -1,6 +1,6 @@
 package com.network.clever.di.module.fragment
 
-import com.network.clever.presentation.home.HomeFragment
+import com.network.clever.presentation.tab.HomeFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
