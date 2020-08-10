@@ -22,7 +22,6 @@ import com.meuus.base.network.Resource
 import com.meuus.base.utility.Query
 import com.meuus.base.utility.SingleLiveEvent
 import com.network.clever.constant.AppConfig
-import com.network.clever.data.datasource.dao.item.MusicDao
 import com.network.clever.data.datasource.model.item.MusicListModel
 import com.network.clever.data.repository.BaseRepository
 import timber.log.Timber
@@ -32,7 +31,7 @@ import javax.inject.Singleton
 @Singleton
 class MusicRepository
 @Inject
-constructor(private val dao: MusicDao) : BaseRepository<Query>() {
+constructor() : BaseRepository<Query>() {
     override suspend fun work(liveData: MutableLiveData<Query>): SingleLiveEvent<Resource> {
         return object :
             NetworkBoundResource<MusicListModel, MusicListModel>(liveData.value?.boundType!!) {
@@ -40,7 +39,7 @@ constructor(private val dao: MusicDao) : BaseRepository<Query>() {
                 youtubeAPI.getMusics(
                     liveData.value?.params?.get(0) as String,
                     "snippet",
-                    10,
+                    60,
                     AppConfig.apiKey
                 )
 
