@@ -21,7 +21,7 @@ import javax.inject.Inject
 import kotlin.system.exitProcess
 
 
-class CleverNetwork : Application(), LifecycleObserver, HasAndroidInjector {
+class CleverPlayer : Application(), LifecycleObserver, HasAndroidInjector {
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
 
@@ -62,7 +62,7 @@ class CleverNetwork : Application(), LifecycleObserver, HasAndroidInjector {
 
     override fun androidInjector() = dispatchingAndroidInjector
 
-    class CleverNetworkComponentCallback(private val app: CleverNetwork) : ComponentCallbacks2 {
+    class CleverNetworkComponentCallback(private val app: CleverPlayer) : ComponentCallbacks2 {
         override fun onConfigurationChanged(newConfig: Configuration?) {}
 
         override fun onTrimMemory(level: Int) {

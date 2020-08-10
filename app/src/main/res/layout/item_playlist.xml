@@ -3,21 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/v_root"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="25dp"
-    android:layout_marginTop="10dp"
-    android:layout_marginEnd="25dp"
-    android:layout_marginBottom="10dp"
     android:orientation="vertical"
+    android:padding="10dp"
     tools:background="@color/colorBlack">
 
     <ImageView
         android:id="@+id/iv_thumbnail"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_height="150dp" />
 
     <TextView
         android:id="@+id/tv_name"
@@ -29,8 +29,8 @@
         android:maxLines="1"
         android:singleLine="true"
         android:textColor="@color/primaryTextColor"
-        app:layout_constraintEnd_toEndOf="@+id/iv_thumbnail"
-        app:layout_constraintStart_toStartOf="@+id/iv_thumbnail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/iv_thumbnail"
         tools:text="football" />
 </androidx.constraintlayout.widget.ConstraintLayout>

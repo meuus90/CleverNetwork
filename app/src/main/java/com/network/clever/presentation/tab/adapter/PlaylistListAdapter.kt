@@ -101,7 +101,8 @@ class PlaylistListAdapter(val doOnClick: (item: PlaylistListModel.PlaylistModel)
             try {
                 Glide.with(context).asDrawable().clone()
                     .load(item.imageUrl)
-                    .centerCrop()
+                    .centerInside()
+//                    .centerCrop()
                     .dontAnimate()
                     .into(iv_thumbnail)
             } catch (e: Exception) {

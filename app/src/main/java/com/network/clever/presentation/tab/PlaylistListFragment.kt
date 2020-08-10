@@ -1,13 +1,14 @@
 package com.network.clever.presentation.tab
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.paging.PagedList
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.meuus.base.network.Status
 import com.meuus.base.utility.Params
@@ -18,9 +19,11 @@ import com.network.clever.data.datasource.model.item.PlaylistListModel
 import com.network.clever.domain.viewmodel.item.PlaylistViewModel
 import com.network.clever.presentation.BaseFragment
 import com.network.clever.presentation.Caller
+import com.network.clever.presentation.tab.adapter.PlaylistItemDecoration
 import com.network.clever.presentation.tab.adapter.PlaylistListAdapter
 import kotlinx.android.synthetic.main.fragment_playlist_list.*
 import javax.inject.Inject
+import kotlin.math.absoluteValue
 
 class PlaylistListFragment : BaseFragment() {
     companion object {
@@ -35,6 +38,8 @@ class PlaylistListFragment : BaseFragment() {
     internal lateinit var playlistViewModel: PlaylistViewModel
 
     private lateinit var adapter: PlaylistListAdapter
+    private lateinit var itemDecoration: PlaylistItemDecoration
+    private lateinit var gridManager: GridLayoutManager
 
     private val homeActivity: HomeActivity by lazy {
         activity as HomeActivity
@@ -53,6 +58,10 @@ class PlaylistListFragment : BaseFragment() {
         return acvView.get()?.rootView
     }
 
+    //    private var beforeSize = 0f
+    private var spanCount = 3
+
+    @SuppressLint("ClickableViewAccessibility")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -66,12 +75,75 @@ class PlaylistListFragment : BaseFragment() {
         recyclerView.itemAnimator?.changeDuration = 0
         (recyclerView.itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
         recyclerView.isVerticalScrollBarEnabled = false
-        recyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        gridManager = GridLayoutManager(context, spanCount)
+        recyclerView.layoutManager = gridManager
+        itemDecoration = PlaylistItemDecoration(context)
+        recyclerView.addItemDecoration(itemDecoration)
+
+//        recyclerView.setOnTouchListener { v, event ->
+//            var pointerCount = event.pointerCount
+//            if (pointerCount > 2) pointerCount = 2
+//
+//            when (event.action.and(MotionEvent.ACTION_MASK)) {
+//                MotionEvent.ACTION_POINTER_DOWN -> {
+//                    if (pointerCount > 1) {
+//                        beforeSize = getSize(pointerCount, event)
+//                    }
+//                }
+//                MotionEvent.ACTION_MOVE -> {
+//                    if (pointerCount > 1) {
+//                        val afterSize = getSize(pointerCount, event)
+//
+//                        if (beforeSize < afterSize - 500000) {
+//                            if (spanCount > 1) {
+//                                spanCount -= 1
+//                                gridManager.spanCount = spanCount
+//                                itemDecoration.setSpanCount(spanCount)
+//                                adapter.notifyDataSetChanged()
+//                                beforeSize = afterSize
+//                            }
+//
+//                        } else if (beforeSize > afterSize + 500000) {
+//                            if (spanCount < 5) {
+//                                spanCount += 1
+//                                gridManager.spanCount = spanCount
+//                                itemDecoration.setSpanCount(spanCount)
+//                                adapter.notifyDataSetChanged()
+//                                beforeSize = afterSize
+//                            }
+//                        }
+//                    } else {
+//                        false
+//                    }
+//                }
+//                MotionEvent.ACTION_UP -> {
+//                    beforeSize = 0f
+//                }
+//            }
+//
+//
+//            true
+//        }
 
         swipeRefreshLayout.setOnRefreshListener {
             getPlaylist()
         }
         getPlaylist()
+    }
+
+    fun getSize(pointerCount: Int, event: MotionEvent): Float {
+        val x = floatArrayOf(0f, 0f)
+        val y = floatArrayOf(0f, 0f)
+
+        for (i in 0 until pointerCount) {
+            x[i] = event.getX(i)
+            y[i] = event.getY(i)
+        }
+
+        val xLength = (x[0] - x[1]).absoluteValue
+        val yLength = (y[0] - y[1]).absoluteValue
+
+        return xLength * yLength
     }
 
     private fun getPlaylist() {

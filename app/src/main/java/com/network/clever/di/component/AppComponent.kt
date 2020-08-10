@@ -17,7 +17,7 @@
 package com.network.clever.di.component
 
 import android.app.Application
-import com.network.clever.CleverNetwork
+import com.network.clever.CleverPlayer
 import com.network.clever.di.module.AppModule
 import com.network.clever.di.module.activity.AuthActivityModule
 import com.network.clever.di.module.activity.MainActivityModule
@@ -46,5 +46,5 @@ interface AppComponent {
         fun create(@BindsInstance app: Application): AppComponent
     }
 
-    fun inject(app: CleverNetwork)
+    fun inject(app: CleverPlayer)
 }

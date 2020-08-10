@@ -2,7 +2,7 @@
     package="com.network.clever">
 
     <application
-        android:name=".CleverNetwork"
+        android:name=".CleverPlayer"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"

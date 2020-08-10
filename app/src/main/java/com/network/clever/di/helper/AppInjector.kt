@@ -22,15 +22,15 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
+import com.network.clever.CleverPlayer
 import com.network.clever.di.Injectable
 import com.network.clever.di.component.DaggerAppComponent
-import com.network.clever.CleverNetwork
 import dagger.android.AndroidInjection
 import dagger.android.HasAndroidInjector
 import dagger.android.support.AndroidSupportInjection
 
 object AppInjector {
-    fun init(app: CleverNetwork) {
+    fun init(app: CleverPlayer) {
         DaggerAppComponent.factory().create(app).inject(app)
         app.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
