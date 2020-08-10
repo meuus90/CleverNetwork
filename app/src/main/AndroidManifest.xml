@@ -38,5 +38,17 @@
             android:name=".presentation.stream.PlayerActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme" />
+
+        <service
+            android:name=".presentation.stream.AudioService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="REWIND" />
+                <action android:name="TOGGLE_PLAY" />
+                <action android:name="FORWARD" />
+                <action android:name="CLOSE" />
+            </intent-filter>
+        </service>
     </application>
 </manifest>

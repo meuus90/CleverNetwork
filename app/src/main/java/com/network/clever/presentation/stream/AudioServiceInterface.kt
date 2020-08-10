@@ -5,13 +5,14 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
+import com.network.clever.data.datasource.model.item.MusicListModel
 import com.network.clever.presentation.stream.AudioService.AudioServiceBinder
 
 
 class AudioServiceInterface(context: Context) {
     private var mServiceConnection: ServiceConnection?
     private var mService: AudioService? = null
-    fun setPlayList(audioIds: ArrayList<Long?>?) {
+    fun setPlayList(audioIds: ArrayList<Long>) {
         mService?.setPlayList(audioIds)
     }
 
@@ -34,7 +35,7 @@ class AudioServiceInterface(context: Context) {
     val isPlaying: Boolean
         get() = mService?.isPlaying ?: false
 
-    val audioItem: AudioAdapter.AudioItem?
+    val audioItem: MusicListModel.MusicModel?
         get() = mService?.audioItem
 
     fun pause() {

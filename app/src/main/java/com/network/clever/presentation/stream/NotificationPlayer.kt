@@ -118,26 +118,27 @@ class NotificationPlayer(service: AudioService) {
             notification: Notification
         ) {
             if (mService.isPlaying) {
-                remoteViews!!.setImageViewResource(R.id.btn_play_pause, R.drawable.ic_pause_black)
+                remoteViews?.setImageViewResource(R.id.btn_play_pause, R.drawable.ic_pause_black)
             } else {
-                remoteViews!!.setImageViewResource(
+                remoteViews?.setImageViewResource(
                     R.id.btn_play_pause,
                     R.drawable.ic_play_arrow_black
                 )
             }
-            val title: String = mService.audioItem?.mTitle ?: ""
-            remoteViews.setTextViewText(R.id.txt_title, title)
+            val title: String = mService.audioItem.mTitle
+            remoteViews?.setTextViewText(R.id.txt_title, title)
             val albumArtUri: Uri = ContentUris.withAppendedId(
                 Uri.parse("content://media/external/audio/albumart"),
-                mService.audioItem?.mAlbumId ?: 0
+                mService.audioItem.mAlbumId
             )
-
-            Picasso.get().load(albumArtUri).error(R.drawable.ic_launcher).into(
-                remoteViews,
-                R.id.img_albumart,
-                NOTIFICATION_PLAYER_ID,
-                notification
-            )
+            remoteViews?.let {
+                Picasso.get().load(albumArtUri).error(R.drawable.ic_launcher).into(
+                    it,
+                    R.id.img_albumart,
+                    NOTIFICATION_PLAYER_ID,
+                    notification
+                )
+            }
         }
     }
 

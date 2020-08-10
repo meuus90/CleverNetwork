@@ -3,13 +3,13 @@ package com.network.clever.presentation.stream
 import android.annotation.SuppressLint
 import android.app.Service
 import android.content.Intent
-import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Binder
 import android.os.IBinder
 import android.os.PowerManager
 import android.provider.MediaStore
+import com.network.clever.data.datasource.model.item.MusicListModel
 
 
 class AudioService : Service() {
@@ -18,7 +18,7 @@ class AudioService : Service() {
     private var mMediaPlayer: MediaPlayer? = null
     private var isPrepared = false
     private var mCurrentPosition = 0
-    private var mAudioItem: AudioAdapter.AudioItem? = null
+    private var mAudioItem: MusicListModel.MusicModel? = null
     private var mNotificationPlayer: NotificationPlayer? = null
 
     inner class AudioServiceBinder : Binder() {
@@ -122,25 +122,25 @@ class AudioService : Service() {
         )
         val selection = MediaStore.Audio.Media._ID + " = ?"
         val selectionArgs = arrayOf(audioId.toString())
-        contentResolver.query(uri, projection, selection, selectionArgs, null)?.let { cursor ->
-            if (cursor.count > 0) {
-                cursor.moveToFirst()
-                mAudioItem = AudioAdapter.AudioItem.bindCursor(cursor)
-            }
-            cursor.close()
-        }
+//        contentResolver.query(uri, projection, selection, selectionArgs, null)?.let { cursor ->
+//            if (cursor.count > 0) {
+//                cursor.moveToFirst()
+//                mAudioItem = AudioAdapter.AudioItem.bindCursor(cursor)
+//            }
+//            cursor.close()
+//        }
     }
 
     private fun prepare() {
-        try {
-            mMediaPlayer?.let { player ->
-                player.setDataSource(mAudioItem?.mDataPath)
-                player.setAudioStreamType(AudioManager.STREAM_MUSIC)
-                player.prepareAsync()
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+//        try {
+//            mMediaPlayer?.let { player ->
+//                player.setDataSource(mAudioItem?.mDataPath)
+//                player.setAudioStreamType(AudioManager.STREAM_MUSIC)
+//                player.prepareAsync()
+//            }
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//        }
     }
 
     private fun stop() {
@@ -155,7 +155,7 @@ class AudioService : Service() {
         }
     }
 
-    val audioItem: AudioAdapter.AudioItem?
+    val audioItem: MusicListModel.MusicModel?
         get() = mAudioItem
 
     val isPlaying: Boolean
