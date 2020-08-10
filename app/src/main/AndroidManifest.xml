@@ -1,6 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.network.clever">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".CleverPlayer"
         android:allowBackup="true"
