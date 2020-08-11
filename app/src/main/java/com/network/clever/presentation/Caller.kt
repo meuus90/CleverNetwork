@@ -33,7 +33,7 @@ object Caller {
     }
 
     internal fun openList(activity: BaseActivity) {
-        val intent = Intent(activity, PlayerActivity::class.java).apply {
+        val intent = Intent(activity, HomeActivity::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
             putExtra(TAB_TEY, TAB_LISTS)
         }
@@ -41,7 +41,7 @@ object Caller {
     }
 
     internal fun openSetting(activity: BaseActivity) {
-        val intent = Intent(activity, PlayerActivity::class.java).apply {
+        val intent = Intent(activity, HomeActivity::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
             putExtra(TAB_TEY, TAB_SETTING)
         }
@@ -56,7 +56,7 @@ object Caller {
 //        activity.overridePendingTransition(R.anim.slide_in_right_left, R.anim.slide_out_left_right)
     }
 
-    internal fun openPlayer(activity: BaseActivity, music: MusicListModel.MusicModel) {
+    internal fun openPlayer(activity: BaseActivity, music: ArrayList<MusicListModel.MusicModel>) {
         val intent = Intent(activity, PlayerActivity::class.java).apply {
             putExtra(KEY_MUSIC, music)
         }

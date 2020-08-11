@@ -1,17 +1,20 @@
 package com.network.clever.presentation.stream
 
-import android.annotation.SuppressLint
 import android.app.Notification
+import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
+import android.os.Build
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.AppWidgetTarget
 import com.network.clever.R
 import com.network.clever.presentation.tab.HomeActivity
-import com.squareup.picasso.Picasso
 
 
 class NotificationPlayer(service: AudioService) {
@@ -20,10 +23,25 @@ class NotificationPlayer(service: AudioService) {
         service.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     private var mNotificationManagerBuilder: NotificationManagerBuilder? = null
     private var isForeground = false
+
+    private var channelId = ""
+    fun initNotificationPlayer() {
+        cancel()
+
+        channelId = createNotificationChannel(
+            mService, NotificationManagerCompat.IMPORTANCE_DEFAULT,
+            false, mService.getString(R.string.app_name), "App notification channel"
+        ) // 1
+
+        mNotificationManagerBuilder = NotificationManagerBuilder(channelId)
+        mNotificationManagerBuilder?.execute()
+    }
+
     fun updateNotificationPlayer() {
         cancel()
-        mNotificationManagerBuilder = NotificationManagerBuilder()
-        mNotificationManagerBuilder!!.execute()
+
+        mNotificationManagerBuilder = NotificationManagerBuilder(channelId)
+        mNotificationManagerBuilder?.execute()
     }
 
     fun removeNotificationPlayer() {
@@ -32,54 +50,63 @@ class NotificationPlayer(service: AudioService) {
         isForeground = false
     }
 
+    private fun createNotificationChannel(
+        context: Context, importance: Int, showBadge: Boolean,
+        name: String, description: String
+    ): String {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channelId = "${context.packageName}-$name"
+            val channel = NotificationChannel(channelId, name, importance)
+            channel.description = description
+            channel.setShowBadge(showBadge)
+
+            val notificationManager = context.getSystemService(NotificationManager::class.java)
+            notificationManager?.createNotificationChannel(channel)
+
+            channelId
+        } else ""
+    }
+
     private fun cancel() {
         mNotificationManagerBuilder?.cancel(true)
         mNotificationManagerBuilder = null
     }
 
-    @SuppressLint("StaticFieldLeak")
-    private inner class NotificationManagerBuilder : AsyncTask<Any?, Any?, Notification>() {
-        private var mRemoteViews: RemoteViews? = null
-        private var mNotificationBuilder: NotificationCompat.Builder? = null
-        private var mMainPendingIntent: PendingIntent? = null
+    private inner class NotificationManagerBuilder(val channelId: String) :
+        AsyncTask<Any, Any, Notification>() {
+        lateinit var mRemoteViews: RemoteViews
+        lateinit var mNotificationBuilder: NotificationCompat.Builder
+        lateinit var mMainPendingIntent: PendingIntent
+
         override fun onPreExecute() {
             super.onPreExecute()
+
             val mainActivity = Intent(mService, HomeActivity::class.java)
             mMainPendingIntent = PendingIntent.getActivity(mService, 0, mainActivity, 0)
             mRemoteViews = createRemoteView(R.layout.notification_player)
-            mNotificationBuilder = NotificationCompat.Builder(mService)
-            mNotificationBuilder?.let { builder ->
-                builder.setSmallIcon(R.mipmap.ic_launcher)
+            mNotificationBuilder =
+                NotificationCompat.Builder(mService, channelId)
+                    .setSmallIcon(R.mipmap.ic_launcher)
                     .setOngoing(true)
                     .setContentIntent(mMainPendingIntent)
                     .setContent(mRemoteViews)
 
-                val notification: Notification = builder.build()
-                notification.priority = Notification.PRIORITY_MAX
-                notification.contentIntent = mMainPendingIntent
-                if (!isForeground) {
-                    isForeground = true
-                    // 서비스를 Foreground 상태로 만든다
-                    mService.startForeground(
-                        NOTIFICATION_PLAYER_ID,
-                        notification
-                    )
-                }
-            }
+            NotificationManagerCompat.from(mService)
+                .notify(NOTIFICATION_PLAYER_ID, mNotificationBuilder.build())
         }
 
-        override fun doInBackground(params: Array<Any?>): Notification? {
-            mNotificationBuilder?.setContent(mRemoteViews)
-            mNotificationBuilder?.setContentIntent(mMainPendingIntent)
-            mNotificationBuilder?.priority = Notification.PRIORITY_MAX
-            val notification: Notification? = mNotificationBuilder?.build()
-            notification?.let {
-                updateRemoteView(mRemoteViews, it)
-            }
-            return notification
+        override fun doInBackground(params: Array<Any>): Notification {
+            return mNotificationBuilder.apply {
+                setContent(mRemoteViews)
+                setContentIntent(mMainPendingIntent)
+                priority = Notification.PRIORITY_MAX
+                setVibrate(null)
+                setSound(null)
+                updateRemoteView(mRemoteViews)
+            }.build()
         }
 
-        override fun onPostExecute(notification: Notification?) {
+        override fun onPostExecute(notification: Notification) {
             super.onPostExecute(notification)
             try {
                 mNotificationManager.notify(NOTIFICATION_PLAYER_ID, notification)
@@ -96,9 +123,9 @@ class NotificationPlayer(service: AudioService) {
             val actionClose = Intent(CommandActions.CLOSE)
             val togglePlay =
                 PendingIntent.getService(mService, 0, actionTogglePlay, 0)
-            val forward = PendingIntent.getService(mService, 0, actionForward, 0)
-            val rewind = PendingIntent.getService(mService, 0, actionRewind, 0)
-            val close = PendingIntent.getService(mService, 0, actionClose, 0)
+            val forward = PendingIntent.getService(mService, 0, Intent(CommandActions.FORWARD), 0)
+            val rewind = PendingIntent.getService(mService, 0, Intent(CommandActions.REWIND), 0)
+            val close = PendingIntent.getService(mService, 0, Intent(CommandActions.CLOSE), 0)
             remoteView.setOnClickPendingIntent(R.id.btn_play_pause, togglePlay)
             remoteView.setOnClickPendingIntent(R.id.btn_forward, forward)
             remoteView.setOnClickPendingIntent(R.id.btn_rewind, rewind)
@@ -106,29 +133,31 @@ class NotificationPlayer(service: AudioService) {
             return remoteView
         }
 
-        private fun updateRemoteView(
-            remoteViews: RemoteViews?,
-            notification: Notification
-        ) {
-            if (mService.isPlaying) {
-                remoteViews?.setImageViewResource(R.id.btn_play_pause, R.drawable.ic_pause_black)
-            } else {
-                remoteViews?.setImageViewResource(
-                    R.id.btn_play_pause,
-                    R.drawable.ic_play_arrow_black
-                )
-            }
+        private fun updateRemoteView(remoteViews: RemoteViews) {
             val title = mService.audioItem?.snippet?.title
-            remoteViews?.setTextViewText(R.id.txt_title, title)
             val albumArtUrl = mService.audioItem?.snippet?.thumbnails?.default?.url
-            remoteViews?.let {
-                Picasso.get().load(albumArtUrl)
-                    .error(R.drawable.ic_launcher).into(
-                        it,
-                        R.id.img_albumart,
-                        NOTIFICATION_PLAYER_ID,
-                        notification
+
+            remoteViews.apply {
+                if (mService.isPlaying) {
+                    setImageViewResource(R.id.btn_play_pause, R.drawable.ic_pause_black)
+                } else {
+                    setImageViewResource(
+                        R.id.btn_play_pause,
+                        R.drawable.ic_play_arrow_black
                     )
+                }
+
+                setTextViewText(R.id.txt_title, title)
+                try {
+                    val appWidgetTarget =
+                        AppWidgetTarget(mService, R.id.img_albumart, this, NOTIFICATION_PLAYER_ID)
+                    Glide.with(mService).asBitmap()
+                        .load(albumArtUrl)
+                        .centerCrop()
+                        .dontAnimate()
+                        .into(appWidgetTarget)
+                } catch (e: Exception) {
+                }
             }
         }
     }

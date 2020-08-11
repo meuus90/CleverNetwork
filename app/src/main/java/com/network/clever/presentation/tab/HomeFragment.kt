@@ -63,8 +63,8 @@ class HomeFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
 
         adapter =
-            ContentsAdapter({ item ->
-                Caller.openPlayer(homeActivity, item)
+            ContentsAdapter({ list ->
+                Caller.openPlayer(homeActivity, list)
             }, { item ->
                 val query = Query.query(listOf(UpdateMyPlaylistUseCase.DELETE_ITEM, item))
                 update(query)
@@ -87,12 +87,9 @@ class HomeFragment : BaseFragment() {
 
     private fun update(query: Query) {
         updateMyPlaylistViewModel.pullTrigger(Params(query))
-        updateMyPlaylistViewModel.playlist.observe(viewLifecycleOwner, Observer { isSuccess ->
-            if (isSuccess) {
-                adapter.submitList(null)
-                getPlaylist()
-            } else {
-            }
+        updateMyPlaylistViewModel.playlist.observe(viewLifecycleOwner, Observer { list ->
+            adapter.submitList(null)
+            getPlaylist()
         })
     }
 

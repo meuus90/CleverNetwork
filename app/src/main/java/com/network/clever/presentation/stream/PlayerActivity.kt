@@ -5,15 +5,14 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
-import android.view.View
+import com.bumptech.glide.Glide
 import com.network.clever.CleverPlayer
 import com.network.clever.R
 import com.network.clever.data.datasource.model.item.MusicListModel
 import com.network.clever.presentation.BaseActivity
 import com.network.clever.presentation.Caller
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback
 import kotlinx.android.synthetic.main.fragment_player.*
+import timber.log.Timber
 
 
 class PlayerActivity : BaseActivity() {
@@ -23,23 +22,27 @@ class PlayerActivity : BaseActivity() {
         setContentView(R.layout.fragment_player)
     }
 
-    lateinit var music: MusicListModel.MusicModel
+    lateinit var music: ArrayList<MusicListModel.MusicModel>
     private var videoUrl = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        music = intent.getParcelableExtra(Caller.KEY_MUSIC)
+        music = intent.getParcelableArrayListExtra<MusicListModel.MusicModel>(Caller.KEY_MUSIC)
 
         registerBroadcast()
-        youtubePlayerView.enableBackgroundPlayback(true)
-        youtubePlayerView.getYouTubePlayerWhenReady(object : YouTubePlayerCallback {
-            override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
-//                youTubePlayer.cueVideo(music.snippet.resourceId.videoId, 0f)
-                CleverPlayer.instance.serviceInterface.setPlayer(youTubePlayer)
-                CleverPlayer.instance.serviceInterface.setPlayList(arrayListOf(music))
-            }
-        })
+
+        CleverPlayer.instance.serviceInterface.setPlayList(music)
+
+        btn_rewind.setOnClickListener {
+            CleverPlayer.instance.serviceInterface.rewind()
+        }
+        btn_play_pause.setOnClickListener {
+            CleverPlayer.instance.serviceInterface.togglePlay()
+        }
+        btn_forward.setOnClickListener {
+            CleverPlayer.instance.serviceInterface.forward()
+        }
         updateUI()
     }
 
@@ -69,16 +72,17 @@ class PlayerActivity : BaseActivity() {
         }
         val audioItem: MusicListModel.MusicModel? =
             CleverPlayer.instance.serviceInterface.audioItem
-    }
 
-    fun onClick(v: View) {
-        when (v.id) {
-            R.id.btn_rewind ->                 // 이전곡으로 이동
-                CleverPlayer.instance.serviceInterface.rewind()
-            R.id.btn_play_pause ->                 // 재생 또는 일시정지
-                CleverPlayer.instance.serviceInterface.togglePlay()
-            R.id.btn_forward ->                 // 다음곡으로 이동
-                CleverPlayer.instance.serviceInterface.forward()
+        try {
+            audioItem?.let {
+                Glide.with(this).asDrawable().clone()
+                    .load(it.snippet.thumbnails.maxres.url)
+                    .centerCrop()
+                    .dontAnimate()
+                    .into(iv_thumbnail)
+            }
+        } catch (e: Exception) {
+            Timber.e(e)
         }
     }
 

@@ -16,12 +16,11 @@ import kotlinx.android.synthetic.main.item_my_music.*
 import timber.log.Timber
 
 class ContentsAdapter(
-    val doOnClick: (item: MusicListModel.MusicModel) -> Unit,
+    val doOnClick: (item: ArrayList<MusicListModel.MusicModel>) -> Unit,
     val doOnClickDelete: (item: MusicListModel.MusicModel) -> Unit
-) :
-    PagedListAdapter<MusicListModel.MusicModel, BaseViewHolder<MusicListModel.MusicModel>>(
-        DIFF_CALLBACK
-    ) {
+) : PagedListAdapter<MusicListModel.MusicModel, BaseViewHolder<MusicListModel.MusicModel>>(
+    DIFF_CALLBACK
+) {
     companion object {
         private val PAYLOAD_TITLE = Any()
 
@@ -118,11 +117,14 @@ class ContentsAdapter(
                 Timber.e(e)
             }
 
+
             tv_title.text = item.snippet.title
-            tv_artist.text = item.snippet.description
+            tv_artist.text = item.snippet.channelTitle
 
             v_root.setOnClickListener {
-                adapter.doOnClick(item)
+                adapter.currentList?.toMutableList()?.let {
+                    adapter.doOnClick(ArrayList(it))
+                }
             }
 
             iv_delete.setOnClickListener {

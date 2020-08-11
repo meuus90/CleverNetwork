@@ -7,16 +7,11 @@ import android.content.ServiceConnection
 import android.os.IBinder
 import com.network.clever.data.datasource.model.item.MusicListModel
 import com.network.clever.presentation.stream.AudioService.AudioServiceBinder
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 
 
 class AudioServiceInterface(context: Context) {
     private var mServiceConnection: ServiceConnection?
     private var mService: AudioService? = null
-
-    fun setPlayer(mediaPlayer: YouTubePlayer) {
-        mService?.setPlayer(mediaPlayer)
-    }
 
     fun setPlayList(mMusics: ArrayList<MusicListModel.MusicModel>) {
         mService?.setPlayList(mMusics)
@@ -32,9 +27,9 @@ class AudioServiceInterface(context: Context) {
 
     fun togglePlay() {
         if (isPlaying) {
-            mService?.pause()
+            pause()
         } else {
-            mService?.play()
+            play()
         }
     }
 

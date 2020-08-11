@@ -30,7 +30,8 @@ import javax.inject.Singleton
 @Singleton
 class UpdateMyPlaylistUseCase
 @Inject
-constructor(private val dao: MusicDao) : BaseUseCase<Params, Boolean>() {
+constructor(private val dao: MusicDao) :
+    BaseUseCase<Params, MutableList<MusicListModel.MusicModel>>() {
     companion object {
         const val UPDATE_ALL = 0
         const val ADD_ALL = 1
@@ -44,7 +45,7 @@ constructor(private val dao: MusicDao) : BaseUseCase<Params, Boolean>() {
     override suspend fun execute(
         viewModelScope: CoroutineScope,
         params: Params
-    ): SingleLiveEvent<Boolean> {
+    ): SingleLiveEvent<MutableList<MusicListModel.MusicModel>> {
         setQuery(params)
 
         val state = params.query.params[0] as Int
@@ -54,37 +55,37 @@ constructor(private val dao: MusicDao) : BaseUseCase<Params, Boolean>() {
 
                 dao.clear()
                 dao.insert(music)
-                true
+                dao.getPlaylists()
             }
             ADD_ALL -> {
                 val music = params.query.params[1] as MutableList<MusicListModel.MusicModel>
 
                 dao.insert(music)
 
-                true
+                dao.getPlaylists()
             }
             ADD_ITEM -> {
                 val music = params.query.params[1] as MusicListModel.MusicModel
 
                 dao.insert(music)
-                true
+                dao.getPlaylists()
             }
             DELETE_ALL -> {
                 dao.clear()
-                true
+                dao.getPlaylists()
             }
             DELETE_ITEM -> {
                 val music = params.query.params[1] as MusicListModel.MusicModel
 
                 dao.delete(music)
-                true
+                dao.getPlaylists()
             }
             else -> {
-                false
+                mutableListOf()
             }
         }
 
-        val resultEvent = SingleLiveEvent<Boolean>()
+        val resultEvent = SingleLiveEvent<MutableList<MusicListModel.MusicModel>>()
         resultEvent.addSource(liveData) {
             resultEvent.value = result
         }

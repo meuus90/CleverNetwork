@@ -35,11 +35,12 @@ data class MusicListModel(
         @field:ColumnInfo(name = "description") val description: String,
         @field:ColumnInfo(name = "channelId") val channelId: String,
         @field:ColumnInfo(name = "playlistId") val playlistId: String,
+        @field:ColumnInfo(name = "channelTitle") val channelTitle: String,
 
         @field:ColumnInfo(name = "resourceId") val resourceId: ResourceId,
         @field:ColumnInfo(name = "thumbnails") val thumbnails: Thumbnails
     ) : BaseData(), Parcelable {
-        constructor() : this("", "", "", "", "", ResourceId(), Thumbnails())
+        constructor() : this("", "", "", "", "", "", ResourceId(), Thumbnails())
     }
 
     @Parcelize
@@ -52,9 +53,10 @@ data class MusicListModel(
 
     @Parcelize
     data class Thumbnails(
-        @field:ColumnInfo(name = "default") val default: Thumbnail
+        @field:ColumnInfo(name = "default") val default: Thumbnail,
+        @field:ColumnInfo(name = "maxres") val maxres: Thumbnail
     ) : BaseData(), Parcelable {
-        constructor() : this(Thumbnail())
+        constructor() : this(Thumbnail(), Thumbnail())
     }
 
     @Parcelize

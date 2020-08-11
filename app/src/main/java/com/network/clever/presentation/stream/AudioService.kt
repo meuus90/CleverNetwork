@@ -7,14 +7,15 @@ import android.os.IBinder
 import com.network.clever.data.datasource.model.item.MusicListModel
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerListener
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 
 
 class AudioService : Service() {
     private val mBinder: IBinder = AudioServiceBinder()
     private val mMusics: ArrayList<MusicListModel.MusicModel> = ArrayList()
     private var mMediaPlayer: YouTubePlayer? = null
-    private var isPrepared = false
     private var mCurrentPosition = 0
     private var mNotificationPlayer: NotificationPlayer? = null
 
@@ -31,88 +32,105 @@ class AudioService : Service() {
             get() = this@AudioService
     }
 
-    fun setPlayer(mediaPlayer: YouTubePlayer) {
-        mMediaPlayer = mediaPlayer
-        mMediaPlayer?.addListener(object : YouTubePlayerListener {
-            override fun onApiChange(youTubePlayer: YouTubePlayer) {
+    fun setPlayer() {
+        youtubeView.enableBackgroundPlayback(true)
+        youtubeView.getYouTubePlayerWhenReady(object : YouTubePlayerCallback {
+            override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
+                mMediaPlayer = youTubePlayer
 
-            }
+////                youTubePlayer.cueVideo(music.snippet.resourceId.videoId, 0f)
+//                CleverPlayer.instance.serviceInterface.initNotification()
+//                CleverPlayer.instance.serviceInterface.setPlayer(youTubePlayer)
+//                CleverPlayer.instance.serviceInterface.setPlayList(music)
 
-            override fun onCurrentSecond(youTubePlayer: YouTubePlayer, second: Float) {
+                youTubePlayer.addListener(object : YouTubePlayerListener {
+                    override fun onApiChange(youTubePlayer: YouTubePlayer) {
 
-            }
+                    }
 
-            override fun onError(
-                youTubePlayer: YouTubePlayer,
-                error: PlayerConstants.PlayerError
-            ) {
-                isPrepared = false
-                sendBroadcast(Intent(BroadcastActions.PLAY_STATE_CHANGED)) // 재생상태 변경 전송
-                updateNotificationPlayer()
-            }
+                    override fun onCurrentSecond(youTubePlayer: YouTubePlayer, second: Float) {
 
-            override fun onPlaybackQualityChange(
-                youTubePlayer: YouTubePlayer,
-                playbackQuality: PlayerConstants.PlaybackQuality
-            ) {
+                    }
 
-            }
+                    override fun onError(
+                        youTubePlayer: YouTubePlayer,
+                        error: PlayerConstants.PlayerError
+                    ) {
+                        sendBroadcast(Intent(BroadcastActions.PLAY_STATE_CHANGED)) // 재생상태 변경 전송
+                        updateNotificationPlayer()
+                    }
 
-            override fun onPlaybackRateChange(
-                youTubePlayer: YouTubePlayer,
-                playbackRate: PlayerConstants.PlaybackRate
-            ) {
+                    override fun onPlaybackQualityChange(
+                        youTubePlayer: YouTubePlayer,
+                        playbackQuality: PlayerConstants.PlaybackQuality
+                    ) {
 
-            }
+                    }
 
-            override fun onReady(youTubePlayer: YouTubePlayer) {
-                isPrepared = true
-                youTubePlayer.play()
-                sendBroadcast(Intent(BroadcastActions.PREPARED)) // prepared 전송
-                updateNotificationPlayer()
-            }
+                    override fun onPlaybackRateChange(
+                        youTubePlayer: YouTubePlayer,
+                        playbackRate: PlayerConstants.PlaybackRate
+                    ) {
 
-            override fun onStateChange(
-                youTubePlayer: YouTubePlayer,
-                state: PlayerConstants.PlayerState
-            ) {
-                when (state) {
-                    PlayerConstants.PlayerState.ENDED -> {
-                        if (mCurrentPosition < mMusics.lastIndex) {
-                            forward()
-                        } else {
-                            isPrepared = false
-                            sendBroadcast(Intent(BroadcastActions.PLAY_STATE_CHANGED)) // 재생상태 변경 전송
-                            updateNotificationPlayer()
+                    }
+
+                    override fun onReady(youTubePlayer: YouTubePlayer) {
+                        youTubePlayer.play()
+                        sendBroadcast(Intent(BroadcastActions.PREPARED)) // prepared 전송
+                        updateNotificationPlayer()
+                    }
+
+                    override fun onStateChange(
+                        youTubePlayer: YouTubePlayer,
+                        state: PlayerConstants.PlayerState
+                    ) {
+                        when (state) {
+                            PlayerConstants.PlayerState.ENDED -> {
+                                if (mCurrentPosition < mMusics.lastIndex) {
+                                    forward()
+                                }
+                            }
+                            else -> {
+                            }
                         }
+
+                        isPlaying = state == PlayerConstants.PlayerState.PLAYING
+
+                        sendBroadcast(Intent(BroadcastActions.PLAY_STATE_CHANGED)) // 재생상태 변경 전송
+                        updateNotificationPlayer()
                     }
-                    else -> {
+
+                    override fun onVideoDuration(youTubePlayer: YouTubePlayer, duration: Float) {
+
                     }
-                }
 
-                isPlaying = state == PlayerConstants.PlayerState.PLAYING
-            }
+                    override fun onVideoId(youTubePlayer: YouTubePlayer, videoId: String) {
 
-            override fun onVideoDuration(youTubePlayer: YouTubePlayer, duration: Float) {
+                    }
 
-            }
+                    override fun onVideoLoadedFraction(
+                        youTubePlayer: YouTubePlayer,
+                        loadedFraction: Float
+                    ) {
 
-            override fun onVideoId(youTubePlayer: YouTubePlayer, videoId: String) {
-
-            }
-
-            override fun onVideoLoadedFraction(
-                youTubePlayer: YouTubePlayer,
-                loadedFraction: Float
-            ) {
-
+                    }
+                })
             }
         })
     }
 
+    lateinit var youtubeView: YouTubePlayerView
+    fun initYoutubeView(): YouTubePlayerView {
+        youtubeView = YouTubePlayerView(this)
+        return youtubeView
+    }
+
     override fun onCreate() {
         super.onCreate()
+        initYoutubeView()
+        setPlayer()
         mNotificationPlayer = NotificationPlayer(this)
+        initNotificationPlayer()
     }
 
     override fun onBind(intent: Intent?): IBinder {
@@ -151,6 +169,10 @@ class AudioService : Service() {
         removeNotificationPlayer()
     }
 
+    fun initNotificationPlayer() {
+        mNotificationPlayer?.initNotificationPlayer()
+    }
+
     private fun updateNotificationPlayer() {
         mNotificationPlayer?.updateNotificationPlayer()
     }
@@ -168,26 +190,21 @@ class AudioService : Service() {
     fun play(position: Int) {
         mCurrentPosition = position
         val id = mMusics[position].snippet.resourceId.videoId
-        mMediaPlayer?.loadVideo(id, 0f)
+        mMediaPlayer?.cueVideo(id, 0f)
+        play()
     }
 
     fun play() {
-        if (isPrepared) {
-            mMediaPlayer?.let {
-                it.play()
-                sendBroadcast(Intent(BroadcastActions.PLAY_STATE_CHANGED)) // 재생상태 변경 전송
-                updateNotificationPlayer()
-            }
+        mMediaPlayer?.let {
+            it.play()
+            updateNotificationPlayer()
         }
     }
 
     fun pause() {
-        if (isPrepared) {
-            mMediaPlayer?.let {
-                it.pause()
-                sendBroadcast(Intent(BroadcastActions.PLAY_STATE_CHANGED)) // 재생상태 변경 전송
-                updateNotificationPlayer()
-            }
+        mMediaPlayer?.let {
+            it.pause()
+            updateNotificationPlayer()
         }
     }
 
