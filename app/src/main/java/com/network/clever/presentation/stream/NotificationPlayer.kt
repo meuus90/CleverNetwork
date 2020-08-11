@@ -4,10 +4,8 @@ import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.AsyncTask
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
@@ -35,10 +33,8 @@ class NotificationPlayer(service: AudioService) {
     }
 
     private fun cancel() {
-        if (mNotificationManagerBuilder != null) {
-            mNotificationManagerBuilder!!.cancel(true)
-            mNotificationManagerBuilder = null
-        }
+        mNotificationManagerBuilder?.cancel(true)
+        mNotificationManagerBuilder = null
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -86,10 +82,7 @@ class NotificationPlayer(service: AudioService) {
         override fun onPostExecute(notification: Notification?) {
             super.onPostExecute(notification)
             try {
-                mNotificationManager.notify(
-                    NOTIFICATION_PLAYER_ID,
-                    notification
-                )
+                mNotificationManager.notify(NOTIFICATION_PLAYER_ID, notification)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -125,19 +118,17 @@ class NotificationPlayer(service: AudioService) {
                     R.drawable.ic_play_arrow_black
                 )
             }
-            val title: String = mService.audioItem.mTitle
+            val title = mService.audioItem?.snippet?.title
             remoteViews?.setTextViewText(R.id.txt_title, title)
-            val albumArtUri: Uri = ContentUris.withAppendedId(
-                Uri.parse("content://media/external/audio/albumart"),
-                mService.audioItem.mAlbumId
-            )
+            val albumArtUrl = mService.audioItem?.snippet?.thumbnails?.default?.url
             remoteViews?.let {
-                Picasso.get().load(albumArtUri).error(R.drawable.ic_launcher).into(
-                    it,
-                    R.id.img_albumart,
-                    NOTIFICATION_PLAYER_ID,
-                    notification
-                )
+                Picasso.get().load(albumArtUrl)
+                    .error(R.drawable.ic_launcher).into(
+                        it,
+                        R.id.img_albumart,
+                        NOTIFICATION_PLAYER_ID,
+                        notification
+                    )
             }
         }
     }

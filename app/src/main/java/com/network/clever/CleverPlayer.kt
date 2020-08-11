@@ -12,6 +12,7 @@ import androidx.multidex.BuildConfig
 import androidx.multidex.MultiDex
 import com.bumptech.glide.Glide
 import com.network.clever.di.helper.AppInjector
+import com.network.clever.presentation.stream.AudioServiceInterface
 import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.Logger
 import dagger.android.DispatchingAndroidInjector
@@ -27,7 +28,11 @@ class CleverPlayer : Application(), LifecycleObserver, HasAndroidInjector {
 
     internal var isInForeground = false
 
+    lateinit var serviceInterface: AudioServiceInterface
+
     companion object {
+        lateinit var instance: CleverPlayer
+
         fun exitApplication(activity: Activity) {
             ActivityCompat.finishAffinity(activity)
             exit()
@@ -42,6 +47,8 @@ class CleverPlayer : Application(), LifecycleObserver, HasAndroidInjector {
 
     override fun onCreate() {
         super.onCreate()
+        instance = this
+        serviceInterface = AudioServiceInterface(applicationContext)
 
         if (BuildConfig.DEBUG) {
             Timber.uprootAll()

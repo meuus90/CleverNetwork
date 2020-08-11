@@ -1,56 +1,117 @@
 package com.network.clever.presentation.stream
 
-import android.annotation.SuppressLint
 import android.app.Service
 import android.content.Intent
-import android.media.MediaPlayer
-import android.net.Uri
 import android.os.Binder
 import android.os.IBinder
-import android.os.PowerManager
-import android.provider.MediaStore
 import com.network.clever.data.datasource.model.item.MusicListModel
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerListener
 
 
 class AudioService : Service() {
     private val mBinder: IBinder = AudioServiceBinder()
-    private val mAudioIds: ArrayList<Long> = ArrayList()
-    private var mMediaPlayer: MediaPlayer? = null
+    private val mMusics: ArrayList<MusicListModel.MusicModel> = ArrayList()
+    private var mMediaPlayer: YouTubePlayer? = null
     private var isPrepared = false
     private var mCurrentPosition = 0
-    private var mAudioItem: MusicListModel.MusicModel? = null
     private var mNotificationPlayer: NotificationPlayer? = null
+
+    var isPlaying = false
+    val audioItem: MusicListModel.MusicModel?
+        get() = try {
+            mMusics[mCurrentPosition]
+        } catch (e: Exception) {
+            null
+        }
 
     inner class AudioServiceBinder : Binder() {
         val service: AudioService
             get() = this@AudioService
     }
 
+    fun setPlayer(mediaPlayer: YouTubePlayer) {
+        mMediaPlayer = mediaPlayer
+        mMediaPlayer?.addListener(object : YouTubePlayerListener {
+            override fun onApiChange(youTubePlayer: YouTubePlayer) {
+
+            }
+
+            override fun onCurrentSecond(youTubePlayer: YouTubePlayer, second: Float) {
+
+            }
+
+            override fun onError(
+                youTubePlayer: YouTubePlayer,
+                error: PlayerConstants.PlayerError
+            ) {
+                isPrepared = false
+                sendBroadcast(Intent(BroadcastActions.PLAY_STATE_CHANGED)) // 재생상태 변경 전송
+                updateNotificationPlayer()
+            }
+
+            override fun onPlaybackQualityChange(
+                youTubePlayer: YouTubePlayer,
+                playbackQuality: PlayerConstants.PlaybackQuality
+            ) {
+
+            }
+
+            override fun onPlaybackRateChange(
+                youTubePlayer: YouTubePlayer,
+                playbackRate: PlayerConstants.PlaybackRate
+            ) {
+
+            }
+
+            override fun onReady(youTubePlayer: YouTubePlayer) {
+                isPrepared = true
+                youTubePlayer.play()
+                sendBroadcast(Intent(BroadcastActions.PREPARED)) // prepared 전송
+                updateNotificationPlayer()
+            }
+
+            override fun onStateChange(
+                youTubePlayer: YouTubePlayer,
+                state: PlayerConstants.PlayerState
+            ) {
+                when (state) {
+                    PlayerConstants.PlayerState.ENDED -> {
+                        if (mCurrentPosition < mMusics.lastIndex) {
+                            forward()
+                        } else {
+                            isPrepared = false
+                            sendBroadcast(Intent(BroadcastActions.PLAY_STATE_CHANGED)) // 재생상태 변경 전송
+                            updateNotificationPlayer()
+                        }
+                    }
+                    else -> {
+                    }
+                }
+
+                isPlaying = state == PlayerConstants.PlayerState.PLAYING
+            }
+
+            override fun onVideoDuration(youTubePlayer: YouTubePlayer, duration: Float) {
+
+            }
+
+            override fun onVideoId(youTubePlayer: YouTubePlayer, videoId: String) {
+
+            }
+
+            override fun onVideoLoadedFraction(
+                youTubePlayer: YouTubePlayer,
+                loadedFraction: Float
+            ) {
+
+            }
+        })
+    }
+
     override fun onCreate() {
         super.onCreate()
-        mMediaPlayer = MediaPlayer()
-        mMediaPlayer?.setWakeMode(
-            applicationContext,
-            PowerManager.PARTIAL_WAKE_LOCK
-        )
-        mMediaPlayer?.setOnPreparedListener { mp ->
-            isPrepared = true
-            mp.start()
-            sendBroadcast(Intent(BroadcastActions.PREPARED)) // prepared 전송
-            updateNotificationPlayer()
-        }
-        mMediaPlayer?.setOnCompletionListener {
-            isPrepared = false
-            sendBroadcast(Intent(BroadcastActions.PLAY_STATE_CHANGED)) // 재생상태 변경 전송
-            updateNotificationPlayer()
-        }
-        mMediaPlayer?.setOnErrorListener { mp, what, extra ->
-            isPrepared = false
-            sendBroadcast(Intent(BroadcastActions.PLAY_STATE_CHANGED)) // 재생상태 변경 전송
-            updateNotificationPlayer()
-            false
-        }
-        mMediaPlayer?.setOnSeekCompleteListener { }
         mNotificationPlayer = NotificationPlayer(this)
     }
 
@@ -58,27 +119,24 @@ class AudioService : Service() {
         return mBinder
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        if (intent != null) {
-            val action = intent.action
-            when (action) {
-                CommandActions.TOGGLE_PLAY -> {
-                    if (isPlaying) {
-                        pause()
-                    } else {
-                        play()
-                    }
-                }
-                CommandActions.REWIND -> {
-                    rewind()
-                }
-                CommandActions.FORWARD -> {
-                    forward()
-                }
-                CommandActions.CLOSE -> {
+    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+        when (intent.action) {
+            CommandActions.TOGGLE_PLAY -> {
+                if (isPlaying) {
                     pause()
-                    removeNotificationPlayer()
+                } else {
+                    play()
                 }
+            }
+            CommandActions.REWIND -> {
+                rewind()
+            }
+            CommandActions.FORWARD -> {
+                forward()
+            }
+            CommandActions.CLOSE -> {
+                pause()
+                removeNotificationPlayer()
             }
         }
         return super.onStartCommand(intent, flags, startId)
@@ -86,105 +144,55 @@ class AudioService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        if (mMediaPlayer != null) {
-            mMediaPlayer!!.stop()
-            mMediaPlayer!!.release()
+        mMediaPlayer?.let {
+            it.pause()
             mMediaPlayer = null
         }
         removeNotificationPlayer()
     }
 
     private fun updateNotificationPlayer() {
-        if (mNotificationPlayer != null) {
-            mNotificationPlayer!!.updateNotificationPlayer()
-        }
+        mNotificationPlayer?.updateNotificationPlayer()
     }
 
     private fun removeNotificationPlayer() {
-        if (mNotificationPlayer != null) {
-            mNotificationPlayer!!.removeNotificationPlayer()
-        }
+        mNotificationPlayer?.removeNotificationPlayer()
     }
 
-    @SuppressLint("Recycle")
-    private fun queryAudioItem(position: Int) {
-        mCurrentPosition = position
-        val audioId = mAudioIds[position]
-        val uri: Uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
-        val projection = arrayOf(
-            MediaStore.Audio.Media._ID,
-            MediaStore.Audio.Media.TITLE,
-            MediaStore.Audio.Media.ARTIST,
-            MediaStore.Audio.Media.ALBUM,
-            MediaStore.Audio.Media.ALBUM_ID,
-            MediaStore.Audio.Media.DURATION,
-            MediaStore.Audio.Media.DATA
-        )
-        val selection = MediaStore.Audio.Media._ID + " = ?"
-        val selectionArgs = arrayOf(audioId.toString())
-//        contentResolver.query(uri, projection, selection, selectionArgs, null)?.let { cursor ->
-//            if (cursor.count > 0) {
-//                cursor.moveToFirst()
-//                mAudioItem = AudioAdapter.AudioItem.bindCursor(cursor)
-//            }
-//            cursor.close()
-//        }
+    fun setPlayList(musics: ArrayList<MusicListModel.MusicModel>) {
+        mMusics.clear()
+        mMusics.addAll(musics)
+        play(0)
     }
-
-    private fun prepare() {
-//        try {
-//            mMediaPlayer?.let { player ->
-//                player.setDataSource(mAudioItem?.mDataPath)
-//                player.setAudioStreamType(AudioManager.STREAM_MUSIC)
-//                player.prepareAsync()
-//            }
-//        } catch (e: Exception) {
-//            e.printStackTrace()
-//        }
-    }
-
-    private fun stop() {
-        mMediaPlayer!!.stop()
-        mMediaPlayer!!.reset()
-    }
-
-    fun setPlayList(audioIds: ArrayList<Long>) {
-        if (mAudioIds != audioIds) {
-            mAudioIds.clear()
-            mAudioIds.addAll(audioIds)
-        }
-    }
-
-    val audioItem: MusicListModel.MusicModel?
-        get() = mAudioItem
-
-    val isPlaying: Boolean
-        get() = mMediaPlayer?.isPlaying ?: false
 
     fun play(position: Int) {
-        queryAudioItem(position)
-        stop()
-        prepare()
+        mCurrentPosition = position
+        val id = mMusics[position].snippet.resourceId.videoId
+        mMediaPlayer?.loadVideo(id, 0f)
     }
 
     fun play() {
         if (isPrepared) {
-            mMediaPlayer!!.start()
-            sendBroadcast(Intent(BroadcastActions.PLAY_STATE_CHANGED)) // 재생상태 변경 전송
-            updateNotificationPlayer()
+            mMediaPlayer?.let {
+                it.play()
+                sendBroadcast(Intent(BroadcastActions.PLAY_STATE_CHANGED)) // 재생상태 변경 전송
+                updateNotificationPlayer()
+            }
         }
     }
 
     fun pause() {
         if (isPrepared) {
-            mMediaPlayer!!.pause()
-            sendBroadcast(Intent(BroadcastActions.PLAY_STATE_CHANGED)) // 재생상태 변경 전송
-            updateNotificationPlayer()
+            mMediaPlayer?.let {
+                it.pause()
+                sendBroadcast(Intent(BroadcastActions.PLAY_STATE_CHANGED)) // 재생상태 변경 전송
+                updateNotificationPlayer()
+            }
         }
     }
 
     fun forward() {
-        if (mAudioIds.size - 1 > mCurrentPosition) {
+        if (mMusics.size - 1 > mCurrentPosition) {
             mCurrentPosition++ // 다음 포지션으로 이동.
         } else {
             mCurrentPosition = 0 // 처음 포지션으로 이동.
@@ -196,7 +204,7 @@ class AudioService : Service() {
         if (mCurrentPosition > 0) {
             mCurrentPosition-- // 이전 포지션으로 이동.
         } else {
-            mCurrentPosition = mAudioIds.size - 1 // 마지막 포지션으로 이동.
+            mCurrentPosition = mMusics.size - 1 // 마지막 포지션으로 이동.
         }
         play(mCurrentPosition)
     }
