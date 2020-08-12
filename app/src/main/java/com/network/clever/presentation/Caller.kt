@@ -2,10 +2,8 @@ package com.network.clever.presentation
 
 import android.content.Context
 import android.content.Intent
-import com.network.clever.data.datasource.model.item.MusicListModel
 import com.network.clever.data.datasource.model.item.PlaylistListModel
 import com.network.clever.presentation.auth.AuthActivity
-import com.network.clever.presentation.player.PlayerActivity
 import com.network.clever.presentation.playlist.PlaylistActivity
 import com.network.clever.presentation.tab.HomeActivity
 
@@ -51,18 +49,6 @@ object Caller {
     internal fun openPlaylist(activity: BaseActivity, playlist: PlaylistListModel.PlaylistModel) {
         val intent = Intent(activity, PlaylistActivity::class.java).apply {
             putExtra(KEY_PLAYLIST, playlist)
-        }
-        activity.startActivity(intent)
-//        activity.overridePendingTransition(R.anim.slide_in_right_left, R.anim.slide_out_left_right)
-    }
-
-    internal fun openPlayer(
-        activity: BaseActivity,
-        music: ArrayList<MusicListModel.MusicModel>,
-        videoId: String
-    ) {
-        val intent = Intent(activity, PlayerActivity::class.java).apply {
-            putExtra(KEY_MUSIC, music)
         }
         activity.startActivity(intent)
 //        activity.overridePendingTransition(R.anim.slide_in_right_left, R.anim.slide_out_left_right)

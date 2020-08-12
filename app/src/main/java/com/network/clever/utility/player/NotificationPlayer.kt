@@ -1,5 +1,6 @@
-package com.network.clever.presentation.player
+package com.network.clever.utility.player
 
+import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -8,6 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Build
+import android.view.View
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -16,33 +18,31 @@ import com.bumptech.glide.request.target.AppWidgetTarget
 import com.network.clever.R
 import com.network.clever.constant.CommandActions
 import com.network.clever.presentation.tab.HomeActivity
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 
 
 class NotificationPlayer(service: AudioService) {
     private val mService: AudioService = service
     private val mNotificationManager: NotificationManager =
         service.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-    private var mNotificationManagerBuilder: NotificationManagerBuilder? = null
+    private lateinit var mNotificationManagerBuilder: NotificationManagerBuilder
     private var isForeground = false
 
-    private var channelId = ""
+    private lateinit var channelId: String
     fun initNotificationPlayer() {
-        cancel()
-
         channelId = createNotificationChannel(
             mService, NotificationManagerCompat.IMPORTANCE_DEFAULT,
             false, mService.getString(R.string.app_name), "App notification channel"
-        ) // 1
+        )
 
-        mNotificationManagerBuilder = NotificationManagerBuilder(channelId)
-        mNotificationManagerBuilder?.execute()
+        updateNotificationPlayer()
     }
 
     fun updateNotificationPlayer() {
         cancel()
 
         mNotificationManagerBuilder = NotificationManagerBuilder(channelId)
-        mNotificationManagerBuilder?.execute()
+        mNotificationManagerBuilder.execute()
     }
 
     fun removeNotificationPlayer() {
@@ -62,17 +62,17 @@ class NotificationPlayer(service: AudioService) {
             channel.setShowBadge(showBadge)
 
             val notificationManager = context.getSystemService(NotificationManager::class.java)
-            notificationManager?.createNotificationChannel(channel)
+            notificationManager.createNotificationChannel(channel)
 
             channelId
         } else ""
     }
 
     private fun cancel() {
-        mNotificationManagerBuilder?.cancel(true)
-        mNotificationManagerBuilder = null
+        mNotificationManagerBuilder.cancel(true)
     }
 
+    @SuppressLint("StaticFieldLeak")
     private inner class NotificationManagerBuilder(val channelId: String) :
         AsyncTask<Any, Any, Notification>() {
         lateinit var mRemoteViews: RemoteViews
@@ -139,13 +139,24 @@ class NotificationPlayer(service: AudioService) {
             val albumArtUrl = mService.audioItem?.snippet?.thumbnails?.default?.url
 
             remoteViews.apply {
-                if (mService.isPlaying) {
-                    setImageViewResource(R.id.btn_play_pause, R.drawable.ic_pause_black)
-                } else {
-                    setImageViewResource(
-                        R.id.btn_play_pause,
-                        R.drawable.ic_play_arrow_black
-                    )
+                when (mService.playerState) {
+                    PlayerConstants.PlayerState.PLAYING -> {
+                        setViewVisibility(R.id.pb_loading, View.GONE)
+                        setViewVisibility(R.id.btn_play_pause, View.VISIBLE)
+                        setImageViewResource(R.id.btn_play_pause, R.drawable.ic_pause_black)
+                    }
+                    PlayerConstants.PlayerState.PAUSED -> {
+                        setViewVisibility(R.id.pb_loading, View.GONE)
+                        setViewVisibility(R.id.btn_play_pause, View.VISIBLE)
+                        setImageViewResource(
+                            R.id.btn_play_pause,
+                            R.drawable.ic_play_arrow_black
+                        )
+                    }
+                    else -> {
+                        setViewVisibility(R.id.btn_play_pause, View.GONE)
+                        setViewVisibility(R.id.pb_loading, View.VISIBLE)
+                    }
                 }
 
                 setTextViewText(R.id.txt_title, title)

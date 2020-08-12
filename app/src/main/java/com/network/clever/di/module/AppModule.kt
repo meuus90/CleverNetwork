@@ -37,6 +37,7 @@ import com.network.clever.data.datasource.network.FirebaseAPI
 import com.network.clever.data.datasource.network.LiveDataCallAdapterFactory
 import com.network.clever.data.datasource.network.YoutubeAPI
 import com.network.clever.data.preferences.LocalStorage
+import com.network.clever.utility.player.AudioServiceInterface
 import com.orhanobut.logger.Logger
 import dagger.Module
 import dagger.Provides
@@ -181,6 +182,12 @@ class AppModule {
             ).build()
 
         }
+    }
+
+    @Singleton
+    @Provides
+    fun provideAudioService(context: Context): AudioServiceInterface {
+        return AudioServiceInterface(context)
     }
 
     @Singleton

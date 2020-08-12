@@ -20,7 +20,6 @@ import com.network.clever.domain.usecase.item.UpdateMyPlaylistUseCase.Companion.
 import com.network.clever.domain.viewmodel.item.MusicViewModel
 import com.network.clever.domain.viewmodel.item.UpdateMyPlaylistViewModel
 import com.network.clever.presentation.BaseFragment
-import com.network.clever.presentation.Caller
 import com.network.clever.presentation.playlist.adapter.PlaylistAdapter
 import kotlinx.android.synthetic.main.fragment_playlist.*
 import javax.inject.Inject
@@ -67,7 +66,7 @@ class PlaylistFragment : BaseFragment() {
                 val query = Query.query(listOf(ADD_ITEM, item))
                 update(query) {
                     if (it.isNotEmpty())
-                        Caller.openPlayer(playlistActivity, it, item.snippet.resourceId.videoId)
+                        playlistActivity.setPlayList(it, item.snippet.resourceId.videoId)
                 }
             }
         adapter.setHasStableIds(true)
@@ -88,11 +87,7 @@ class PlaylistFragment : BaseFragment() {
             val query = Query.query(listOf(ADD_ALL, list))
             update(query) {
                 if (it.isNotEmpty())
-                    Caller.openPlayer(
-                        playlistActivity,
-                        it,
-                        it.first().snippet.resourceId.videoId
-                    )
+                    playlistActivity.setPlayList(it, it.first().snippet.resourceId.videoId)
             }
         }
 
@@ -100,11 +95,7 @@ class PlaylistFragment : BaseFragment() {
             val query = Query.query(listOf(UPDATE_ALL, list))
             update(query) {
                 if (it.isNotEmpty())
-                    Caller.openPlayer(
-                        playlistActivity,
-                        it,
-                        it.first().snippet.resourceId.videoId
-                    )
+                    playlistActivity.setPlayList(it, it.first().snippet.resourceId.videoId)
             }
         }
     }
@@ -120,7 +111,7 @@ class PlaylistFragment : BaseFragment() {
     private fun getPlaylist() {
         setLoading(true)
 
-        val key = playlistActivity.platlist.key
+        val key = playlistActivity.playlist.key
         val query = Query.query(listOf(key))
 
         musicViewModel.pullTrigger(Params(query))

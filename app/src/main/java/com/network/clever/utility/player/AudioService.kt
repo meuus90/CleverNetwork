@@ -1,4 +1,4 @@
-package com.network.clever.presentation.player
+package com.network.clever.utility.player
 
 import android.app.Service
 import android.content.Intent
@@ -19,9 +19,10 @@ class AudioService : Service() {
     private val mMusics: ArrayList<MusicListModel.MusicModel> = ArrayList()
     private var mMediaPlayer: YouTubePlayer? = null
     private var mCurrentPosition = 0
-    private var mNotificationPlayer: NotificationPlayer? = null
+    lateinit var mNotificationPlayer: NotificationPlayer
 
-    var isPlaying = false
+    //    var isPlaying = false
+    var playerState = PlayerConstants.PlayerState.UNSTARTED
     val audioItem: MusicListModel.MusicModel?
         get() = try {
             mMusics[mCurrentPosition]
@@ -96,7 +97,7 @@ class AudioService : Service() {
                             }
                         }
 
-                        isPlaying = state == PlayerConstants.PlayerState.PLAYING
+                        playerState = state
 
                         sendBroadcast(Intent(BroadcastActions.PLAY_STATE_CHANGED)) // 재생상태 변경 전송
                         updateNotificationPlayer()
@@ -129,10 +130,18 @@ class AudioService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        initYoutubeView()
-        setPlayer()
-        mNotificationPlayer = NotificationPlayer(this)
-        initNotificationPlayer()
+    }
+
+    var isInitialized = false
+    fun initPlayer() {
+        if (!isInitialized) {
+            initYoutubeView()
+            setPlayer()
+            mNotificationPlayer = NotificationPlayer(this)
+            initNotificationPlayer()
+
+            isInitialized = true
+        }
     }
 
     override fun onBind(intent: Intent?): IBinder {
@@ -142,9 +151,9 @@ class AudioService : Service() {
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         when (intent.action) {
             CommandActions.TOGGLE_PLAY -> {
-                if (isPlaying) {
+                if (playerState == PlayerConstants.PlayerState.PLAYING) {
                     pause()
-                } else {
+                } else if (playerState == PlayerConstants.PlayerState.PAUSED) {
                     play()
                 }
             }
@@ -172,21 +181,27 @@ class AudioService : Service() {
     }
 
     fun initNotificationPlayer() {
-        mNotificationPlayer?.initNotificationPlayer()
+        mNotificationPlayer.initNotificationPlayer()
     }
 
     private fun updateNotificationPlayer() {
-        mNotificationPlayer?.updateNotificationPlayer()
+        mNotificationPlayer.updateNotificationPlayer()
     }
 
     private fun removeNotificationPlayer() {
-        mNotificationPlayer?.removeNotificationPlayer()
+        mNotificationPlayer.removeNotificationPlayer()
     }
 
-    fun setPlayList(musics: ArrayList<MusicListModel.MusicModel>) {
+    fun setPlayList(musics: ArrayList<MusicListModel.MusicModel>, videoId: String) {
         mMusics.clear()
         mMusics.addAll(musics)
-        play(0)
+
+        val position = mMusics.indexOfFirst {
+            it.snippet.resourceId.videoId == videoId
+        }
+
+        if (mCurrentPosition != position)
+            play(position)
     }
 
     fun play(position: Int) {

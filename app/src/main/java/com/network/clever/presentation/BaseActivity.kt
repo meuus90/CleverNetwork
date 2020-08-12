@@ -14,8 +14,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.meuus.base.view.DetailsTransition
 import com.network.clever.R
+import com.network.clever.data.datasource.model.item.MusicListModel
 import com.network.clever.data.preferences.LocalStorage
 import com.network.clever.presentation.dialog.LoadingDialog
+import com.network.clever.presentation.dialog.PlayerDialog
+import com.network.clever.utility.player.AudioServiceInterface
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
@@ -34,6 +37,8 @@ abstract class BaseActivity : AppCompatActivity(), HasAndroidInjector {
     @Inject
     lateinit var googleSignInOptions: GoogleSignInOptions
 
+    lateinit var audioServiceInterface: AudioServiceInterface
+
     @Inject
     lateinit var localStorage: LocalStorage
 
@@ -47,6 +52,19 @@ abstract class BaseActivity : AppCompatActivity(), HasAndroidInjector {
     override fun androidInjector() = dispatchingAndroidInjector
 
     protected abstract fun setContentView()
+
+    abstract fun updateUI()
+
+    private val playerDialog = PlayerDialog(this)
+    fun setPlayList(musics: ArrayList<MusicListModel.MusicModel>, videoId: String) {
+        audioServiceInterface.setPlayList(musics, videoId)
+        updateUI()
+
+        if (playerDialog.isResumed)
+            playerDialog.updateUI()
+        else
+            playerDialog.show(supportFragmentManager, null)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

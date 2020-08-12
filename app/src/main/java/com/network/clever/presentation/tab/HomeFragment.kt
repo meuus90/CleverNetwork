@@ -20,7 +20,6 @@ import com.network.clever.domain.usecase.item.UpdateMyPlaylistUseCase
 import com.network.clever.domain.viewmodel.item.MyPlaylistViewModel
 import com.network.clever.domain.viewmodel.item.UpdateMyPlaylistViewModel
 import com.network.clever.presentation.BaseFragment
-import com.network.clever.presentation.Caller
 import com.network.clever.presentation.tab.adapter.ItemDragListener
 import com.network.clever.presentation.tab.adapter.ItemTouchHelperCallback
 import com.network.clever.presentation.tab.adapter.MyPlaylistAdapter
@@ -65,12 +64,12 @@ class HomeFragment : BaseFragment(), ItemDragListener {
         super.onActivityCreated(savedInstanceState)
 
         adapter = MyPlaylistAdapter(context, { list, videoId ->
-            Caller.openPlayer(homeActivity, list, videoId)
+            homeActivity.setPlayList(list, videoId)
         }, { item ->
             val query = Query.query(listOf(UpdateMyPlaylistUseCase.UPDATE_ALL, item))
             update(query)
         }, this)
-        
+
         adapter.setHasStableIds(true)
         recyclerView.adapter = adapter
         recyclerView.setHasFixedSize(false)

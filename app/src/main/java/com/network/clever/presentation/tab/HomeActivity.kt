@@ -12,6 +12,9 @@ class HomeActivity : BaseActivity() {
         setContentView(R.layout.activity_default)
     }
 
+    override fun updateUI() {
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

@@ -21,7 +21,6 @@ import com.network.clever.CleverPlayer
 import com.network.clever.di.module.AppModule
 import com.network.clever.di.module.activity.AuthActivityModule
 import com.network.clever.di.module.activity.MainActivityModule
-import com.network.clever.di.module.activity.PlayerActivityModule
 import com.network.clever.di.module.activity.PlaylistActivityModule
 import dagger.BindsInstance
 import dagger.Component
@@ -35,8 +34,7 @@ import javax.inject.Singleton
         AppModule::class,
         AuthActivityModule::class,
         MainActivityModule::class,
-        PlaylistActivityModule::class,
-        PlayerActivityModule::class
+        PlaylistActivityModule::class
     ]
 )
 

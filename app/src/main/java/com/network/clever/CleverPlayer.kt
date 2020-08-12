@@ -2,8 +2,7 @@ package com.network.clever
 
 import android.app.Activity
 import android.app.Application
-import android.content.ComponentCallbacks2
-import android.content.Context
+import android.content.*
 import android.content.res.Configuration
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.LifecycleObserver
@@ -11,8 +10,9 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.multidex.BuildConfig
 import androidx.multidex.MultiDex
 import com.bumptech.glide.Glide
+import com.network.clever.constant.BroadcastActions
 import com.network.clever.di.helper.AppInjector
-import com.network.clever.presentation.player.AudioServiceInterface
+import com.network.clever.utility.player.AudioServiceInterface
 import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.Logger
 import dagger.android.DispatchingAndroidInjector
@@ -26,13 +26,12 @@ class CleverPlayer : Application(), LifecycleObserver, HasAndroidInjector {
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
 
+    @Inject
+    lateinit var audioServiceInterface: AudioServiceInterface
+
     internal var isInForeground = false
 
-    lateinit var serviceInterface: AudioServiceInterface
-
     companion object {
-        lateinit var instance: CleverPlayer
-
         fun exitApplication(activity: Activity) {
             ActivityCompat.finishAffinity(activity)
             exit()
@@ -47,8 +46,6 @@ class CleverPlayer : Application(), LifecycleObserver, HasAndroidInjector {
 
     override fun onCreate() {
         super.onCreate()
-        instance = this
-        serviceInterface = AudioServiceInterface(applicationContext)
 
         if (BuildConfig.DEBUG) {
             Timber.uprootAll()
@@ -59,6 +56,14 @@ class CleverPlayer : Application(), LifecycleObserver, HasAndroidInjector {
 
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
         AppInjector.init(this)
+
+        registerBroadcast()
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+
+        unregisterBroadcast()
     }
 
     override fun attachBaseContext(base: Context?) {
@@ -84,5 +89,24 @@ class CleverPlayer : Application(), LifecycleObserver, HasAndroidInjector {
 
             Glide.get(app).clearMemory()
         }
+    }
+
+    open var updateUI: () -> Unit? = {}
+
+    val broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            updateUI()
+        }
+    }
+
+    fun registerBroadcast() {
+        val filter = IntentFilter()
+        filter.addAction(BroadcastActions.PREPARED)
+        filter.addAction(BroadcastActions.PLAY_STATE_CHANGED)
+        registerReceiver(broadcastReceiver, filter)
+    }
+
+    fun unregisterBroadcast() {
+        unregisterReceiver(broadcastReceiver)
     }
 }

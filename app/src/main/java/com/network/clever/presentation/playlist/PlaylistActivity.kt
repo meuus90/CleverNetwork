@@ -14,12 +14,16 @@ class PlaylistActivity : BaseActivity() {
         setContentView(R.layout.activity_default)
     }
 
-    lateinit var platlist: PlaylistListModel.PlaylistModel
+    override fun updateUI() {
+
+    }
+
+    lateinit var playlist: PlaylistListModel.PlaylistModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        platlist = intent.getParcelableExtra(Caller.KEY_PLAYLIST)
+        playlist = intent.getParcelableExtra(Caller.KEY_PLAYLIST)
 
         addFragment(
             PlaylistFragment::class.java,
