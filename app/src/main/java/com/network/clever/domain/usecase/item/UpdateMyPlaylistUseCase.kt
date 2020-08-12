@@ -22,7 +22,6 @@ import com.meuus.base.utility.Params
 import com.network.clever.data.datasource.dao.item.MusicDao
 import com.network.clever.data.datasource.model.item.MusicListModel
 import com.network.clever.domain.usecase.BaseUseCase
-import com.network.clever.utility.CollectionExt
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -54,31 +53,33 @@ constructor(private val dao: MusicDao) :
                 UPDATE_ALL -> {
                     dao.clear()
 
-                    val music = params.query.params[1] as ArrayList<MusicListModel.MusicModel>
+                    val musics = params.query.params[1] as ArrayList<MusicListModel.MusicModel>
 
-                    val list = CollectionExt.sortList(music)
+                    val list = sortList(musics)
                     GlobalScope.async { dao.insert(list) }.await()
                     list
                 }
                 ADD_ALL -> {
-                    val music = params.query.params[1] as ArrayList<MusicListModel.MusicModel>
+                    val new = arrayListOf<MusicListModel.MusicModel>()
+                    val musics = params.query.params[1] as ArrayList<MusicListModel.MusicModel>
 
                     val old = GlobalScope.async { dao.getPlaylists() }.await()
-                    music.addAll(old)
+                    new.addAll(old)
+                    new.addAll(musics)
 
-                    val list = CollectionExt.sortList(music)
+                    val list = sortList(new)
 
                     GlobalScope.async { dao.insert(list) }.await()
                     list
                 }
                 ADD_ITEM -> {
-                    val music = params.query.params[1] as MusicListModel.MusicModel
+                    val musics = params.query.params[1] as MusicListModel.MusicModel
 
                     val old = GlobalScope.async { dao.getPlaylists() }.await()
-                    val new = arrayListOf(music)
+                    val new = arrayListOf(musics)
                     new.addAll(old)
 
-                    val list = CollectionExt.sortList(new)
+                    val list = sortList(new)
 
                     GlobalScope.async { dao.insert(list) }.await()
                     list
@@ -89,16 +90,16 @@ constructor(private val dao: MusicDao) :
                 }
                 DELETE_ITEM -> {
                     val old = GlobalScope.async { dao.getPlaylists() }.await()
-                    val music = params.query.params[1] as MusicListModel.MusicModel
+                    val musics = params.query.params[1] as MusicListModel.MusicModel
 
                     val new = arrayListOf<MusicListModel.MusicModel>()
                     new.addAll(old)
 
                     new.removeIf {
-                        it.snippet.resourceId.videoId == music.snippet.resourceId.videoId
+                        it.snippet.resourceId.videoId == musics.snippet.resourceId.videoId
                     }
 
-                    val list = CollectionExt.sortList(new)
+                    val list = sortList(new)
 
                     GlobalScope.async { dao.insert(list) }.await()
                     list
@@ -110,5 +111,13 @@ constructor(private val dao: MusicDao) :
         liveData.value = result
 
         return liveData
+    }
+
+    private fun sortList(list: ArrayList<MusicListModel.MusicModel>): ArrayList<MusicListModel.MusicModel> {
+        for (pos in list.indices) {
+            list[pos].orderId = pos
+        }
+
+        return list
     }
 }

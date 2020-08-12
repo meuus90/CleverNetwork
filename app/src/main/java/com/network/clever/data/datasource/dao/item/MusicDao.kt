@@ -23,7 +23,7 @@ import com.network.clever.data.datasource.model.item.MusicListModel
 
 @Dao
 interface MusicDao : BaseDao<MusicListModel.MusicModel> {
-    @Query("SELECT * FROM Music ORDER BY orderId DESC")
+    @Query("SELECT * FROM Music ORDER BY orderId ASC")
     fun getPlaylists(): MutableList<MusicListModel.MusicModel>
 
     @Query("DELETE FROM Music")

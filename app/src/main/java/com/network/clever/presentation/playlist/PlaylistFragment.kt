@@ -66,7 +66,8 @@ class PlaylistFragment : BaseFragment() {
             PlaylistAdapter(context) { item ->
                 val query = Query.query(listOf(ADD_ITEM, item))
                 update(query) {
-                    Caller.openPlayer(playlistActivity, it, item.snippet.resourceId.videoId)
+                    if (it.isNotEmpty())
+                        Caller.openPlayer(playlistActivity, it, item.snippet.resourceId.videoId)
                 }
             }
         adapter.setHasStableIds(true)
@@ -84,24 +85,26 @@ class PlaylistFragment : BaseFragment() {
         getPlaylist()
 
         iv_add_all.setOnClickListener {
-            val query = Query.query(listOf(ADD_ALL, list.items))
+            val query = Query.query(listOf(ADD_ALL, list))
             update(query) {
-                Caller.openPlayer(
-                    playlistActivity,
-                    it,
-                    list.items.first().snippet.resourceId.videoId
-                )
+                if (it.isNotEmpty())
+                    Caller.openPlayer(
+                        playlistActivity,
+                        it,
+                        it.first().snippet.resourceId.videoId
+                    )
             }
         }
 
         iv_play_all.setOnClickListener {
-            val query = Query.query(listOf(UPDATE_ALL, list.items))
+            val query = Query.query(listOf(UPDATE_ALL, list))
             update(query) {
-                Caller.openPlayer(
-                    playlistActivity,
-                    it,
-                    list.items.first().snippet.resourceId.videoId
-                )
+                if (it.isNotEmpty())
+                    Caller.openPlayer(
+                        playlistActivity,
+                        it,
+                        it.first().snippet.resourceId.videoId
+                    )
             }
         }
     }
@@ -113,7 +116,7 @@ class PlaylistFragment : BaseFragment() {
         })
     }
 
-    lateinit var list: MusicListModel
+    lateinit var list: List<MusicListModel.MusicModel>
     private fun getPlaylist() {
         setLoading(true)
 
@@ -124,8 +127,15 @@ class PlaylistFragment : BaseFragment() {
         musicViewModel.music.observe(viewLifecycleOwner, Observer { resource ->
             when (resource.getStatus()) {
                 Status.SUCCESS -> {
-                    list = resource.getData() as MusicListModel
-                    adapter.setItemList(list.items)
+                    val arrayList = arrayListOf<MusicListModel.MusicModel>()
+                    val newList = (resource.getData() as MusicListModel).items
+                    arrayList.addAll(newList)
+
+                    list = arrayList.distinctBy {
+                        it.snippet.resourceId.videoId
+                    }
+
+                    adapter.setItemList(list)
 
                     setLoading(false)
                 }

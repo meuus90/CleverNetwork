@@ -64,13 +64,13 @@ class HomeFragment : BaseFragment(), ItemDragListener {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        adapter =
-            MyPlaylistAdapter(context, { list, videoId ->
-                Caller.openPlayer(homeActivity, list, videoId)
-            }, { item ->
-                val query = Query.query(listOf(UpdateMyPlaylistUseCase.UPDATE_ALL, item))
-                update(query)
-            }, this)
+        adapter = MyPlaylistAdapter(context, { list, videoId ->
+            Caller.openPlayer(homeActivity, list, videoId)
+        }, { item ->
+            val query = Query.query(listOf(UpdateMyPlaylistUseCase.UPDATE_ALL, item))
+            update(query)
+        }, this)
+        
         adapter.setHasStableIds(true)
         recyclerView.adapter = adapter
         recyclerView.setHasFixedSize(false)
@@ -103,16 +103,13 @@ class HomeFragment : BaseFragment(), ItemDragListener {
 
         myPlaylistViewModel.pullTrigger(Params(query))
         myPlaylistViewModel.playlist.observe(viewLifecycleOwner, Observer { resource ->
-            val list = resource as MutableList<MusicListModel.MusicModel>
+            val list = resource as ArrayList<MusicListModel.MusicModel>
             if (list.isEmpty()) {
                 v_no_music.show()
             } else {
                 v_no_music.gone()
-
-                val aList = arrayListOf<MusicListModel.MusicModel>()
-                aList.addAll(list)
-                adapter.setItemList(aList)
             }
+            adapter.setItemList(list)
         })
     }
 

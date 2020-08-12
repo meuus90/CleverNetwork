@@ -39,7 +39,6 @@ constructor() : BaseRepository<Query>() {
                 youtubeAPI.getMusics(
                     liveData.value?.params?.get(0) as String,
                     "snippet",
-                    60,
                     AppConfig.apiKey
                 )
 

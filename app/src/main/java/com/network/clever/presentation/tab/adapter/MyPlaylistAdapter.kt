@@ -83,10 +83,12 @@ class MyPlaylistAdapter(
         val fromItem = list.removeAt(from)
         list.add(to, fromItem)
         notifyItemMoved(from, to)
+        onDataSetChanged(list)
     }
 
     override fun onItemSwiped(position: Int) {
         list.removeAt(position)
         notifyItemRemoved(position)
+        onDataSetChanged(list)
     }
 }

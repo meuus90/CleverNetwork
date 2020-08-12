@@ -70,7 +70,8 @@ constructor(val context: Context, val cache: Cache) {
         val gson = Gson()
         val json = pref.getString(key_app_setting, "")
 
-        return gson.fromJson(json, AppSetting::class.java)
+        return if (json.isNullOrEmpty()) AppSetting(false, false, false)
+        else gson.fromJson(json, AppSetting::class.java)
     }
 
     internal fun setAppSetting(appSetting: AppSetting) {
