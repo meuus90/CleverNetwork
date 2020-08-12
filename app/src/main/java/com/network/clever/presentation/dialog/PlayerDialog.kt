@@ -74,8 +74,10 @@ class PlayerDialog(private val activity: BaseActivity) : DialogFragment() {
                 btn_play_pause.setImageResource(R.drawable.ic_play_arrow_black)
             }
             else -> {
-                btn_play_pause.gone()
-                pb_loading.show()
+//                btn_play_pause.gone()
+//                pb_loading.show()
+                btn_play_pause.show()
+                pb_loading.gone()
             }
         }
 

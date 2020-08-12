@@ -9,6 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Build
+import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
@@ -63,6 +64,8 @@ class NotificationPlayer(val service: AudioService) {
 
             mNotificationManager = context.getSystemService(NotificationManager::class.java)
             mNotificationManager.createNotificationChannel(channel)
+
+            Log.e("NotificationPlayer", "Notification created")
 
             channelId
         } else ""

@@ -130,8 +130,8 @@ class AudioService : Service() {
 
         youtubeView = YouTubePlayerView(this)
         setPlayer()
-        if (appSetting.isBackgroundPlay)
-            mNotificationPlayer = NotificationPlayer(this)
+//        if (appSetting.isBackgroundPlay)
+        mNotificationPlayer = NotificationPlayer(this)
     }
 
     override fun onBind(intent: Intent): IBinder {
