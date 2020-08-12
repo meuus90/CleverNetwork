@@ -7,6 +7,7 @@ import android.os.IBinder
 import com.network.clever.constant.BroadcastActions
 import com.network.clever.constant.CommandActions
 import com.network.clever.data.datasource.model.item.MusicListModel
+import com.network.clever.data.datasource.model.setting.AppSetting
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback
@@ -19,7 +20,9 @@ class AudioService : Service() {
     private val mMusics: ArrayList<MusicListModel.MusicModel> = ArrayList()
     private var mMediaPlayer: YouTubePlayer? = null
     private var mCurrentPosition = 0
-    lateinit var mNotificationPlayer: NotificationPlayer
+
+    lateinit var youtubeView: YouTubePlayerView
+    var mNotificationPlayer: NotificationPlayer? = null
 
     //    var isPlaying = false
     var playerState = PlayerConstants.PlayerState.UNSTARTED
@@ -35,7 +38,7 @@ class AudioService : Service() {
             get() = this@AudioService
     }
 
-    fun setPlayer() {
+    private fun setPlayer() {
         youtubeView.enableBackgroundPlayback(true)
         youtubeView.getYouTubePlayerWhenReady(object : YouTubePlayerCallback {
             override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
@@ -122,29 +125,16 @@ class AudioService : Service() {
         })
     }
 
-    lateinit var youtubeView: YouTubePlayerView
-    fun initYoutubeView(): YouTubePlayerView {
-        youtubeView = YouTubePlayerView(this)
-        return youtubeView
-    }
-
     override fun onCreate() {
         super.onCreate()
-    }
 
-    var isInitialized = false
-    fun initPlayer() {
-        if (!isInitialized) {
-            initYoutubeView()
-            setPlayer()
+        youtubeView = YouTubePlayerView(this)
+        setPlayer()
+        if (appSetting.isBackgroundPlay)
             mNotificationPlayer = NotificationPlayer(this)
-            initNotificationPlayer()
-
-            isInitialized = true
-        }
     }
 
-    override fun onBind(intent: Intent?): IBinder {
+    override fun onBind(intent: Intent): IBinder {
         return mBinder
     }
 
@@ -180,16 +170,19 @@ class AudioService : Service() {
         removeNotificationPlayer()
     }
 
-    fun initNotificationPlayer() {
-        mNotificationPlayer.initNotificationPlayer()
-    }
-
     private fun updateNotificationPlayer() {
-        mNotificationPlayer.updateNotificationPlayer()
+        if (appSetting.isBackgroundPlay)
+            mNotificationPlayer?.updateNotificationPlayer()
     }
 
     private fun removeNotificationPlayer() {
-        mNotificationPlayer.removeNotificationPlayer()
+        if (appSetting.isBackgroundPlay)
+            mNotificationPlayer?.removeNotificationPlayer()
+    }
+
+    private var appSetting = AppSetting(isRepeatChecked = false, isBackgroundPlay = false)
+    fun setLocalAppSetting(setting: AppSetting) {
+        appSetting = setting
     }
 
     fun setPlayList(musics: ArrayList<MusicListModel.MusicModel>, videoId: String) {
@@ -231,7 +224,11 @@ class AudioService : Service() {
         } else {
             mCurrentPosition = 0 // 처음 포지션으로 이동.
         }
-        play(mCurrentPosition)
+
+        if (appSetting.isRepeatChecked)
+            play(mCurrentPosition)
+        else
+            removeNotificationPlayer()
     }
 
     fun rewind() {

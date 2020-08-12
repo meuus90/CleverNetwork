@@ -12,7 +12,6 @@ import androidx.multidex.MultiDex
 import com.bumptech.glide.Glide
 import com.network.clever.constant.BroadcastActions
 import com.network.clever.di.helper.AppInjector
-import com.network.clever.utility.player.AudioServiceInterface
 import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.Logger
 import dagger.android.DispatchingAndroidInjector
@@ -25,9 +24,6 @@ import kotlin.system.exitProcess
 class CleverPlayer : Application(), LifecycleObserver, HasAndroidInjector {
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
-
-    @Inject
-    lateinit var audioServiceInterface: AudioServiceInterface
 
     internal var isInForeground = false
 
@@ -91,22 +87,21 @@ class CleverPlayer : Application(), LifecycleObserver, HasAndroidInjector {
         }
     }
 
-    open var updateUI: () -> Unit? = {}
-
-    val broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+    var updateUI: () -> Unit = {}
+    private val broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             updateUI()
         }
     }
 
-    fun registerBroadcast() {
+    private fun registerBroadcast() {
         val filter = IntentFilter()
         filter.addAction(BroadcastActions.PREPARED)
         filter.addAction(BroadcastActions.PLAY_STATE_CHANGED)
         registerReceiver(broadcastReceiver, filter)
     }
 
-    fun unregisterBroadcast() {
+    private fun unregisterBroadcast() {
         unregisterReceiver(broadcastReceiver)
     }
 }

@@ -186,8 +186,11 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provideAudioService(context: Context): AudioServiceInterface {
-        return AudioServiceInterface(context)
+    fun provideAudioServiceInterface(
+        context: Context,
+        localStorage: LocalStorage
+    ): AudioServiceInterface {
+        return AudioServiceInterface(context, localStorage)
     }
 
     @Singleton

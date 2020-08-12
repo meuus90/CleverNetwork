@@ -46,7 +46,7 @@ constructor(val context: Context, val cache: Cache) {
     }
 
     internal fun logOut() {
-        clearCache()
+//        clearCache()
         Caller.logoutApp(context)
     }
 
@@ -70,7 +70,7 @@ constructor(val context: Context, val cache: Cache) {
         val gson = Gson()
         val json = pref.getString(key_app_setting, "")
 
-        return if (json.isNullOrEmpty()) AppSetting(false, false, false)
+        return if (json.isNullOrEmpty()) AppSetting(false, false)
         else gson.fromJson(json, AppSetting::class.java)
     }
 

@@ -34,11 +34,6 @@
             android:launchMode="singleTop"
             android:theme="@style/AppTheme" />
 
-        <activity
-            android:name="com.network.clever.utility.player.PlayerActivity"
-            android:launchMode="singleTop"
-            android:theme="@style/AppTheme" />
-
         <service
             android:name="com.network.clever.utility.player.AudioService"
             android:enabled="true"

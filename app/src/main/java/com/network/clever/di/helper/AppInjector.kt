@@ -46,11 +46,10 @@ object AppInjector {
                 if (app.isInForeground) {
                     app.isInForeground = false
                 }
-
-                (activity as BaseActivity).audioServiceInterface = app.audioServiceInterface
-
-                app.updateUI = {
-                    (activity as BaseActivity).updateUI()
+                if (activity is BaseActivity) {
+                    app.updateUI = {
+                        activity.updateUI()
+                    }
                 }
             }
 

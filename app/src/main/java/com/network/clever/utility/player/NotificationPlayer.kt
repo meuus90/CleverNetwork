@@ -21,21 +21,22 @@ import com.network.clever.presentation.tab.HomeActivity
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 
 
-class NotificationPlayer(service: AudioService) {
-    private val mService: AudioService = service
-    private val mNotificationManager: NotificationManager =
-        service.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-    private lateinit var mNotificationManagerBuilder: NotificationManagerBuilder
-    private var isForeground = false
+class NotificationPlayer(val service: AudioService) {
+    private lateinit var mNotificationManager: NotificationManager
+    private var mNotificationManagerBuilder: NotificationManagerBuilder
+    private var channelId: String
 
-    private lateinit var channelId: String
-    fun initNotificationPlayer() {
+    init {
         channelId = createNotificationChannel(
-            mService, NotificationManagerCompat.IMPORTANCE_DEFAULT,
-            false, mService.getString(R.string.app_name), "App notification channel"
+            service, NotificationManagerCompat.IMPORTANCE_DEFAULT,
+            false, service.getString(R.string.app_name), "App notification channel"
         )
 
-        updateNotificationPlayer()
+        mNotificationManagerBuilder = NotificationManagerBuilder(channelId)
+    }
+
+    private fun cancel() {
+        mNotificationManagerBuilder.cancel(true)
     }
 
     fun updateNotificationPlayer() {
@@ -47,8 +48,7 @@ class NotificationPlayer(service: AudioService) {
 
     fun removeNotificationPlayer() {
         cancel()
-        mService.stopForeground(true)
-        isForeground = false
+        service.stopForeground(true)
     }
 
     private fun createNotificationChannel(
@@ -61,15 +61,11 @@ class NotificationPlayer(service: AudioService) {
             channel.description = description
             channel.setShowBadge(showBadge)
 
-            val notificationManager = context.getSystemService(NotificationManager::class.java)
-            notificationManager.createNotificationChannel(channel)
+            mNotificationManager = context.getSystemService(NotificationManager::class.java)
+            mNotificationManager.createNotificationChannel(channel)
 
             channelId
         } else ""
-    }
-
-    private fun cancel() {
-        mNotificationManagerBuilder.cancel(true)
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -82,17 +78,17 @@ class NotificationPlayer(service: AudioService) {
         override fun onPreExecute() {
             super.onPreExecute()
 
-            val mainActivity = Intent(mService, HomeActivity::class.java)
-            mMainPendingIntent = PendingIntent.getActivity(mService, 0, mainActivity, 0)
+            val mainActivity = Intent(service, HomeActivity::class.java)
+            mMainPendingIntent = PendingIntent.getActivity(service, 0, mainActivity, 0)
             mRemoteViews = createRemoteView(R.layout.notification_player)
             mNotificationBuilder =
-                NotificationCompat.Builder(mService, channelId)
+                NotificationCompat.Builder(service, channelId)
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setOngoing(true)
                     .setContentIntent(mMainPendingIntent)
                     .setContent(mRemoteViews)
 
-            NotificationManagerCompat.from(mService)
+            NotificationManagerCompat.from(service)
                 .notify(NOTIFICATION_PLAYER_ID, mNotificationBuilder.build())
         }
 
@@ -117,16 +113,16 @@ class NotificationPlayer(service: AudioService) {
         }
 
         private fun createRemoteView(id: Int): RemoteViews {
-            val remoteView = RemoteViews(mService.packageName, id)
+            val remoteView = RemoteViews(service.packageName, id)
             val actionTogglePlay = Intent(CommandActions.TOGGLE_PLAY)
             val actionForward = Intent(CommandActions.FORWARD)
             val actionRewind = Intent(CommandActions.REWIND)
             val actionClose = Intent(CommandActions.CLOSE)
             val togglePlay =
-                PendingIntent.getService(mService, 0, actionTogglePlay, 0)
-            val forward = PendingIntent.getService(mService, 0, Intent(CommandActions.FORWARD), 0)
-            val rewind = PendingIntent.getService(mService, 0, Intent(CommandActions.REWIND), 0)
-            val close = PendingIntent.getService(mService, 0, Intent(CommandActions.CLOSE), 0)
+                PendingIntent.getService(service, 0, actionTogglePlay, 0)
+            val forward = PendingIntent.getService(service, 0, Intent(CommandActions.FORWARD), 0)
+            val rewind = PendingIntent.getService(service, 0, Intent(CommandActions.REWIND), 0)
+            val close = PendingIntent.getService(service, 0, Intent(CommandActions.CLOSE), 0)
             remoteView.setOnClickPendingIntent(R.id.btn_play_pause, togglePlay)
             remoteView.setOnClickPendingIntent(R.id.btn_forward, forward)
             remoteView.setOnClickPendingIntent(R.id.btn_rewind, rewind)
@@ -135,11 +131,11 @@ class NotificationPlayer(service: AudioService) {
         }
 
         private fun updateRemoteView(remoteViews: RemoteViews) {
-            val title = mService.audioItem?.snippet?.title
-            val albumArtUrl = mService.audioItem?.snippet?.thumbnails?.default?.url
+            val title = service.audioItem?.snippet?.title
+            val albumArtUrl = service.audioItem?.snippet?.thumbnails?.default?.url
 
             remoteViews.apply {
-                when (mService.playerState) {
+                when (service.playerState) {
                     PlayerConstants.PlayerState.PLAYING -> {
                         setViewVisibility(R.id.pb_loading, View.GONE)
                         setViewVisibility(R.id.btn_play_pause, View.VISIBLE)
@@ -162,8 +158,8 @@ class NotificationPlayer(service: AudioService) {
                 setTextViewText(R.id.txt_title, title)
                 try {
                     val appWidgetTarget =
-                        AppWidgetTarget(mService, R.id.img_albumart, this, NOTIFICATION_PLAYER_ID)
-                    Glide.with(mService).asBitmap()
+                        AppWidgetTarget(service, R.id.img_albumart, this, NOTIFICATION_PLAYER_ID)
+                    Glide.with(service).asBitmap()
                         .load(albumArtUrl)
                         .centerCrop()
                         .dontAnimate()

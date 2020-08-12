@@ -37,6 +37,7 @@ abstract class BaseActivity : AppCompatActivity(), HasAndroidInjector {
     @Inject
     lateinit var googleSignInOptions: GoogleSignInOptions
 
+    @Inject
     lateinit var audioServiceInterface: AudioServiceInterface
 
     @Inject

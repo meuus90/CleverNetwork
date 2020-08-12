@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.meuus.base.view.AutoClearedValue
+import com.network.clever.BuildConfig
 import com.network.clever.R
 import com.network.clever.data.datasource.model.setting.AppSetting
 import com.network.clever.presentation.BaseFragment
@@ -43,7 +44,6 @@ class SettingFragment : BaseFragment() {
 
         sw_repeat.isChecked = appSetting.isRepeatChecked
         sw_background_play.isChecked = appSetting.isBackgroundPlay
-        sw_notification_play.isChecked = appSetting.isNotificationPlay
 
         v_repeat.setOnClickListener {
             sw_repeat.isChecked = !appSetting.isRepeatChecked
@@ -63,20 +63,26 @@ class SettingFragment : BaseFragment() {
             updateAppSetting()
         }
 
-        v_notification_play.setOnClickListener {
-            sw_notification_play.isChecked = !appSetting.isNotificationPlay
-        }
-
-        sw_notification_play.setOnCheckedChangeListener { buttonView, isChecked ->
-            appSetting.isNotificationPlay = isChecked
-            updateAppSetting()
-        }
+        tv_version.text = BuildConfig.VERSION_NAME
 
         tv_clear_cache.setOnClickListener {
             homeActivity.localStorage.clearCache()
+
+            appSetting = homeActivity.localStorage.getAppSetting()
+            sw_repeat.isChecked = appSetting.isRepeatChecked
+            sw_background_play.isChecked = appSetting.isBackgroundPlay
+
+            homeActivity.audioServiceInterface.setAppSetting(appSetting)
         }
 
         tv_logout.setOnClickListener {
+            homeActivity.localStorage.clearCache()
+            appSetting = homeActivity.localStorage.getAppSetting()
+            sw_repeat.isChecked = appSetting.isRepeatChecked
+            sw_background_play.isChecked = appSetting.isBackgroundPlay
+
+            homeActivity.audioServiceInterface.setAppSetting(appSetting)
+
             homeActivity.firebaseAuth.signOut()
             homeActivity.localStorage.logOut()
         }
@@ -85,6 +91,8 @@ class SettingFragment : BaseFragment() {
     private lateinit var appSetting: AppSetting
 
     fun updateAppSetting() {
+        homeActivity.audioServiceInterface.setAppSetting(appSetting)
+
         Log.e("AppSetting changed : ", appSetting.toString())
         homeActivity.localStorage.setAppSetting(appSetting)
     }

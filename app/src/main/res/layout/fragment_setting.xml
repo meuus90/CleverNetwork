@@ -48,8 +48,9 @@
 
             <TextView
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:gravity="center_vertical"
                 android:text="@string/setting_repeat"
                 android:textColor="@color/primaryTextColor"
                 android:textSize="18dp" />
@@ -78,8 +79,9 @@
 
             <TextView
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:gravity="center_vertical"
                 android:text="@string/setting_background_play"
                 android:textColor="@color/primaryTextColor"
                 android:textSize="18dp" />
@@ -96,7 +98,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/v_notification_play"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -110,19 +111,17 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/setting_notification_play"
+                android:text="@string/setting_version"
                 android:textColor="@color/primaryTextColor"
                 android:textSize="18dp" />
 
-            <Switch
-                android:id="@+id/sw_notification_play"
+            <TextView
+                android:id="@+id/tv_version"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="false"
-                android:clickable="false"
-                android:thumb="@drawable/switch_thumb"
-                android:track="@drawable/switch_track_selector"
-                tools:checked="false" />
+                android:textColor="@color/primaryTextColor"
+                android:textSize="18dp"
+                tools:text="1.0.0" />
         </LinearLayout>
     </LinearLayout>
 

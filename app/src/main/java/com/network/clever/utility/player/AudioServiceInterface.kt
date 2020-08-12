@@ -6,11 +6,13 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import com.network.clever.data.datasource.model.item.MusicListModel
+import com.network.clever.data.datasource.model.setting.AppSetting
+import com.network.clever.data.preferences.LocalStorage
 import com.network.clever.utility.player.AudioService.AudioServiceBinder
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 
 
-class AudioServiceInterface(context: Context) {
+class AudioServiceInterface(context: Context, localStorage: LocalStorage) {
     private var mServiceConnection: ServiceConnection
     lateinit var mService: AudioService
 
@@ -21,7 +23,7 @@ class AudioServiceInterface(context: Context) {
                 service: IBinder
             ) {
                 mService = (service as AudioServiceBinder).service
-                initPlayer()
+                mService.setLocalAppSetting(localStorage.getAppSetting())
             }
 
             override fun onServiceDisconnected(name: ComponentName) {
@@ -34,8 +36,8 @@ class AudioServiceInterface(context: Context) {
         )
     }
 
-    fun initPlayer() {
-        mService.initPlayer()
+    fun setAppSetting(appSetting: AppSetting) {
+        mService.setLocalAppSetting(appSetting)
     }
 
     fun setPlayList(mMusics: ArrayList<MusicListModel.MusicModel>, videoId: String) {
