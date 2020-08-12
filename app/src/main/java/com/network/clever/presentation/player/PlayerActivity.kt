@@ -1,4 +1,4 @@
-package com.network.clever.presentation.stream
+package com.network.clever.presentation.player
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -8,6 +8,7 @@ import android.os.Bundle
 import com.bumptech.glide.Glide
 import com.network.clever.CleverPlayer
 import com.network.clever.R
+import com.network.clever.constant.BroadcastActions
 import com.network.clever.data.datasource.model.item.MusicListModel
 import com.network.clever.presentation.BaseActivity
 import com.network.clever.presentation.Caller

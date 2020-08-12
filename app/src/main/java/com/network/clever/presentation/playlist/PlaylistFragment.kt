@@ -66,7 +66,7 @@ class PlaylistFragment : BaseFragment() {
             PlaylistAdapter(context) { item ->
                 val query = Query.query(listOf(ADD_ITEM, item))
                 update(query) {
-                    Caller.openPlayer(playlistActivity, it)
+                    Caller.openPlayer(playlistActivity, it, item.snippet.resourceId.videoId)
                 }
             }
         adapter.setHasStableIds(true)
@@ -83,17 +83,25 @@ class PlaylistFragment : BaseFragment() {
         }
         getPlaylist()
 
-        iv_add.setOnClickListener {
+        iv_add_all.setOnClickListener {
             val query = Query.query(listOf(ADD_ALL, list.items))
             update(query) {
-                Caller.openPlayer(playlistActivity, it)
+                Caller.openPlayer(
+                    playlistActivity,
+                    it,
+                    list.items.first().snippet.resourceId.videoId
+                )
             }
         }
 
-        iv_play.setOnClickListener {
+        iv_play_all.setOnClickListener {
             val query = Query.query(listOf(UPDATE_ALL, list.items))
             update(query) {
-                Caller.openPlayer(playlistActivity, it)
+                Caller.openPlayer(
+                    playlistActivity,
+                    it,
+                    list.items.first().snippet.resourceId.videoId
+                )
             }
         }
     }
@@ -101,7 +109,7 @@ class PlaylistFragment : BaseFragment() {
     private fun update(query: Query, onSuccess: (ArrayList<MusicListModel.MusicModel>) -> Unit) {
         updateMyPlaylistViewModel.pullTrigger(Params(query))
         updateMyPlaylistViewModel.playlist.observe(viewLifecycleOwner, Observer { list ->
-            onSuccess(ArrayList(list))
+            onSuccess(list)
         })
     }
 

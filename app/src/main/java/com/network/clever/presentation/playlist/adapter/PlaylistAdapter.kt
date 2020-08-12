@@ -54,7 +54,7 @@ class PlaylistAdapter(
                 tv_title.text = item.snippet.title
                 tv_artist.text = item.snippet.description
 
-                v_root.setOnClickListener {
+                iv_add.setOnClickListener {
                     doOnClickAdd(item)
                 }
             }

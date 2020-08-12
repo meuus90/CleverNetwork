@@ -1,6 +1,6 @@
 package com.network.clever.di.module.activity
 
-import com.network.clever.presentation.stream.PlayerActivity
+import com.network.clever.presentation.player.PlayerActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

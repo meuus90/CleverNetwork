@@ -13,5 +13,10 @@
     <string name="no_music">No Music</string>
 
     <string name="sign_in">Sign in with Google</string>
-    <string name="sign_out">Log out</string>
+
+    <string name="setting_repeat">반복 재생</string>
+    <string name="setting_background_play">백그라운드 재생</string>
+    <string name="setting_notification_play">알림창 위젯</string>
+    <string name="setting_clear_cache">캐시 지우기</string>
+    <string name="setting_log_out">로그 아웃</string>
 </resources>

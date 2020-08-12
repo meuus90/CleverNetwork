@@ -12,7 +12,7 @@ import androidx.multidex.BuildConfig
 import androidx.multidex.MultiDex
 import com.bumptech.glide.Glide
 import com.network.clever.di.helper.AppInjector
-import com.network.clever.presentation.stream.AudioServiceInterface
+import com.network.clever.presentation.player.AudioServiceInterface
 import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.Logger
 import dagger.android.DispatchingAndroidInjector

@@ -57,7 +57,6 @@ class AuthActivity : BaseActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        Log.d("MainActivity", "onActivityResult: ${requestCode}")
         Timber.d("onActivityResult: ${requestCode}")
 
         val task = GoogleSignIn.getSignedInAccountFromIntent(data)
@@ -65,8 +64,6 @@ class AuthActivity : BaseActivity() {
             // Google Sign In was successful, authenticate with Firebase
             val account = task.getResult(ApiException::class.java)!!
 
-            Log.d("MainActivity", "firebaseAuthWithGoogle idToken:" + account.idToken)
-            Log.d("MainActivity", "firebaseAuthWithGoogle serverAuthCode:" + account.serverAuthCode)
             firebaseAuthWithGoogle(account.idToken!!)
         } catch (e: ApiException) {
             Log.w("MainActivity", "Google sign in failed", e)

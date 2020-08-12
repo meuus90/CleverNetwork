@@ -23,6 +23,7 @@ data class MusicListModel(
     data class MusicModel(
         @field:PrimaryKey
         @field:ColumnInfo(name = "id") val id: String,
+        @field:ColumnInfo(name = "orderId", defaultValue = "0") var orderId: Int,
 //        @field:ColumnInfo(name = "playlistId") val playlistId: String,
 
         @field:Embedded(prefix = "snippet") val snippet: Snippet

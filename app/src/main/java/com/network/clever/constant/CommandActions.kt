@@ -1,4 +1,4 @@
-package com.network.clever.presentation.stream
+package com.network.clever.constant
 
 object CommandActions {
     const val REWIND = "REWIND"

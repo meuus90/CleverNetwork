@@ -35,12 +35,12 @@
             android:theme="@style/AppTheme" />
 
         <activity
-            android:name=".presentation.stream.PlayerActivity"
+            android:name=".presentation.player.PlayerActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme" />
 
         <service
-            android:name=".presentation.stream.AudioService"
+            android:name=".presentation.player.AudioService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>

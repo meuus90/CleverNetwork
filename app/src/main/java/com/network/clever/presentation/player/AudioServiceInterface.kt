@@ -1,4 +1,4 @@
-package com.network.clever.presentation.stream
+package com.network.clever.presentation.player
 
 import android.content.ComponentName
 import android.content.Context
@@ -6,7 +6,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import com.network.clever.data.datasource.model.item.MusicListModel
-import com.network.clever.presentation.stream.AudioService.AudioServiceBinder
+import com.network.clever.presentation.player.AudioService.AudioServiceBinder
 
 
 class AudioServiceInterface(context: Context) {

@@ -1,8 +1,8 @@
 package com.network.clever.domain.viewmodel.item
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.meuus.base.utility.Params
-import com.meuus.base.utility.SingleLiveEvent
 import com.network.clever.data.datasource.model.item.MusicListModel
 import com.network.clever.domain.usecase.item.UpdateMyPlaylistUseCase
 import com.network.clever.domain.viewmodel.BaseViewModel
@@ -14,11 +14,11 @@ import javax.inject.Singleton
 class UpdateMyPlaylistViewModel
 @Inject
 constructor(private val useCase: UpdateMyPlaylistUseCase) : BaseViewModel<Params, Int>() {
-    internal var playlist = SingleLiveEvent<MutableList<MusicListModel.MusicModel>>()
+    internal var playlist = MutableLiveData<ArrayList<MusicListModel.MusicModel>>()
 
     override fun pullTrigger(params: Params) {
         viewModelScope.launch {
-            playlist = useCase.execute(viewModelScope, params)
+            playlist.value = useCase.execute(viewModelScope, params).value
         }
     }
 }
