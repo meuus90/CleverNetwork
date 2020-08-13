@@ -312,12 +312,15 @@ open class MediaPlayerService : Service() {
         mMusics.clear()
         mMusics.addAll(musics)
 
-        val position = mMusics.indexOfFirst {
+        var position = mMusics.indexOfFirst {
             it.snippet.resourceId.videoId == videoId
         }
 
-        if (mCurrentPosition != position)
+        if (mCurrentPosition != position) {
+            if (position == -1)
+                position = 0
             play(position)
+        }
     }
 
     open var updateNotificationPlayer = {}

@@ -51,7 +51,7 @@ constructor(private val dao: MusicDao) :
         val result =
             when (state) {
                 UPDATE_ALL -> {
-                    dao.clear()
+                    GlobalScope.async { dao.clear() }.await()
 
                     val musics = params.query.params[1] as ArrayList<MusicListModel.MusicModel>
 
@@ -73,11 +73,14 @@ constructor(private val dao: MusicDao) :
                     list
                 }
                 ADD_ITEM -> {
-                    val musics = params.query.params[1] as MusicListModel.MusicModel
+                    val music = params.query.params[1] as MusicListModel.MusicModel
 
                     val old = GlobalScope.async { dao.getPlaylists() }.await()
-                    val new = arrayListOf(musics)
+                    val new = arrayListOf<MusicListModel.MusicModel>()
+                    new.add(music)
                     new.addAll(old)
+
+                    GlobalScope.async { dao.clear() }.await()
 
                     val list = sortList(new)
 
@@ -85,7 +88,7 @@ constructor(private val dao: MusicDao) :
                     list
                 }
                 DELETE_ALL -> {
-                    dao.clear()
+                    GlobalScope.async { dao.clear() }.await()
                     arrayListOf()
                 }
                 DELETE_ITEM -> {
@@ -99,6 +102,8 @@ constructor(private val dao: MusicDao) :
                         it.snippet.resourceId.videoId == musics.snippet.resourceId.videoId
                     }
 
+                    GlobalScope.async { dao.clear() }.await()
+                    
                     val list = sortList(new)
 
                     GlobalScope.async { dao.insert(list) }.await()
