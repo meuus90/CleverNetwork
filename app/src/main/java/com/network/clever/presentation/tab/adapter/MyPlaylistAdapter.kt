@@ -1,7 +1,6 @@
 package com.network.clever.presentation.tab.adapter
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -10,13 +9,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.network.clever.R
 import com.network.clever.data.datasource.model.item.MusicListModel
+import com.network.clever.presentation.BaseActivity
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_my_music.*
 import timber.log.Timber
 import java.util.*
 
 class MyPlaylistAdapter(
-    val context: Context,
+    val activity: BaseActivity,
     val onStartMusic: (list: ArrayList<MusicListModel.MusicModel>, videoId: String) -> Unit,
     val onDataSetChanged: (list: ArrayList<MusicListModel.MusicModel>) -> Unit,
     private val listener: ItemDragListener
@@ -41,11 +41,19 @@ class MyPlaylistAdapter(
     @SuppressLint("DefaultLocale", "ClickableViewAccessibility")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is ItemHolder) {
+            val currentId = activity.audioService?.audioItem?.id
             val item = list[position]
 
             holder.apply {
+                if (item.id == currentId)
+                    v_root.backgroundTintList =
+                        activity.getColorStateList(R.color.colorOverlayYellow44)
+                else
+                    v_root.backgroundTintList =
+                        activity.getColorStateList(R.color.colorTransparent)
+
                 try {
-                    Glide.with(context).asDrawable().clone()
+                    Glide.with(activity).asDrawable().clone()
                         .load(item.snippet.thumbnails.default.url)
                         .centerCrop()
                         .dontAnimate()
@@ -53,7 +61,6 @@ class MyPlaylistAdapter(
                 } catch (e: Exception) {
                     Timber.e(e)
                 }
-
 
                 tv_title.text = item.snippet.title
                 tv_artist.text = item.snippet.channelTitle

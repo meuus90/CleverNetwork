@@ -209,7 +209,7 @@ open class MediaPlayerService : Service() {
                     }
 
                     override fun onReady(youTubePlayer: YouTubePlayer) {
-                        youTubePlayer.play()
+//                        youTubePlayer.play()
                     }
 
                     override fun onStateChange(
@@ -218,9 +218,7 @@ open class MediaPlayerService : Service() {
                     ) {
                         when (state) {
                             PlayerConstants.PlayerState.ENDED -> {
-                                if (mCurrentPosition < mMusics.lastIndex) {
-                                    forward()
-                                }
+                                forward()
                             }
                             else -> {
                             }
@@ -365,7 +363,7 @@ open class MediaPlayerService : Service() {
     }
 
     fun stop() {
-        //Stop media player here
+        mYouTubePlayer?.pause()
         val notificationManager =
             applicationContext
                 .getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -377,34 +375,24 @@ open class MediaPlayerService : Service() {
         stopService(intent)
     }
 
-//    fun togglePlay() {
-//        when (playerState) {
-//            PlayerConstants.PlayerState.PLAYING -> pause()
-//            PlayerConstants.PlayerState.PAUSED -> play()
-//            else -> {
-//            }
-//        }
-//    }
-
     fun forward() {
-        if (mMusics.size - 1 > mCurrentPosition) {
-            mCurrentPosition++ // 다음 포지션으로 이동.
+        if (mCurrentPosition < mMusics.lastIndex) {
+            mCurrentPosition++
             play(mCurrentPosition)
         } else {
-            mCurrentPosition = 0 // 처음 포지션으로 이동.
-
-            if (mAppSetting.isRepeatChecked)
+            if (mAppSetting.isRepeatChecked) {
+                mCurrentPosition = 0
                 play(mCurrentPosition)
-            else
+            } else
                 stop()
         }
     }
 
     fun rewind() {
         if (mCurrentPosition > 0) {
-            mCurrentPosition-- // 이전 포지션으로 이동.
+            mCurrentPosition--
         } else {
-            mCurrentPosition = mMusics.size - 1 // 마지막 포지션으로 이동.
+            mCurrentPosition = mMusics.lastIndex
         }
         play(mCurrentPosition)
     }

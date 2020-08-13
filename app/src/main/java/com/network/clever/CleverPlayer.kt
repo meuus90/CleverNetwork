@@ -6,7 +6,9 @@ import android.content.*
 import android.content.res.Configuration
 import android.os.IBinder
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.multidex.BuildConfig
 import androidx.multidex.MultiDex
@@ -43,6 +45,12 @@ class CleverPlayer : Application(), LifecycleObserver, HasAndroidInjector {
             System.runFinalizersOnExit(true)
             exitProcess(0)
         }
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    fun onEnterBackground() {
+        if (!localStorage.getAppSetting().isBackgroundPlay)
+            audioService?.stop()
     }
 
     override fun onCreate() {

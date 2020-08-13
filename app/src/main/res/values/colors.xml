@@ -23,5 +23,6 @@
     <color name="colorBlue">#0000ff</color>
 
     <color name="colorTransparent">#00000000</color>
-    <color name="colorOverlayDark60">#99000000</color>
+    <color name="colorOverlayDark99">#99000000</color>
+    <color name="colorOverlayYellow44">#44c8a415</color>
 </resources>

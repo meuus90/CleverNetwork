@@ -68,29 +68,23 @@ class SettingFragment : BaseFragment() {
         tv_clear_cache.setOnClickListener {
             homeActivity.localStorage.clearCache()
 
-            appSetting = homeActivity.localStorage.getAppSetting()
+            appSetting = AppSetting(isRepeatChecked = false, isBackgroundPlay = false)
+
             sw_repeat.isChecked = appSetting.isRepeatChecked
             sw_background_play.isChecked = appSetting.isBackgroundPlay
 
-            homeActivity.audioService?.setAppSetting(appSetting)
+            updateAppSetting()
         }
 
         tv_logout.setOnClickListener {
             homeActivity.localStorage.clearCache()
-            appSetting = homeActivity.localStorage.getAppSetting()
-            sw_repeat.isChecked = appSetting.isRepeatChecked
-            sw_background_play.isChecked = appSetting.isBackgroundPlay
-
-            homeActivity.audioService?.setAppSetting(appSetting)
-
-            homeActivity.firebaseAuth.signOut()
             homeActivity.localStorage.logOut()
         }
     }
 
     private lateinit var appSetting: AppSetting
 
-    fun updateAppSetting() {
+    private fun updateAppSetting() {
         homeActivity.audioService?.setAppSetting(appSetting)
 
         Log.e("AppSetting changed : ", appSetting.toString())

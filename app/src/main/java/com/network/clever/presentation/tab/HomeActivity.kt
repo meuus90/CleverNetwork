@@ -39,15 +39,17 @@ class HomeActivity : BaseActivity() {
         } catch (e: Exception) {
             Timber.e(e)
         }
+        fragment.setUI()
     }
 
+    lateinit var fragment: TabFragment
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        addFragment(
+        fragment = addFragment(
             TabFragment::class.java,
             BACK_STACK_STATE_NEW
-        )
+        ) as TabFragment
         setUI()
 
         btn_rewind.setOnClickListener {

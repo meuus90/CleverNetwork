@@ -63,7 +63,7 @@ class HomeFragment : BaseFragment(), ItemDragListener {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        adapter = MyPlaylistAdapter(context, { list, videoId ->
+        adapter = MyPlaylistAdapter(homeActivity, { list, videoId ->
             homeActivity.setPlayList(list, videoId)
         }, { item ->
             val query = Query.query(listOf(UpdateMyPlaylistUseCase.UPDATE_ALL, item))
@@ -81,6 +81,13 @@ class HomeFragment : BaseFragment(), ItemDragListener {
 
         itemTouchHelper = ItemTouchHelper(ItemTouchHelperCallback(adapter))
         itemTouchHelper.attachToRecyclerView(recyclerView)
+    }
+
+    fun setUI() {
+        try {
+            adapter.notifyDataSetChanged()
+        } catch (e: Exception) {
+        }
     }
 
     override fun onResume() {
