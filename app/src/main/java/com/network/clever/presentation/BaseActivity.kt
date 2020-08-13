@@ -58,17 +58,22 @@ abstract class BaseActivity : AppCompatActivity(), HasAndroidInjector {
             playerDialog.updateUI(audioService?.playerState)
     }
 
-    private val playerDialog = PlayerDialog(this)
+    val playerDialog = PlayerDialog(this)
     fun setPlayList(musics: ArrayList<MusicListModel.MusicModel>, videoId: String) {
 //        audioService?.setAppSetting(localStorage.getAppSetting())
         audioService?.setPlayList(musics, videoId, localStorage.getAppSetting())
         audioService?.updateNotificationPlayer = { onUpdateUI() }
 
-        if (playerDialog.isVisible)
-            onUpdateUI()
-        else
+        onUpdateUI()
+        
+        if (!playerDialog.isVisible)
             playerDialog.show(supportFragmentManager, null)
+    }
 
+    override fun onResume() {
+        super.onResume()
+
+        onUpdateUI()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

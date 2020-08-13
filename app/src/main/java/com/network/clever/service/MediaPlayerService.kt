@@ -111,11 +111,12 @@ open class MediaPlayerService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 channelId, appName,
-                NotificationManager.IMPORTANCE_HIGH
+                NotificationManager.IMPORTANCE_LOW
             )
             channel.description = "CleverPlayer notification channel"
             channel.setShowBadge(false)
-
+            channel.vibrationPattern = longArrayOf(0)
+            channel.enableVibration(true)
             notificationManager.createNotificationChannel(channel)
         }
 

@@ -52,6 +52,10 @@ class HomeActivity : BaseActivity() {
         ) as TabFragment
         setUI()
 
+        v_mini_player.setOnClickListener {
+            playerDialog.show(supportFragmentManager, null)
+        }
+
         btn_rewind.setOnClickListener {
             audioService?.rewind()
         }
