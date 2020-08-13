@@ -34,17 +34,17 @@ class PlayerDialog(private val activity: BaseActivity) : DialogFragment() {
         super.onActivityCreated(savedInstanceState)
 
         btn_rewind.setOnClickListener {
-            activity.audioServiceInterface.rewind()
+            activity.audioService?.rewind()
         }
         btn_play_pause.setOnClickListener {
-            activity.audioServiceInterface.togglePlay()
+            activity.audioService?.togglePlay()
         }
         btn_forward.setOnClickListener {
-            activity.audioServiceInterface.forward()
+            activity.audioService?.forward()
         }
 
         val audioItem: MusicListModel.MusicModel? =
-            activity.audioServiceInterface.audioItem
+            activity.audioService?.audioItem
 
         try {
             audioItem?.let {
@@ -58,11 +58,11 @@ class PlayerDialog(private val activity: BaseActivity) : DialogFragment() {
             Timber.e(e)
         }
 
-        updateUI()
+        updateUI(activity.audioService?.playerState)
     }
 
-    fun updateUI() {
-        when (activity.audioServiceInterface.playerState) {
+    fun updateUI(playerState: PlayerConstants.PlayerState? = PlayerConstants.PlayerState.UNSTARTED) {
+        when (playerState) {
             PlayerConstants.PlayerState.PLAYING -> {
                 btn_play_pause.show()
                 pb_loading.gone()
@@ -74,15 +74,15 @@ class PlayerDialog(private val activity: BaseActivity) : DialogFragment() {
                 btn_play_pause.setImageResource(R.drawable.ic_play_arrow_black)
             }
             else -> {
-//                btn_play_pause.gone()
-//                pb_loading.show()
-                btn_play_pause.show()
-                pb_loading.gone()
+                btn_play_pause.gone()
+                pb_loading.show()
+//                btn_play_pause.show()
+//                pb_loading.gone()
             }
         }
 
         val audioItem: MusicListModel.MusicModel? =
-            activity.audioServiceInterface.audioItem
+            activity.audioService?.audioItem
 
         try {
             audioItem?.let {

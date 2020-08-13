@@ -35,15 +35,8 @@
             android:theme="@style/AppTheme" />
 
         <service
-            android:name=".utility.player.AudioService"
+            android:name=".service.MediaPlayerService"
             android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="REWIND" />
-                <action android:name="TOGGLE_PLAY" />
-                <action android:name="FORWARD" />
-                <action android:name="CLOSE" />
-            </intent-filter>
-        </service>
+            android:exported="true"></service>
     </application>
 </manifest>

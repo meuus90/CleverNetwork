@@ -18,7 +18,7 @@ import com.network.clever.data.datasource.model.item.MusicListModel
 import com.network.clever.data.preferences.LocalStorage
 import com.network.clever.presentation.dialog.LoadingDialog
 import com.network.clever.presentation.dialog.PlayerDialog
-import com.network.clever.utility.player.AudioServiceInterface
+import com.network.clever.service.MediaPlayerService
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
@@ -38,9 +38,6 @@ abstract class BaseActivity : AppCompatActivity(), HasAndroidInjector {
     lateinit var googleSignInOptions: GoogleSignInOptions
 
     @Inject
-    lateinit var audioServiceInterface: AudioServiceInterface
-
-    @Inject
     lateinit var localStorage: LocalStorage
 
     open val frameLayoutId = 0
@@ -50,21 +47,28 @@ abstract class BaseActivity : AppCompatActivity(), HasAndroidInjector {
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
 
+    var audioService: MediaPlayerService? = null
+
     override fun androidInjector() = dispatchingAndroidInjector
 
     protected abstract fun setContentView()
 
-    abstract fun updateUI()
+    open fun onUpdateUI() {
+        if (playerDialog.isVisible)
+            playerDialog.updateUI(audioService?.playerState)
+    }
 
     private val playerDialog = PlayerDialog(this)
     fun setPlayList(musics: ArrayList<MusicListModel.MusicModel>, videoId: String) {
-        audioServiceInterface.setPlayList(musics, videoId)
-        updateUI()
+//        audioService?.setAppSetting(localStorage.getAppSetting())
+        audioService?.setPlayList(musics, videoId)
+        audioService?.updateNotificationPlayer = { onUpdateUI() }
 
-        if (playerDialog.isResumed)
-            playerDialog.updateUI()
+        if (playerDialog.isVisible)
+            onUpdateUI()
         else
             playerDialog.show(supportFragmentManager, null)
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -4,14 +4,16 @@ import android.app.Activity
 import android.app.Application
 import android.content.*
 import android.content.res.Configuration
+import android.os.IBinder
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.multidex.BuildConfig
 import androidx.multidex.MultiDex
 import com.bumptech.glide.Glide
-import com.network.clever.constant.BroadcastActions
+import com.network.clever.data.preferences.LocalStorage
 import com.network.clever.di.helper.AppInjector
+import com.network.clever.service.MediaPlayerService
 import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.Logger
 import dagger.android.DispatchingAndroidInjector
@@ -24,6 +26,9 @@ import kotlin.system.exitProcess
 class CleverPlayer : Application(), LifecycleObserver, HasAndroidInjector {
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
+
+    @Inject
+    lateinit var localStorage: LocalStorage
 
     internal var isInForeground = false
 
@@ -53,16 +58,16 @@ class CleverPlayer : Application(), LifecycleObserver, HasAndroidInjector {
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
         AppInjector.init(this)
 
-        registerBroadcast()
+        val intent = Intent(this, MediaPlayerService::class.java)
+        bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE)
+
+
+//        val intent = Intent(applicationContext, MediaPlayerService::class.java)
+//        intent.action = CommandActions.PLAY
+//        startService(intent)
     }
 
-    override fun onLowMemory() {
-        super.onLowMemory()
-
-        unregisterBroadcast()
-    }
-
-    override fun attachBaseContext(base: Context?) {
+    override fun attachBaseContext(base: Context) {
         super.attachBaseContext(base)
 
         MultiDex.install(this)
@@ -94,14 +99,18 @@ class CleverPlayer : Application(), LifecycleObserver, HasAndroidInjector {
         }
     }
 
-    private fun registerBroadcast() {
-        val filter = IntentFilter()
-        filter.addAction(BroadcastActions.PREPARED)
-        filter.addAction(BroadcastActions.PLAY_STATE_CHANGED)
-        registerReceiver(broadcastReceiver, filter)
-    }
+    var audioService: MediaPlayerService? = null
+    val mServiceConnection = object : ServiceConnection {
+        override fun onServiceConnected(
+            name: ComponentName,
+            service: IBinder
+        ) {
+            audioService = (service as MediaPlayerService.MediaPlayerServiceBinder).service
 
-    private fun unregisterBroadcast() {
-        unregisterReceiver(broadcastReceiver)
+            audioService?.setAppSetting(localStorage.getAppSetting())
+        }
+
+        override fun onServiceDisconnected(name: ComponentName) {
+        }
     }
 }

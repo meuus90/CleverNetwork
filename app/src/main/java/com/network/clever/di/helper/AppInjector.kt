@@ -36,6 +36,11 @@ object AppInjector {
         app.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
                 handleActivity(activity)
+
+                if (activity is BaseActivity) {
+                    activity.audioService = app.audioService
+                }
+
             }
 
             override fun onActivityStarted(activity: Activity) {
@@ -48,7 +53,7 @@ object AppInjector {
                 }
                 if (activity is BaseActivity) {
                     app.updateUI = {
-                        activity.updateUI()
+                        activity.onUpdateUI()
                     }
                 }
             }

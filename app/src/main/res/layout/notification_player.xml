@@ -59,7 +59,8 @@
             android:background="@color/colorWhite"
             android:clickable="false"
             android:padding="10dp"
-            android:progressTint="@color/colorBlack" />
+            android:progressTint="@color/colorBlack"
+            android:theme="@style/LoadingProgressBar" />
 
         <ImageButton
             android:id="@+id/btn_play_pause"

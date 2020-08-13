@@ -72,7 +72,7 @@ class SettingFragment : BaseFragment() {
             sw_repeat.isChecked = appSetting.isRepeatChecked
             sw_background_play.isChecked = appSetting.isBackgroundPlay
 
-            homeActivity.audioServiceInterface.setAppSetting(appSetting)
+            homeActivity.audioService?.setAppSetting(appSetting)
         }
 
         tv_logout.setOnClickListener {
@@ -81,7 +81,7 @@ class SettingFragment : BaseFragment() {
             sw_repeat.isChecked = appSetting.isRepeatChecked
             sw_background_play.isChecked = appSetting.isBackgroundPlay
 
-            homeActivity.audioServiceInterface.setAppSetting(appSetting)
+            homeActivity.audioService?.setAppSetting(appSetting)
 
             homeActivity.firebaseAuth.signOut()
             homeActivity.localStorage.logOut()
@@ -91,7 +91,7 @@ class SettingFragment : BaseFragment() {
     private lateinit var appSetting: AppSetting
 
     fun updateAppSetting() {
-        homeActivity.audioServiceInterface.setAppSetting(appSetting)
+        homeActivity.audioService?.setAppSetting(appSetting)
 
         Log.e("AppSetting changed : ", appSetting.toString())
         homeActivity.localStorage.setAppSetting(appSetting)
