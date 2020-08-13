@@ -25,4 +25,5 @@
     <color name="colorTransparent">#00000000</color>
     <color name="colorOverlayDark99">#99000000</color>
     <color name="colorOverlayYellow44">#44c8a415</color>
+    <color name="colorOverlayYellow22">#22c8a415</color>
 </resources>
