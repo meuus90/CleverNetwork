@@ -96,5 +96,4 @@ class SettingFragment : BaseFragment() {
         Log.e("AppSetting changed : ", appSetting.toString())
         homeActivity.localStorage.setAppSetting(appSetting)
     }
-
 }

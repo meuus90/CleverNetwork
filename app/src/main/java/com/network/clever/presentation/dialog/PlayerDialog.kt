@@ -91,6 +91,9 @@ class PlayerDialog(private val activity: BaseActivity) : DialogFragment() {
                     .centerCrop()
                     .dontAnimate()
                     .into(iv_thumbnail)
+
+                tv_title.text = it.snippet.title
+                tv_author.text = it.snippet.channelTitle
             }
         } catch (e: Exception) {
             Timber.e(e)

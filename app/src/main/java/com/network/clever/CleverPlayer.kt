@@ -106,8 +106,6 @@ class CleverPlayer : Application(), LifecycleObserver, HasAndroidInjector {
             service: IBinder
         ) {
             audioService = (service as MediaPlayerService.MediaPlayerServiceBinder).service
-
-            audioService?.setAppSetting(localStorage.getAppSetting())
         }
 
         override fun onServiceDisconnected(name: ComponentName) {

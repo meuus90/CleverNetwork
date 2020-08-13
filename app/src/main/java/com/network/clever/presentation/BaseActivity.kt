@@ -61,7 +61,7 @@ abstract class BaseActivity : AppCompatActivity(), HasAndroidInjector {
     private val playerDialog = PlayerDialog(this)
     fun setPlayList(musics: ArrayList<MusicListModel.MusicModel>, videoId: String) {
 //        audioService?.setAppSetting(localStorage.getAppSetting())
-        audioService?.setPlayList(musics, videoId)
+        audioService?.setPlayList(musics, videoId, localStorage.getAppSetting())
         audioService?.updateNotificationPlayer = { onUpdateUI() }
 
         if (playerDialog.isVisible)

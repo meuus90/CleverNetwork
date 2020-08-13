@@ -12,7 +12,6 @@ import android.media.session.MediaSession
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
-import android.util.Log
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
@@ -28,7 +27,7 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTube
 import javax.annotation.Nullable
 
 
-class MediaPlayerService : Service() {
+open class MediaPlayerService : Service() {
     private var mMediaPlayer: MediaPlayer? = null
     private lateinit var mSession: MediaSession
     private lateinit var mController: MediaController
@@ -91,7 +90,7 @@ class MediaPlayerService : Service() {
         ).build()
     }
 
-    fun buildNotification(action: Notification.Action) {
+    private fun buildNotification(action: Notification.Action) {
         Glide.with(applicationContext)
             .asBitmap()
             .load(audioItem?.snippet?.thumbnails?.default?.url)
@@ -260,31 +259,26 @@ class MediaPlayerService : Service() {
         mSession.setCallback(object : MediaSession.Callback() {
             override fun onPlay() {
                 super.onPlay()
-                Log.e("MediaPlayerService", "onPlay")
                 play()
             }
 
             override fun onPause() {
                 super.onPause()
-                Log.e("MediaPlayerService", "onPause")
                 pause()
             }
 
             override fun onFastForward() {
                 super.onFastForward()
-                Log.e("MediaPlayerService", "onFastForward")
                 forward()
             }
 
             override fun onRewind() {
                 super.onRewind()
-                Log.e("MediaPlayerService", "onRewind")
                 rewind()
             }
 
             override fun onStop() {
                 super.onStop()
-                Log.e("MediaPlayerService", "onStop")
                 stop()
             }
         }
@@ -297,7 +291,7 @@ class MediaPlayerService : Service() {
     }
 
     private val mMusics: ArrayList<MusicListModel.MusicModel> = ArrayList()
-    private var mCurrentPosition = 0
+    private var mCurrentPosition = -1
     val audioItem: MusicListModel.MusicModel?
         get() = try {
             mMusics[mCurrentPosition]
@@ -310,7 +304,13 @@ class MediaPlayerService : Service() {
         mAppSetting = setting
     }
 
-    fun setPlayList(musics: ArrayList<MusicListModel.MusicModel>, videoId: String) {
+    fun setPlayList(
+        musics: ArrayList<MusicListModel.MusicModel>,
+        videoId: String,
+        setting: AppSetting
+    ) {
+        mAppSetting = setting
+
         mMusics.clear()
         mMusics.addAll(musics)
 
@@ -326,7 +326,7 @@ class MediaPlayerService : Service() {
 
     var playerState = PlayerConstants.PlayerState.UNSTARTED
 
-    fun play(position: Int) {
+    private fun play(position: Int) {
         mCurrentPosition = position
         val id = mMusics[position].snippet.resourceId.videoId
         mYouTubePlayer?.cueVideo(id, 0f)
@@ -334,9 +334,7 @@ class MediaPlayerService : Service() {
     }
 
     fun play() {
-        mYouTubePlayer?.let {
-            it.play()
-        }
+        mYouTubePlayer?.play()
         updateNotificationPlayer()
         buildNotification(
             generateAction(
@@ -348,9 +346,7 @@ class MediaPlayerService : Service() {
     }
 
     fun pause() {
-        mYouTubePlayer?.let {
-            it.pause()
-        }
+        mYouTubePlayer?.pause()
         updateNotificationPlayer()
         buildNotification(
             generateAction(
@@ -393,14 +389,15 @@ class MediaPlayerService : Service() {
     fun forward() {
         if (mMusics.size - 1 > mCurrentPosition) {
             mCurrentPosition++ // 다음 포지션으로 이동.
+            play(mCurrentPosition)
         } else {
             mCurrentPosition = 0 // 처음 포지션으로 이동.
-        }
 
-        if (mAppSetting.isRepeatChecked)
-            play(mCurrentPosition)
-        else
-            pause()
+            if (mAppSetting.isRepeatChecked)
+                play(mCurrentPosition)
+            else
+                stop()
+        }
     }
 
     fun rewind() {
@@ -411,14 +408,4 @@ class MediaPlayerService : Service() {
         }
         play(mCurrentPosition)
     }
-
-//    companion object {
-//        const val ACTION_PLAY = "action_play"
-//        const val ACTION_PAUSE = "action_pause"
-//        const val ACTION_REWIND = "action_rewind"
-//        const val ACTION_FAST_FORWARD = "action_fast_foward"
-//        const val ACTION_NEXT = "action_next"
-//        const val ACTION_PREVIOUS = "action_previous"
-//        const val ACTION_STOP = "action_stop"
-//    }
 }

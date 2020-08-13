@@ -18,6 +18,10 @@
         <item name="colorAccent">@color/colorBlack</item>
     </style>
 
+    <style name="LoadingProgressBarLight">
+        <item name="colorAccent">@color/colorWhite</item>
+    </style>
+
     <style name="DialogFullscreenTransparent" parent="Theme.MaterialComponents.Light.Dialog">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowLightStatusBar">true</item>
