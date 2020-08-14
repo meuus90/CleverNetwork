@@ -5,7 +5,6 @@ import com.network.clever.R
 import com.network.clever.presentation.BaseActivity
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 import kotlinx.android.synthetic.main.activity_home.*
-import timber.log.Timber
 
 
 class HomeActivity : BaseActivity() {
@@ -21,23 +20,19 @@ class HomeActivity : BaseActivity() {
     }
 
     private fun setUI() {
-        try {
-            when (audioService?.playerState) {
-                PlayerConstants.PlayerState.PLAYING -> {
-                    btn_play_pause.setImageResource(R.drawable.ic_pause_black)
-                }
-                PlayerConstants.PlayerState.PAUSED -> {
-                    btn_play_pause.setImageResource(R.drawable.ic_play_arrow_black)
-                }
-                else -> {
-                }
+        when (audioService?.playerState) {
+            PlayerConstants.PlayerState.PLAYING -> {
+                btn_play_pause.setImageResource(R.drawable.ic_pause_black)
             }
+            PlayerConstants.PlayerState.PAUSED -> {
+                btn_play_pause.setImageResource(R.drawable.ic_play_arrow_black)
+            }
+            else -> {
+            }
+        }
 
-            audioService?.audioItem?.let {
-                tv_title.text = it.snippet.title
-            }
-        } catch (e: Exception) {
-            Timber.e(e)
+        audioService?.audioItem?.let {
+            tv_title.text = it.snippet.title
         }
         fragment.setUI()
     }

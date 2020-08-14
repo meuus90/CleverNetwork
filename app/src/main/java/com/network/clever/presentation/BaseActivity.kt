@@ -59,19 +59,24 @@ abstract class BaseActivity : AppCompatActivity(), HasAndroidInjector {
     }
 
     val playerDialog = PlayerDialog(this)
-    fun setPlayList(musics: ArrayList<MusicListModel.MusicModel>, videoId: String) {
+    fun setPlayList(
+        musics: ArrayList<MusicListModel.MusicModel>,
+        videoId: String,
+        isPlay: Boolean = true
+    ) {
 //        audioService?.setAppSetting(localStorage.getAppSetting())
-        audioService?.setPlayList(musics, videoId, localStorage.getAppSetting())
+        audioService?.setPlayList(musics, videoId, localStorage.getAppSetting(), isPlay)
         audioService?.updateNotificationPlayer = { onUpdateUI() }
 
         onUpdateUI()
-        
-        if (!playerDialog.isVisible)
+
+        if (!playerDialog.isVisible && isPlay)
             playerDialog.show(supportFragmentManager, null)
     }
 
     override fun onResume() {
         super.onResume()
+        audioService?.updateNotificationPlayer = { onUpdateUI() }
 
         onUpdateUI()
     }

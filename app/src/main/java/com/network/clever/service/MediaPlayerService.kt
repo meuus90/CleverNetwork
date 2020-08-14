@@ -306,7 +306,8 @@ open class MediaPlayerService : Service() {
     fun setPlayList(
         musics: ArrayList<MusicListModel.MusicModel>,
         videoId: String,
-        setting: AppSetting
+        setting: AppSetting,
+        isPlay: Boolean = true
     ) {
         mAppSetting = setting
 
@@ -317,7 +318,7 @@ open class MediaPlayerService : Service() {
             it.snippet.resourceId.videoId == videoId
         }
 
-        if (mCurrentPosition != position) {
+        if (mCurrentPosition != position && isPlay) {
             if (position == -1)
                 position = 0
             play(position)
