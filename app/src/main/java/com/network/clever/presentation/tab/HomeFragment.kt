@@ -64,7 +64,7 @@ class HomeFragment : BaseFragment(), ItemDragListener {
         super.onActivityCreated(savedInstanceState)
 
         adapter = MyPlaylistAdapter(homeActivity, { list, videoId ->
-            homeActivity.setPlayList(list, videoId)
+            homeActivity.setPlayList(list, videoId, true, false)
         }, { item ->
             val query = Query.query(listOf(UpdateMyPlaylistUseCase.UPDATE_ALL, item))
             update(query)

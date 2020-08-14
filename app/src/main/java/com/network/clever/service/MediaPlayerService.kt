@@ -329,7 +329,7 @@ open class MediaPlayerService : Service() {
 
     var playerState = PlayerConstants.PlayerState.UNSTARTED
 
-    private fun play(position: Int) {
+    fun play(position: Int) {
         mCurrentPosition = position
         val id = mMusics[position].snippet.resourceId.videoId
         mYouTubePlayer?.cueVideo(id, 0f)
