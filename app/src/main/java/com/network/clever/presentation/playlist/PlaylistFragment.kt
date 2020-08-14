@@ -20,7 +20,6 @@ import com.network.clever.domain.usecase.item.UpdateMyPlaylistUseCase.Companion.
 import com.network.clever.domain.viewmodel.item.MusicViewModel
 import com.network.clever.domain.viewmodel.item.UpdateMyPlaylistViewModel
 import com.network.clever.presentation.BaseFragment
-import com.network.clever.presentation.Caller
 import com.network.clever.presentation.playlist.adapter.PlaylistAdapter
 import kotlinx.android.synthetic.main.fragment_playlist.*
 import javax.inject.Inject
@@ -66,7 +65,9 @@ class PlaylistFragment : BaseFragment() {
             PlaylistAdapter(context) { item ->
                 val query = Query.query(listOf(ADD_ITEM, item))
                 update(query) {
-                    Caller.openPlayer(playlistActivity, item)
+                    if (it.isNotEmpty())
+                        playlistActivity.setPlayList(it, item.snippet.resourceId.videoId)
+                    playlistActivity.showToast(getString(R.string.toast_replace_playlist))
                 }
             }
         adapter.setHasStableIds(true)
@@ -83,45 +84,57 @@ class PlaylistFragment : BaseFragment() {
         }
         getPlaylist()
 
-        iv_add.setOnClickListener {
-            val query = Query.query(listOf(ADD_ALL, list.items))
+        iv_add_all.setOnClickListener {
+            val query = Query.query(listOf(ADD_ALL, list))
             update(query) {
-                Caller.openPlayer(playlistActivity, list.items[0])
+                if (it.isNotEmpty())
+                    playlistActivity.setPlayList(
+                        it,
+                        it.first().snippet.resourceId.videoId,
+                        false,
+                        false
+                    )
+                playlistActivity.showToast(getString(R.string.toast_replace_playlist))
             }
         }
 
-        iv_play.setOnClickListener {
-            val query = Query.query(listOf(UPDATE_ALL, list.items))
+        iv_play_all.setOnClickListener {
+            val query = Query.query(listOf(UPDATE_ALL, list))
             update(query) {
-                Caller.openPlayer(playlistActivity, list.items[0])
+                if (it.isNotEmpty())
+                    playlistActivity.setPlayList(it, it.first().snippet.resourceId.videoId)
+                playlistActivity.showToast(getString(R.string.toast_replace_playlist))
             }
         }
     }
 
-    private fun update(query: Query, onSuccess: () -> Unit) {
+    private fun update(query: Query, onSuccess: (ArrayList<MusicListModel.MusicModel>) -> Unit) {
         updateMyPlaylistViewModel.pullTrigger(Params(query))
-        updateMyPlaylistViewModel.playlist.observe(viewLifecycleOwner, Observer { isSuccess ->
-            if (isSuccess) {
-                onSuccess()
-            } else {
-
-            }
+        updateMyPlaylistViewModel.playlist.observe(viewLifecycleOwner, Observer { list ->
+            onSuccess(list)
         })
     }
 
-    lateinit var list: MusicListModel
+    lateinit var list: List<MusicListModel.MusicModel>
     private fun getPlaylist() {
         setLoading(true)
 
-        val key = playlistActivity.platlist.key
+        val key = playlistActivity.playlist.key
         val query = Query.query(listOf(key))
 
         musicViewModel.pullTrigger(Params(query))
         musicViewModel.music.observe(viewLifecycleOwner, Observer { resource ->
             when (resource.getStatus()) {
                 Status.SUCCESS -> {
-                    list = resource.getData() as MusicListModel
-                    adapter.setItemList(list.items)
+                    val arrayList = arrayListOf<MusicListModel.MusicModel>()
+                    val newList = (resource.getData() as MusicListModel).items
+                    arrayList.addAll(newList)
+
+                    list = arrayList.distinctBy {
+                        it.snippet.resourceId.videoId
+                    }
+
+                    adapter.setItemList(list)
 
                     setLoading(false)
                 }

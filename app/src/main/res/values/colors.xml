@@ -10,6 +10,19 @@
     <color name="primaryTextColor">@color/colorWhite</color>
     <color name="primaryTextHintColor">#cdcdcd</color>
 
+    <color name="primaryColor0">#ff7000</color>
+    <color name="primaryColor1">#ff9000</color>
+    <color name="primaryColor2">#ffa100</color>
+    <color name="primaryColor3">#ffb400</color>
+    <color name="primaryColor4">#ffc206</color>
+    <color name="primaryColor5">#ffcb28</color>
+    <color name="primaryColor6">#ffd64f</color>
+    <color name="primaryColor7">#ffd64f</color>
+    <color name="primaryColor8">#ffe182</color>
+    <color name="primaryColor9">#ffecb3</color>
+    <color name="primaryColor10">#fff8e1</color>
+
+
     <color name="listLineGrey">#ededed</color>
 
     <color name="colorWhite">#FFFFFF</color>
@@ -23,5 +36,7 @@
     <color name="colorBlue">#0000ff</color>
 
     <color name="colorTransparent">#00000000</color>
-    <color name="colorOverlayDark60">#99000000</color>
+    <color name="colorOverlayDark99">#99000000</color>
+    <color name="colorOverlayYellow44">#44c8a415</color>
+    <color name="colorOverlayYellow22">#22c8a415</color>
 </resources>

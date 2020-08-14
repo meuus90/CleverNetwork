@@ -37,7 +37,7 @@ open class LoadingDialog : DialogFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        dialog?.setCancelable(false)
+//        dialog?.setCancelable(false)
     }
 
     fun isShowing(): Boolean {

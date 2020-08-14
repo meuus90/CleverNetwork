@@ -16,21 +16,23 @@
 
 package com.network.clever.domain.usecase.item
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.meuus.base.utility.Params
-import com.meuus.base.utility.Query
-import com.meuus.base.utility.SingleLiveEvent
 import com.network.clever.data.datasource.dao.item.MusicDao
 import com.network.clever.data.datasource.model.item.MusicListModel
 import com.network.clever.domain.usecase.BaseUseCase
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class UpdateMyPlaylistUseCase
 @Inject
-constructor(private val dao: MusicDao) : BaseUseCase<Params, Boolean>() {
+constructor(private val dao: MusicDao) :
+    BaseUseCase<Params, ArrayList<MusicListModel.MusicModel>>() {
     companion object {
         const val UPDATE_ALL = 0
         const val ADD_ALL = 1
@@ -39,60 +41,88 @@ constructor(private val dao: MusicDao) : BaseUseCase<Params, Boolean>() {
         const val DELETE_ITEM = 4
     }
 
-    private val liveData by lazy { MutableLiveData<Query>() }
+    private val liveData by lazy { MutableLiveData<ArrayList<MusicListModel.MusicModel>>() }
 
     override suspend fun execute(
         viewModelScope: CoroutineScope,
         params: Params
-    ): SingleLiveEvent<Boolean> {
-        setQuery(params)
-
+    ): LiveData<ArrayList<MusicListModel.MusicModel>> {
         val state = params.query.params[0] as Int
-        val result = when (state) {
-            UPDATE_ALL -> {
-                val music = params.query.params[1] as MutableList<MusicListModel.MusicModel>
+        val result =
+            when (state) {
+                UPDATE_ALL -> {
+                    GlobalScope.async { dao.clear() }.await()
 
-                dao.clear()
-                dao.insert(music)
-                true
+                    val musics = params.query.params[1] as ArrayList<MusicListModel.MusicModel>
+
+                    val list = sortList(musics)
+                    GlobalScope.async { dao.insert(list) }.await()
+                    list
+                }
+                ADD_ALL -> {
+                    val new = arrayListOf<MusicListModel.MusicModel>()
+                    val musics = params.query.params[1] as ArrayList<MusicListModel.MusicModel>
+
+                    val old = GlobalScope.async { dao.getPlaylists() }.await()
+                    new.addAll(old)
+                    new.addAll(musics)
+
+                    val list = sortList(new)
+
+                    GlobalScope.async { dao.insert(list) }.await()
+                    list
+                }
+                ADD_ITEM -> {
+                    val music = params.query.params[1] as MusicListModel.MusicModel
+
+                    val old = GlobalScope.async { dao.getPlaylists() }.await()
+                    val new = arrayListOf<MusicListModel.MusicModel>()
+                    new.add(music)
+                    new.addAll(old)
+
+                    GlobalScope.async { dao.clear() }.await()
+
+                    val list = sortList(new)
+
+                    GlobalScope.async { dao.insert(list) }.await()
+                    list
+                }
+                DELETE_ALL -> {
+                    GlobalScope.async { dao.clear() }.await()
+                    arrayListOf()
+                }
+                DELETE_ITEM -> {
+                    val old = GlobalScope.async { dao.getPlaylists() }.await()
+                    val musics = params.query.params[1] as MusicListModel.MusicModel
+
+                    val new = arrayListOf<MusicListModel.MusicModel>()
+                    new.addAll(old)
+
+                    new.removeIf {
+                        it.snippet.resourceId.videoId == musics.snippet.resourceId.videoId
+                    }
+
+                    GlobalScope.async { dao.clear() }.await()
+                    
+                    val list = sortList(new)
+
+                    GlobalScope.async { dao.insert(list) }.await()
+                    list
+                }
+                else -> {
+                    arrayListOf()
+                }
             }
-            ADD_ALL -> {
-                val music = params.query.params[1] as MutableList<MusicListModel.MusicModel>
+        liveData.value = result
 
-                dao.insert(music)
-
-                true
-            }
-            ADD_ITEM -> {
-                val music = params.query.params[1] as MusicListModel.MusicModel
-
-                dao.insert(music)
-                true
-            }
-            DELETE_ALL -> {
-                dao.clear()
-                true
-            }
-            DELETE_ITEM -> {
-                val music = params.query.params[1] as MusicListModel.MusicModel
-
-                dao.delete(music)
-                true
-            }
-            else -> {
-                false
-            }
-        }
-
-        val resultEvent = SingleLiveEvent<Boolean>()
-        resultEvent.addSource(liveData) {
-            resultEvent.value = result
-        }
-
-        return resultEvent
+        return liveData
     }
 
-    private fun setQuery(params: Params) {
-        liveData.value = params.query
+    private fun sortList(list: ArrayList<MusicListModel.MusicModel>): ArrayList<MusicListModel.MusicModel> {
+        for (pos in list.indices) {
+            list[pos].orderId = pos
+        }
+
+        return list
     }
 }

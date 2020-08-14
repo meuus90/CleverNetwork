@@ -1,16 +1,25 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:background">@color/colorGrey2</item>
     </style>
 
     <style name="TemplateInputHintText">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/colorRed</item>
+    </style>
+
+    <style name="LoadingProgressBar">
+        <item name="colorAccent">@color/colorBlack</item>
+    </style>
+
+    <style name="LoadingProgressBarLight">
+        <item name="colorAccent">@color/colorWhite</item>
     </style>
 
     <style name="DialogFullscreenTransparent" parent="Theme.MaterialComponents.Light.Dialog">

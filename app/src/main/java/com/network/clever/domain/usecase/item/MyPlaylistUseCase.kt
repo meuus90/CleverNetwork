@@ -16,18 +16,15 @@
 
 package com.network.clever.domain.usecase.item
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.paging.DataSource
-import androidx.paging.LivePagedListBuilder
-import androidx.paging.PagedList
 import com.meuus.base.utility.Params
-import com.meuus.base.utility.Query
-import com.meuus.base.utility.SingleLiveEvent
-import com.network.clever.data.datasource.MusicDataSource
 import com.network.clever.data.datasource.dao.item.MusicDao
 import com.network.clever.data.datasource.model.item.MusicListModel
 import com.network.clever.domain.usecase.BaseUseCase
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -35,39 +32,28 @@ import javax.inject.Singleton
 class MyPlaylistUseCase
 @Inject
 constructor(private val dao: MusicDao) :
-    BaseUseCase<Params, MutableList<MusicListModel.MusicModel>>() {
-    private val liveData by lazy { MutableLiveData<Query>() }
+    BaseUseCase<Params, ArrayList<MusicListModel.MusicModel>>() {
+    private val liveData by lazy { MutableLiveData<ArrayList<MusicListModel.MusicModel>>() }
 
     override suspend fun execute(
         viewModelScope: CoroutineScope,
         params: Params
-    ): SingleLiveEvent<MutableList<MusicListModel.MusicModel>> {
-        val config = PagedList.Config.Builder()
-            .setInitialLoadSizeHint(20)
-            .setPageSize(10)
-            .setPrefetchDistance(10)
-            .setEnablePlaceholders(true)
-            .build()
+    ): LiveData<ArrayList<MusicListModel.MusicModel>> {
 
-        val liveData = LivePagedListBuilder(object :
-            DataSource.Factory<Int, MusicListModel.MusicModel>() {
-            override fun create(): DataSource<Int, MusicListModel.MusicModel> {
+        val old = GlobalScope.async { dao.getPlaylists() }.await()
+        val new = arrayListOf<MusicListModel.MusicModel>()
+        new.addAll(old)
 
-                val list = dao.getPlaylists()
-                return MusicDataSource(list)
-            }
-        }, /* PageList Config */ config).build()
+        liveData.value = sortList(new)
 
-
-        val resultEvent = SingleLiveEvent<MutableList<MusicListModel.MusicModel>>()
-        resultEvent.addSource(liveData) {
-            resultEvent.value = it
-        }
-
-        return resultEvent
+        return liveData
     }
 
-    private fun setQuery(params: Params) {
-        liveData.value = params.query
+    private fun sortList(list: ArrayList<MusicListModel.MusicModel>): ArrayList<MusicListModel.MusicModel> {
+        for (pos in list.indices) {
+            list[pos].orderId = pos
+        }
+
+        return list
     }
 }

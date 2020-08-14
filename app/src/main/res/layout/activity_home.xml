@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/v_mini_player"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/colorOverlayYellow22"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="25dp"
+        android:paddingEnd="25dp">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/colorTransparent"
+            android:gravity="center_vertical"
+            android:lines="1"
+            android:singleLine="true"
+            android:textColor="@color/colorWhite"
+            android:textSize="10sp"
+            tools:text="Sample Title" />
+
+        <ImageView
+            android:id="@+id/btn_rewind"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@color/colorTransparent"
+            android:padding="8dp"
+            android:src="@drawable/ic_fast_rewind_black"
+            android:tint="@color/colorWhite" />
+
+        <ImageView
+            android:id="@+id/btn_play_pause"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@color/colorTransparent"
+            android:padding="8dp"
+            android:src="@drawable/ic_play_arrow_black"
+            android:tint="@color/colorWhite" />
+
+        <ImageView
+            android:id="@+id/btn_forward"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@color/colorTransparent"
+            android:padding="8dp"
+            android:src="@drawable/ic_fast_forward_black"
+            android:tint="@color/colorWhite" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/contentFrame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:scrollbars="none"
+        android:scrollingCache="true" />
+</LinearLayout>

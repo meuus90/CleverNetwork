@@ -25,6 +25,7 @@ import androidx.fragment.app.FragmentManager
 import com.network.clever.CleverPlayer
 import com.network.clever.di.Injectable
 import com.network.clever.di.component.DaggerAppComponent
+import com.network.clever.presentation.BaseActivity
 import dagger.android.AndroidInjection
 import dagger.android.HasAndroidInjector
 import dagger.android.support.AndroidSupportInjection
@@ -35,6 +36,11 @@ object AppInjector {
         app.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
                 handleActivity(activity)
+
+                if (activity is BaseActivity) {
+                    activity.audioService = app.audioService
+                }
+
             }
 
             override fun onActivityStarted(activity: Activity) {
@@ -45,9 +51,16 @@ object AppInjector {
                 if (app.isInForeground) {
                     app.isInForeground = false
                 }
+                if (activity is BaseActivity) {
+                    app.updateUI = {
+                        activity.onUpdateUI()
+                    }
+                }
             }
 
             override fun onActivityPaused(activity: Activity) {
+                app.updateUI = {
+                }
             }
 
             override fun onActivityStopped(activity: Activity) {
@@ -59,6 +72,7 @@ object AppInjector {
             override fun onActivityDestroyed(activity: Activity) {
             }
         })
+
     }
 
     private fun handleActivity(activity: Activity) {

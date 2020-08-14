@@ -16,6 +16,10 @@ class TabFragment : BaseFragment() {
         activity as HomeActivity
     }
 
+    fun setUI() {
+        (fragments[0] as HomeFragment).setUI()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

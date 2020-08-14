@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import androidx.paging.PagedList
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
@@ -20,12 +20,13 @@ import com.network.clever.domain.usecase.item.UpdateMyPlaylistUseCase
 import com.network.clever.domain.viewmodel.item.MyPlaylistViewModel
 import com.network.clever.domain.viewmodel.item.UpdateMyPlaylistViewModel
 import com.network.clever.presentation.BaseFragment
-import com.network.clever.presentation.Caller
-import com.network.clever.presentation.tab.adapter.ContentsAdapter
+import com.network.clever.presentation.tab.adapter.ItemDragListener
+import com.network.clever.presentation.tab.adapter.ItemTouchHelperCallback
+import com.network.clever.presentation.tab.adapter.MyPlaylistAdapter
 import kotlinx.android.synthetic.main.fragment_home.*
 import javax.inject.Inject
 
-class HomeFragment : BaseFragment() {
+class HomeFragment : BaseFragment(), ItemDragListener {
     companion object {
         fun newInstance() = HomeFragment().apply {
             arguments = Bundle(1).apply {
@@ -40,7 +41,7 @@ class HomeFragment : BaseFragment() {
     @Inject
     internal lateinit var updateMyPlaylistViewModel: UpdateMyPlaylistViewModel
 
-    private lateinit var adapter: ContentsAdapter
+    private lateinit var adapter: MyPlaylistAdapter
 
     private val homeActivity: HomeActivity by lazy {
         activity as HomeActivity
@@ -62,13 +63,13 @@ class HomeFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        adapter =
-            ContentsAdapter({ item ->
-                Caller.openPlayer(homeActivity, item)
-            }, { item ->
-                val query = Query.query(listOf(UpdateMyPlaylistUseCase.DELETE_ITEM, item))
-                update(query)
-            })
+        adapter = MyPlaylistAdapter(homeActivity, { list, videoId ->
+            homeActivity.setPlayList(list, videoId, true, false)
+        }, { item ->
+            val query = Query.query(listOf(UpdateMyPlaylistUseCase.UPDATE_ALL, item))
+            update(query)
+        }, this)
+
         adapter.setHasStableIds(true)
         recyclerView.adapter = adapter
         recyclerView.setHasFixedSize(false)
@@ -77,6 +78,16 @@ class HomeFragment : BaseFragment() {
         (recyclerView.itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
         recyclerView.isVerticalScrollBarEnabled = false
         recyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+
+        itemTouchHelper = ItemTouchHelper(ItemTouchHelperCallback(adapter))
+        itemTouchHelper.attachToRecyclerView(recyclerView)
+    }
+
+    fun setUI() {
+        try {
+            adapter.notifyDataSetChanged()
+        } catch (e: Exception) {
+        }
     }
 
     override fun onResume() {
@@ -87,12 +98,9 @@ class HomeFragment : BaseFragment() {
 
     private fun update(query: Query) {
         updateMyPlaylistViewModel.pullTrigger(Params(query))
-        updateMyPlaylistViewModel.playlist.observe(viewLifecycleOwner, Observer { isSuccess ->
-            if (isSuccess) {
-                adapter.submitList(null)
-                getPlaylist()
-            } else {
-            }
+        updateMyPlaylistViewModel.playlist.observe(viewLifecycleOwner, Observer {
+//            adapter.setItemList(arrayListOf())
+//            getPlaylist()
         })
     }
 
@@ -101,13 +109,18 @@ class HomeFragment : BaseFragment() {
 
         myPlaylistViewModel.pullTrigger(Params(query))
         myPlaylistViewModel.playlist.observe(viewLifecycleOwner, Observer { resource ->
-            val list = resource as PagedList<MusicListModel.MusicModel>
+            val list = resource as ArrayList<MusicListModel.MusicModel>
             if (list.isEmpty()) {
                 v_no_music.show()
             } else {
                 v_no_music.gone()
-                adapter.submitList(list)
             }
+            adapter.setItemList(list)
         })
+    }
+
+    lateinit var itemTouchHelper: ItemTouchHelper
+    override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {
+        itemTouchHelper.startDrag(viewHolder)
     }
 }

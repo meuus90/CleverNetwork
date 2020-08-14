@@ -29,14 +29,12 @@ interface YoutubeAPI {
     fun getMusics(
         @Query("playlistId") playlistId: String,
         @Query("part") part: String,
-        @Query("maxResults") maxResults: Int,
         @Query("key") key: String
     ): LiveData<ApiResponse<MusicListModel>>
 
     @GET("v3/playlists")
     fun getMyPlaylist(
         @Query("part") part: String,
-        @Query("maxResults") maxResults: Int,
         @Query("mine") mine: Boolean,
         @Query("key") key: String
     ): LiveData<ApiResponse<MusicListModel>>

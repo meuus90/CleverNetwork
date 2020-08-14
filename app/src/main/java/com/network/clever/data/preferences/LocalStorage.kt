@@ -21,6 +21,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.network.clever.data.datasource.model.Cache
+import com.network.clever.data.datasource.model.setting.AppSetting
 import com.network.clever.presentation.Caller
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
@@ -33,14 +34,19 @@ constructor(val context: Context, val cache: Cache) {
     companion object {
         internal const val USER_FILE = "User"
 
+        const val key_app_setting = "app_setting"
         const val key_auth_token = "auth_token"
     }
 
     private val pref: SharedPreferences =
         context.getSharedPreferences(USER_FILE, Activity.MODE_PRIVATE)
 
-    internal fun logOut() {
+    internal fun clearCache() {
         cleanPreference(clearRoom = true)
+    }
+
+    internal fun logOut() {
+//        clearCache()
         Caller.logoutApp(context)
     }
 
@@ -58,6 +64,22 @@ constructor(val context: Context, val cache: Cache) {
     private fun clearRoom() = runBlocking {
         cache.playlistDao().clear()
         cache.musicDao().clear()
+    }
+
+    internal fun getAppSetting(): AppSetting {
+        val gson = Gson()
+        val json = pref.getString(key_app_setting, "")
+
+        return if (json.isNullOrEmpty()) AppSetting(false, false)
+        else gson.fromJson(json, AppSetting::class.java)
+    }
+
+    internal fun setAppSetting(appSetting: AppSetting) {
+        val editor = pref.edit()
+        val gson = Gson()
+        val json = gson.toJson(appSetting)
+        editor.putString(key_app_setting, json)
+        editor.apply()
     }
 
     internal fun getAuthToken(): String? {
