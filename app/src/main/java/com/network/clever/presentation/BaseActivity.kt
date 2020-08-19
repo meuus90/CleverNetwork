@@ -3,6 +3,7 @@ package com.network.clever.presentation
 import android.os.Bundle
 import android.transition.Fade
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -59,19 +60,25 @@ abstract class BaseActivity : AppCompatActivity(), HasAndroidInjector {
     }
 
     val playerDialog = PlayerDialog(this)
-    fun setPlayList(musics: ArrayList<MusicListModel.MusicModel>, videoId: String) {
+    fun setPlayList(
+        musics: ArrayList<MusicListModel.MusicModel>,
+        videoId: String,
+        isPlay: Boolean = true,
+        showDialog: Boolean = true
+    ) {
 //        audioService?.setAppSetting(localStorage.getAppSetting())
-        audioService?.setPlayList(musics, videoId, localStorage.getAppSetting())
+        audioService?.setPlayList(musics, videoId, localStorage.getAppSetting(), isPlay)
         audioService?.updateNotificationPlayer = { onUpdateUI() }
 
         onUpdateUI()
-        
-        if (!playerDialog.isVisible)
+
+        if (!playerDialog.isVisible && showDialog)
             playerDialog.show(supportFragmentManager, null)
     }
 
     override fun onResume() {
         super.onResume()
+        audioService?.updateNotificationPlayer = { onUpdateUI() }
 
         onUpdateUI()
     }
@@ -83,6 +90,11 @@ abstract class BaseActivity : AppCompatActivity(), HasAndroidInjector {
         glideRequestManager = Glide.with(this)
 
         setContentView()
+    }
+
+    internal fun showToast(message: String) {
+        val toast = Toast.makeText(this.applicationContext, message, Toast.LENGTH_LONG)
+        toast?.show()
     }
 
     internal fun replaceFragment(cls: Class<*>): Fragment {

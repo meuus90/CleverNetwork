@@ -67,6 +67,7 @@ class PlaylistFragment : BaseFragment() {
                 update(query) {
                     if (it.isNotEmpty())
                         playlistActivity.setPlayList(it, item.snippet.resourceId.videoId)
+                    playlistActivity.showToast(getString(R.string.toast_replace_playlist))
                 }
             }
         adapter.setHasStableIds(true)
@@ -87,7 +88,13 @@ class PlaylistFragment : BaseFragment() {
             val query = Query.query(listOf(ADD_ALL, list))
             update(query) {
                 if (it.isNotEmpty())
-                    playlistActivity.setPlayList(it, it.first().snippet.resourceId.videoId)
+                    playlistActivity.setPlayList(
+                        it,
+                        it.first().snippet.resourceId.videoId,
+                        false,
+                        false
+                    )
+                playlistActivity.showToast(getString(R.string.toast_replace_playlist))
             }
         }
 
@@ -96,6 +103,7 @@ class PlaylistFragment : BaseFragment() {
             update(query) {
                 if (it.isNotEmpty())
                     playlistActivity.setPlayList(it, it.first().snippet.resourceId.videoId)
+                playlistActivity.showToast(getString(R.string.toast_replace_playlist))
             }
         }
     }
