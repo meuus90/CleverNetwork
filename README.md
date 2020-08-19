@@ -1,7 +1,5 @@
 # CleverPlayer
- 설명 ...
- 
- [사진]
+ <img src="/images/icon.png" width="400px" height="400px"></img><br/>
  
  
 ## 목차
