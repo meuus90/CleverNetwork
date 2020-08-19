@@ -49,7 +49,10 @@ Youtube 기반 음악 스트리밍 앱. Firebase Google authentication을 바탕
 
 <https://github.com/meuus90/CleverBase> [![](https://jitpack.io/v/meuus90/CleverBase.svg)](https://jitpack.io/#meuus90/CleverBase)
 
+
 #### Dependency Injection (Dagger)
+
+UI, Viewmodel, Model 뿐만 아니라 네트워크 모듈이나 Firebase 모듈도 파편화하여 Inject 할 수 있다. Singleton 어노테이션을 사용하여 싱글턴 패턴으로 사용할 수 있다.
 
 ```
     @Singleton
@@ -61,12 +64,11 @@ Youtube 기반 음악 스트리밍 앱. Firebase Google authentication을 바탕
             .build()
     }
 ```
-UI, Viewmodel, Model 뿐만 아니라 네트워크 모듈이나 Firebase 모듈도 파편화하여 Inject 할 수 있다. Singleton 어노테이션을 사용하여 싱글턴 패턴으로 사용할 수 있다.
 
 
-#### 내외부 저장소를 연결해주는 Repository
+#### 내외부 저장소를 연결해주는 Repository [MusicRepository](app/src/main/java/com/network/clever/data/repository/item/MusicRepository.kt)
 
-[MusicRepository](app/src/main/java/com/network/clever/data/repository/item/MusicRepository.kt)
+네트워크 API 설정부분, Room 저장부분, Cache(Room) 데이터 호출부분, 네트워크 에러, Fetch 에러 등의 기능이 있다.
 ```
 @Singleton
 class MusicRepository
@@ -91,12 +93,11 @@ constructor() : BaseRepository<Query>() {
     }
 }
 ```
-네트워크 API 설정부분, Room 저장부분, Cache(Room) 데이터 호출부분, 네트워크 에러, Fetch 에러 등의 기능이 있다.
 
 
-#### 저장소와 비즈니스 로직을 담당하는 UseCase
+#### 저장소와 비즈니스 로직을 담당하는 UseCase [MusicUseCase](app/src/main/java/com/network/clever/domain/usecase/item/MusicUseCase.kt)
 
-[MusicUseCase](app/src/main/java/com/network/clever/domain/usecase/item/MusicUseCase.kt)
+데이터 수집, 연산, 데이터 정렬 등의 비즈니스 로직을 담당한다.
 ```
 @Singleton
 class MusicUseCase
@@ -118,7 +119,6 @@ constructor(private val repository: MusicRepository) : BaseUseCase<Params, Resou
     }
 }
 ```
-데이터 수집, 연산, 데이터 정렬 등의 비즈니스 로직을 담당한다.
 
 
 ### 소프트웨어 아키텍처 디자인 패턴
