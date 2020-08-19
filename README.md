@@ -4,30 +4,26 @@
  
 ## 목차
 - [컨텐츠 소개](#컨텐츠-소개)
-    - [설명](#설명)
-    - [UML](#UML)
-    - [결과물](#결과물)
+    - [1. 설명](#1.-설명)
+    - [2. UML](#2.-UML)
+    - [3. 결과물](#3.-결과물)
 - [사용한 기술](#사용한-기술)
-    - [코드 리뷰](#코드-리뷰)
-    - [소프트웨어 아키텍처 디자인 패턴](#소프트웨어-아키텍처-디자인-패턴)
-    - [Kotlin](#Kotlin)
-    - [Livedata](#Livedata)
-    - [Room](#Room)
-    - [코루틴과 쓰레드](#코루틴과-쓰레드)
-    - [Firebase](#Firebase)
-    - [사용한 라이브러리](#사용한-라이브러리)
+    - [1. 코드 리뷰](#1.-코드-리뷰)
+    - [2. 소프트웨어 아키텍처 디자인 패턴](#2.-소프트웨어-아키텍처-디자인-패턴)
+    - [3. Firebase](#3.-Firebase)
+    - [4. 사용한 라이브러리](#4.-사용한-라이브러리)
 - [Changelog](#changelog)
 - [License](#license)
 
 ## 컨텐츠 소개
 
-### 설명
+### 1. 설명
 Youtube 기반 음악 스트리밍 앱. Firebase Google authentication을 바탕으로 로그인 기능 구현하였다. Youtube API 를 이용하여 플레이리스트 관리, 음악 재생, 내 플레이리스트 생성을 할 수 있다. Media 타입 Notification 기능을 구현하였고 백그라운드 재생 기능을 지원한다. 저장된 플레이리스트는 편의에 따라 변경이 가능하며 개인 취향에 맞게 앱 설정을 변경할 수 있다.
 
-### UML
+### 2. UML
 <img src="/images/diagram.png" width="960px" height="630px"></img><br/>
  
-### 결과물
+### 3. 결과물
 <img src="/images/login.jpg" width="270px" height="555px"> </img><img src="/images/google_auth.jpg" width="270px" height="555px"> </img>
 <img src="/images/main_home.jpg" width="270px" height="555px"></img><br/>
 
@@ -41,7 +37,7 @@ Youtube 기반 음악 스트리밍 앱. Firebase Google authentication을 바탕
 
 ## 사용한 기술
 
-### 코드 리뷰
+### 1. 코드 리뷰
 
 #### 베이스 모듈
 
@@ -121,7 +117,7 @@ constructor(private val repository: MusicRepository) : BaseUseCase<Params, Resou
 ```
 
 
-### 소프트웨어 아키텍처 디자인 패턴
+### 2. 소프트웨어 아키텍처 디자인 패턴
 
 MVVM 기반의 MVI 패턴을 적용하였다. MVI는 Model-View-Intent의 약자다. MVI는 Cycle.js프레임워크의 단방향성과 Cycle Nature에서 영감을 받은 안드로이드를 위한 최신 아키텍처 패턴 중 하나이다. Model-View-Intent는 유지 관리가 용이하고 확장 가능한 앱을 만들수 있도록 도와준다.
 
@@ -133,7 +129,7 @@ MVVM 기반의 MVI 패턴을 적용하였다. MVI는 Model-View-Intent의 약자
 * 불변 Model은 큰 앱에서 멀티 스레드 안정성과 안정적인 동작을 제공
 
 
-### Firebase
+### 3. Firebase
 
 Firebase Authentication을 이용한 OAuth 인증 로그인 기능을 추가하였다.
 
@@ -144,7 +140,7 @@ OAuth의 개념은 다음가 같다.
 Firebase의 Realtime Database를 적용하였다. 해당 기능은 클라이언트 입장에서 사용방법이 Restful API와 비슷하여 쉽게 사용할 수 있다.
 
 
-### 사용한 라이브러리
+### 4. 사용한 라이브러리
 Androidx Room 2.2.3
 Androidx Livedata 2.2.0
 Youtube player <https://github.com/PierfrancescoSoffritti/android-youtube-player>
