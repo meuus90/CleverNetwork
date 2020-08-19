@@ -122,11 +122,29 @@ constructor(private val repository: MusicRepository) : BaseUseCase<Params, Resou
 
 
 ### 소프트웨어 아키텍처 디자인 패턴
-### Kotlin
+
+이번 프로젝트에는 MVVM 기반의 MVI 패턴을 적용하였다. MVI는 Model-View-Intent의 약자다. MVI는 Cycle.js프레임워크의 단방향성과 Cycle Nature에서 영감을 받은 안드로이드를 위한 최신 아키텍처 패턴 중 하나이다. Model-View-Intent는 유지 관리가 용이하고 확장 가능한 앱을 만들수 있도록 도와준다.
+
+<img src="/images/mvi.png" width="350px" height="240px"></img><br/>
+
+주요 장점은 다음과 같다.
+* 데이터가 단방향으로 순환
+* View의 생명주기 동안 일관성 있는 상태를 가짐
+* 불변 Model은 큰 앱에서 멀티 스레드 안정성과 안정적인 동작을 제공
+
+
 ### Livedata
+
+
 ### Room
+
+
 ### 코루틴과 쓰레드
+
+
 ### Firebase
+
+
 ### 사용한 라이브러리
 
 
