@@ -141,8 +141,11 @@ Firebase의 Realtime Database를 적용하였다. 해당 기능은 클라이언�
 
 
 ### 4. 사용한 라이브러리
+
 Androidx Room 2.2.3
+
 Androidx Livedata 2.2.0
+
 Youtube player <https://github.com/PierfrancescoSoffritti/android-youtube-player>
 
 
