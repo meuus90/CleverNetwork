@@ -8,12 +8,14 @@
     - [2. UML](#2-UML)
     - [3. 결과물](#3-결과물)
 - [사용한 기술](#사용한-기술)
-    - [1. 코드 리뷰](#1-코드-리뷰)
-    - [2. 소프트웨어 아키텍처 디자인 패턴](#2-소프트웨어-아키텍처-디자인-패턴)
-    - [3. Firebase](#3-Firebase)
-    - [4. 사용한 라이브러리](#4-사용한-라이브러리)
+    - [1. 다이어그램](#1-다이어그램)
+    - [2. 코드 리뷰](#2-코드-리뷰)
+    - [3. 소프트웨어 아키텍처 디자인 패턴](#3-소프트웨어-아키텍처-디자인-패턴)
+    - [4. Firebase](#4-Firebase)
+    - [5. 사용한 라이브러리](#5-사용한-라이브러리)
 - [Changelog](#changelog)
 - [License](#license)
+
 
 ## 컨텐츠 소개
 
@@ -37,7 +39,19 @@ Youtube 기반 음악 스트리밍 앱. Firebase Google authentication을 바탕
 
 ## 사용한 기술
 
-### 1. 코드 리뷰
+### 1. 다이어그램
+
+#### 데이터 플로우
+
+<img src="/images/mvi_dataflow.png" width="757px" height="343px"></img><br/>
+
+
+#### 서비스
+
+<img src="/images/service_dataflow.png" width="683px" height="277px"></img><br/>
+
+
+### 2. 코드 리뷰
 
 #### 베이스 모듈
 
@@ -117,7 +131,7 @@ constructor(private val repository: MusicRepository) : BaseUseCase<Params, Resou
 ```
 
 
-### 2. 소프트웨어 아키텍처 디자인 패턴
+### 3. 소프트웨어 아키텍처 디자인 패턴
 
 MVVM 기반의 MVI 패턴을 적용하였다. MVI는 Model-View-Intent의 약자다. MVI는 Cycle.js프레임워크의 단방향성과 Cycle Nature에서 영감을 받은 안드로이드를 위한 최신 아키텍처 패턴 중 하나이다. Model-View-Intent는 유지 관리가 용이하고 확장 가능한 앱을 만들수 있도록 도와준다.
 
@@ -129,7 +143,7 @@ MVVM 기반의 MVI 패턴을 적용하였다. MVI는 Model-View-Intent의 약자
 * 불변 Model은 큰 앱에서 멀티 스레드 안정성과 안정적인 동작을 제공
 
 
-### 3. Firebase
+### 4. Firebase
 
 Firebase Authentication을 이용한 OAuth 인증 로그인 기능을 추가하였다.
 
@@ -140,7 +154,7 @@ OAuth의 개념은 다음가 같다.
 Firebase의 Realtime Database를 적용하였다. 해당 기능은 클라이언트 입장에서 사용방법이 Restful API와 비슷하여 쉽게 사용할 수 있다.
 
 
-### 4. 사용한 라이브러리
+### 5. 사용한 라이브러리
 
 Androidx Room 2.2.3
 
