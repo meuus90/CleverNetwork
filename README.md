@@ -28,13 +28,13 @@ Youtube 기반 음악 스트리밍 앱. Firebase Google authentication을 바탕
 <img src="/images/diagram.png" width="960px" height="630px"></img><br/>
  
 ### 결과물
-<img src="/images/login.jpg" width="180px" height="370px">&nbsp</img><img src="/images/google_auth.jpg" width="180px" height="370px">&nbsp</img>
-<img src="/images/main_home.jpg" width="180px" height="370px"></img><br/>
+<img src="/images/login.jpg" width="270px" height="555px"> </img><img src="/images/google_auth.jpg" width="270px" height="555px"> </img>
+<img src="/images/main_home.jpg" width="270px" height="555px"></img><br/>
 
-<img src="/images/main_playlist.jpg" width="180px" height="370px">&nbsp</img><img src="/images/main_setting.jpg" width="180px" height="370px">&nbsp</img>
-<img src="/images/playlist.jpg" width="180px" height="370px"></img><br/>
+<img src="/images/main_playlist.jpg" width="270px" height="555px"> </img><img src="/images/main_setting.jpg" width="270px" height="555px"> </img>
+<img src="/images/playlist.jpg" width="270px" height="555px"></img><br/>
 
-<img src="/images/music_player.jpg" width="180px" height="370px">&nbsp</img><img src="/images/notification.jpg" width="180px" height="370px"></img><br/>
+<img src="/images/music_player.jpg" width="270px" height="555px"> </img><img src="/images/notification.jpg" width="270px" height="555px"></img><br/>
 
 
 
