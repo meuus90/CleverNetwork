@@ -78,7 +78,7 @@ UI, Viewmodel, Model 뿐만 아니라 네트워크 모듈이나 Firebase 모듈�
 
 #### 내외부 저장소를 연결해주는 Repository [MusicRepository](app/src/main/java/com/network/clever/data/repository/item/MusicRepository.kt)
 
-네트워크 API 설정부분, Room 저장부분, Cache(Room) 데이터 호출부분, 네트워크 에러, Fetch 에러 등의 기능이 있다.
+네트워크 API 설정부분, Room 저장부분, Cache(Room) 데이터 호출부분, 네트워크 에러 시 처리, Fetch 에러 시 처리 등의 기능이 있다.
 ```
 @Singleton
 class MusicRepository
