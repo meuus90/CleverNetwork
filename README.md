@@ -5,7 +5,7 @@
 ## 목차
 - [컨텐츠 소개](#컨텐츠-소개)
     - [설명](#설명)
-    - [Use case diagram](#use-case-diagram)
+    - [UML](#UML)
     - [화면 기획](#화면-기획)
     - [결과물](#결과물)
 - [사용한 기술](#사용한-기술)
@@ -23,7 +23,8 @@
 ## 컨텐츠 소개
 
 ### 설명
-### Use case diagram
+### UML
+ <img src="/images/diagram.png" width="960px" height="630px"></img><br/>
 
 
 ## 사용한 기술
