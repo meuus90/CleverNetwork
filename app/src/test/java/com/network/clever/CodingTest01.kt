@@ -1,4 +1,4 @@
-package com.bluewhale
+package com.network.clever
 
 import org.junit.Assert
 import org.junit.Test
